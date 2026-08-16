@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "婚礼请柬",
-  "navigationStyle": "custom"
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "danmaku": "/components/danmaku/danmaku"
+  }
 }

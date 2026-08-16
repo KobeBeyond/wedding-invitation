@@ -1,36 +1,69 @@
-/* pages/guest/view/view.wxss */
-.guest-view {
-  min-height: 100vh;
+/* pages/guest/view/view.wxss — 来宾视角完整样式 */
+page {
   background: #fdf5f6;
 }
 
-/* 封面区 */
+.guest-view {
+  min-height: 100vh;
+  background: #fdf5f6;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ========== 通用 Section ========== */
+.section {
+  padding: 60rpx 32rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24rpx;
+  margin-bottom: 48rpx;
+}
+
+.header-line {
+  width: 64rpx;
+  height: 2rpx;
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+}
+
+.header-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #8a6d4f;
+  letter-spacing: 4rpx;
+}
+
+/* ========== 第一屏：封面 ========== */
 .cover-section {
   position: relative;
-  height: 70vh;
-  min-height: 600rpx;
+  overflow: hidden;
 }
 
 .cover-bg {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
 }
 
 .cover-gradient {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: linear-gradient(180deg, #e8a0a0 0%, #d4af37 100%);
+}
+
+.cover-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.25);
 }
 
 .cover-content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -38,21 +71,20 @@
   justify-content: center;
   padding: 0 64rpx;
   padding-top: 120rpx;
-  background: rgba(0, 0, 0, 0.2);
 }
 
 .cover-names {
   display: flex;
   align-items: center;
   gap: 24rpx;
-  margin-bottom: 16rpx;
+  margin-bottom: 20rpx;
 }
 
 .name {
   font-size: 64rpx;
   font-weight: 700;
   color: #fff;
-  text-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.4);
 }
 
 .ampersand {
@@ -62,8 +94,8 @@
 }
 
 .cover-date {
-  font-size: 32rpx;
-  color: #fff;
+  font-size: 30rpx;
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 48rpx;
   text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
 }
@@ -81,7 +113,7 @@
 
 .countdown-grid {
   display: flex;
-  gap: 24rpx;
+  gap: 20rpx;
 }
 
 .cd-item {
@@ -92,12 +124,14 @@
   border-radius: 16rpx;
   padding: 16rpx 24rpx;
   backdrop-filter: blur(8rpx);
+  min-width: 80rpx;
 }
 
 .cd-num {
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 700;
   color: #fff;
+  line-height: 1.2;
 }
 
 .cd-unit {
@@ -110,61 +144,671 @@
   font-size: 40rpx;
   color: #fff;
   font-weight: 600;
+  text-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.3);
 }
 
-/* 导航卡片 */
-.nav-cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20rpx;
-  padding: 40rpx 32rpx;
-}
-
-.nav-card {
-  width: calc(33.33% - 14rpx);
-  background: #fff;
-  border-radius: 20rpx;
-  padding: 32rpx 0;
+/* 下滑提示 */
+.scroll-hint {
+  position: absolute;
+  bottom: 60rpx;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+  z-index: 3;
+  animation: bounce 2s ease-in-out infinite;
 }
 
-.nav-icon {
-  font-size: 48rpx;
+.scroll-text {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.7);
   margin-bottom: 12rpx;
 }
 
-.nav-label {
+.scroll-arrow {
+  width: 20rpx;
+  height: 20rpx;
+  border-right: 4rpx solid rgba(255, 255, 255, 0.6);
+  border-bottom: 4rpx solid rgba(255, 255, 255, 0.6);
+  transform: rotate(45deg);
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(16rpx); }
+}
+
+/* ========== 音乐开关 ========== */
+.music-toggle {
+  position: fixed;
+  top: 200rpx;
+  right: 32rpx;
+  z-index: 100;
+  width: 72rpx;
+  height: 72rpx;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.music-icon {
+  display: flex;
+  align-items: flex-end;
+  gap: 4rpx;
+  height: 32rpx;
+}
+
+.music-bar {
+  width: 6rpx;
+  height: 16rpx;
+  background: #e8a0a0;
+  border-radius: 3rpx;
+}
+
+.music-toggle.playing .music-bar {
+  animation: musicBar 0.6s ease-in-out infinite;
+}
+
+.music-toggle.playing .music-bar:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.music-toggle.playing .music-bar:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes musicBar {
+  0%, 100% { height: 16rpx; }
+  50% { height: 32rpx; }
+}
+
+/* ========== 第二屏：新人介绍 ========== */
+.intro-section {
+  background: #fdf5f6;
+}
+
+.couple-cards {
+  display: flex;
+  align-items: stretch;
+  gap: 24rpx;
+}
+
+.couple-card {
+  flex: 1;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.04);
+}
+
+.couple-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20rpx;
+}
+
+.groom-avatar {
+  background: linear-gradient(135deg, #6bb4e8, #4a9fde);
+}
+
+.bride-avatar {
+  background: linear-gradient(135deg, #e8a0a0, #d97a7a);
+}
+
+.couple-initial {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #fff;
+}
+
+.couple-name {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12rpx;
+}
+
+.couple-intro {
   font-size: 26rpx;
-  color: #666;
-}
-
-/* CTA */
-.cta-section {
-  text-align: center;
-  padding: 48rpx 32rpx 80rpx;
-}
-
-.cta-text {
-  font-size: 30rpx;
   color: #888;
-  margin-bottom: 24rpx;
+  line-height: 1.6;
+  text-align: center;
 }
 
-.cta-btn {
-  display: inline-block;
-  padding: 24rpx 64rpx;
+.couple-heart {
+  display: flex;
+  align-items: center;
+  font-size: 40rpx;
+  color: #e8a0a0;
+}
+
+/* ========== 第三屏：婚礼信息 ========== */
+.wedding-info-section {
+  background: #fff;
+}
+
+.info-card {
+  background: #fdf5f6;
+  border-radius: 20rpx;
+  padding: 40rpx 32rpx;
+  margin-bottom: 32rpx;
+}
+
+.venue-name {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+  margin-bottom: 8rpx;
+}
+
+.venue-hall {
+  font-size: 28rpx;
+  color: #999;
+  text-align: center;
+  margin-bottom: 32rpx;
+  padding-bottom: 24rpx;
+  border-bottom: 2rpx dashed #e8d0d0;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+  margin-bottom: 28rpx;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-icon {
+  font-size: 36rpx;
+  flex-shrink: 0;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.info-label {
+  font-size: 24rpx;
+  color: #aaa;
+  margin-bottom: 4rpx;
+}
+
+.info-value {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* 地图 */
+.map-wrap {
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+.venue-map {
+  width: 100%;
+  height: 360rpx;
+}
+
+.map-nav-btn {
+  background: linear-gradient(135deg, #e8a0a0, #d97a7a);
+  color: #fff;
+  text-align: center;
+  padding: 24rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+/* ========== 第四屏：婚纱照 ========== */
+.photos-section {
+  background: #fdf5f6;
+}
+
+.photo-swiper {
+  width: 100%;
+  height: 480rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+
+.photo-item {
+  width: 100%;
+  height: 100%;
+}
+
+.photo-img {
+  width: 100%;
+  height: 100%;
+}
+
+.thumb-strip {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 24rpx;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 4rpx 0;
+}
+
+.thumb-item {
+  flex-shrink: 0;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  border: 4rpx solid transparent;
+  transition: border-color 0.3s;
+}
+
+.thumb-item.active {
+  border-color: #e8a0a0;
+}
+
+.thumb-img {
+  width: 100%;
+  height: 100%;
+}
+
+/* ========== 第五屏：婚礼流程 ========== */
+.timeline-section {
+  background: #fff;
+}
+
+.timeline {
+  padding: 0 16rpx;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 24rpx;
+}
+
+.time-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.time-badge {
+  background: linear-gradient(135deg, #e8a0a0, #d97a7a);
+  color: #fff;
+  font-size: 24rpx;
+  font-weight: 600;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  min-width: 96rpx;
+  text-align: center;
+}
+
+.time-line {
+  width: 2rpx;
+  flex: 1;
+  background: #e8d0d0;
+  margin: 8rpx 0;
+  min-height: 48rpx;
+}
+
+.content-col {
+  flex: 1;
+  padding-bottom: 32rpx;
+}
+
+.content-card {
+  background: #fdf5f6;
+  border-radius: 16rpx;
+  padding: 24rpx 28rpx;
+}
+
+.content-header {
+  margin-bottom: 8rpx;
+}
+
+.content-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.content-desc {
+  font-size: 26rpx;
+  color: #888;
+  line-height: 1.5;
+}
+
+/* ========== 第六屏：来宾回执 ========== */
+.rsvp-section {
+  background: #fdf5f6;
+}
+
+.rsvp-intro {
+  font-size: 28rpx;
+  color: #888;
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.rsvp-form {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx 32rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.04);
+}
+
+.form-item {
+  margin-bottom: 32rpx;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #555;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.required {
+  color: #e8a0a0;
+}
+
+.form-input {
+  width: 100%;
+  height: 80rpx;
+  background: #f9f5f5;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.form-textarea {
+  width: 100%;
+  background: #f9f5f5;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  color: #333;
+  min-height: 120rpx;
+  box-sizing: border-box;
+}
+
+.radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-right: 48rpx;
+  padding: 12rpx 24rpx;
+  background: #f9f5f5;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #555;
+  transition: all 0.3s;
+}
+
+.radio-label.checked {
+  background: #fce8e8;
+  color: #d97a7a;
+}
+
+.picker-value {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80rpx;
+  background: #f9f5f5;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.picker-arrow {
+  color: #ccc;
+  font-size: 32rpx;
+}
+
+.rsvp-submit-btn {
+  width: 100%;
+  height: 88rpx;
   background: linear-gradient(135deg, #e8a0a0, #d97a7a);
   color: #fff;
   font-size: 32rpx;
-  border-radius: 48rpx;
   font-weight: 500;
-  box-shadow: 0 8rpx 24rpx rgba(232, 160, 160, 0.35);
+  border-radius: 44rpx;
+  margin-top: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
 }
 
-/* 加载状态 */
+.rsvp-submit-btn::after {
+  border: none;
+}
+
+.rsvp-submit-btn[disabled] {
+  opacity: 0.6;
+}
+
+/* 回执成功 */
+.rsvp-success {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 64rpx 32rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.04);
+}
+
+.success-check {
+  position: relative;
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: 32rpx;
+}
+
+.check-circle {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: #4caf50;
+  opacity: 0.15;
+}
+
+.check-mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 64rpx;
+  color: #4caf50;
+  font-weight: 700;
+}
+
+.success-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12rpx;
+}
+
+.success-desc {
+  font-size: 28rpx;
+  color: #888;
+}
+
+/* ========== 第七屏：祝福墙 ========== */
+.blessings-section {
+  background: #fff;
+}
+
+.danmaku-wrap {
+  position: relative;
+  height: 400rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  background: linear-gradient(180deg, #fdf5f6, #fce8e8);
+}
+
+.blessing-count {
+  position: absolute;
+  bottom: 16rpx;
+  right: 16rpx;
+  font-size: 24rpx;
+  color: #aaa;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+}
+
+.blessing-empty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-icon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.empty-text {
+  font-size: 26rpx;
+  color: #aaa;
+}
+
+.blessing-input-bar {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 24rpx;
+  align-items: center;
+}
+
+.blessing-input {
+  flex: 1;
+  height: 80rpx;
+  background: #f9f5f5;
+  border-radius: 40rpx;
+  padding: 0 32rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.blessing-send-btn {
+  flex-shrink: 0;
+  height: 80rpx;
+  padding: 0 32rpx;
+  background: #e0e0e0;
+  color: #999;
+  font-size: 28rpx;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.blessing-send-btn.active {
+  background: linear-gradient(135deg, #e8a0a0, #d97a7a);
+  color: #fff;
+}
+
+/* ========== 底部 ========== */
+.footer-section {
+  background: #fdf5f6;
+  padding: 64rpx 32rpx 120rpx;
+  text-align: center;
+}
+
+.footer-deco {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.footer-line {
+  width: 80rpx;
+  height: 2rpx;
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+}
+
+.footer-heart {
+  font-size: 32rpx;
+  color: #e8a0a0;
+}
+
+.footer-couple {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #8a6d4f;
+  margin-bottom: 8rpx;
+}
+
+.footer-date {
+  font-size: 26rpx;
+  color: #b09080;
+  margin-bottom: 48rpx;
+}
+
+.footer-actions {
+  margin-bottom: 40rpx;
+}
+
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12rpx;
+  background: linear-gradient(135deg, #e8a0a0, #d97a7a);
+  color: #fff !important;
+  font-size: 30rpx;
+  padding: 24rpx 64rpx;
+  border-radius: 48rpx;
+  box-shadow: 0 8rpx 24rpx rgba(232, 160, 160, 0.35);
+  line-height: 1.5;
+}
+
+.share-btn::after {
+  border: none;
+}
+
+.share-icon {
+  font-size: 32rpx;
+}
+
+.create-cta {
+  font-size: 28rpx;
+  color: #b09080;
+  text-decoration: underline;
+  padding: 16rpx;
+}
+
+/* ========== 加载状态 ========== */
 .loading-state {
   min-height: 100vh;
   display: flex;
