@@ -101,6 +101,11 @@
   color: #666;
 }
 
+.action-btn.view {
+  background: #f0f5ff;
+  color: #5b8def;
+}
+
 .action-btn.primary {
   background: #e8a0a0;
   color: #fff;

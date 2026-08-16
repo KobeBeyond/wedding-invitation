@@ -377,15 +377,67 @@ page {
   font-weight: 500;
 }
 
-/* ========== 第四屏：婚纱照 ========== */
+/* ========== 第四屏：婚纱照 + 弹幕 ========== */
 .photos-section {
   background: #fdf5f6;
 }
 
-.photo-swiper {
+.gallery-stage {
+  position: relative;
   width: 100%;
   height: 480rpx;
   border-radius: 20rpx;
+  overflow: hidden;
+}
+
+.gallery-danmaku-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.photo-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fce8ec, #f5d5d5, #e8c4c4);
+}
+
+.fallback-heart {
+  font-size: 80rpx;
+  color: #e8a0a0;
+  margin-bottom: 20rpx;
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.fallback-text {
+  font-size: 36rpx;
+  color: #c07070;
+  font-weight: 500;
+  margin-bottom: 10rpx;
+}
+
+.fallback-sub {
+  font-size: 24rpx;
+  color: #c09999;
+}
+
+.photo-swiper {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
   overflow: hidden;
 }
 
@@ -518,11 +570,17 @@ page {
 }
 
 .form-label {
-  font-size: 28rpx;
-  color: #555;
-  font-weight: 500;
-  display: block;
-  margin-bottom: 12rpx;
+font-size: 28rpx;
+color: #555;
+font-weight: 500;
+display: block;
+margin-bottom: 12rpx;
+}
+
+.form-hint {
+font-size: 24rpx;
+color: #b0a0a0;
+font-weight: 400;
 }
 
 .required {
@@ -662,33 +720,25 @@ page {
   background: #fff;
 }
 
-.danmaku-wrap {
-  position: relative;
-  height: 400rpx;
-  border-radius: 20rpx;
-  overflow: hidden;
-  background: linear-gradient(180deg, #fdf5f6, #fce8e8);
+.blessing-stats {
+  padding: 20rpx 0;
+  text-align: center;
 }
 
 .blessing-count {
-  position: absolute;
-  bottom: 16rpx;
-  right: 16rpx;
-  font-size: 24rpx;
-  color: #aaa;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 8rpx 20rpx;
+  display: inline-block;
+  font-size: 26rpx;
+  color: #e8a0a0;
+  background: #fdf5f6;
+  padding: 8rpx 24rpx;
   border-radius: 20rpx;
 }
 
 .blessing-empty {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 20rpx 0;
 }
 
 .empty-icon {

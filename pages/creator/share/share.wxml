@@ -60,7 +60,8 @@
   <!-- 底部操作 -->
   <view class="bottom-actions">
     <view class="btn-secondary" bindtap="goEdit">编辑请柬</view>
-    <view class="btn-primary" bindtap="goBack">返回首页</view>
+    <view class="btn-primary" bindtap="goView">查看请柬</view>
+    <view class="btn-secondary" bindtap="goBack">返回首页</view>
   </view>
 
   <view class="bottom-space"></view>

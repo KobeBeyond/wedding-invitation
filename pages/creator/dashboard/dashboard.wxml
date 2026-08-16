@@ -31,6 +31,7 @@
       wx:for="{{invitations}}"
       wx:key="_id"
       invitation="{{item}}"
+      bind:view="onView"
       bind:edit="onEdit"
       bind:share="onShare"
       bind:delete="onDelete"

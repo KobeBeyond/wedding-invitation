@@ -6,6 +6,9 @@ Component({
   },
 
   methods: {
+    onView() {
+      this.triggerEvent('view', { id: this.properties.invitation._id })
+    },
     onEdit() {
       this.triggerEvent('edit', { id: this.properties.invitation._id })
     },

@@ -43,6 +43,14 @@ Page({
     wx.navigateTo({ url: '/pages/creator/template/template' })
   },
 
+  // 查看请柬（以来宾视角预览）
+  onView(e) {
+    const id = e.detail.id
+    wx.navigateTo({
+      url: `/pages/guest/view/view?inv=${id}`
+    })
+  },
+
   // 编辑请柬
   onEdit(e) {
     const id = e.detail.id

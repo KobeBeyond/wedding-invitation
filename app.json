@@ -21,6 +21,12 @@
     "enablePullDownRefresh": false
   },
   "cloud": true,
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于显示婚礼地点地图和导航"
+    }
+  },
+  "requiredPrivateInfos": ["getLocation"],
   "sitemapLocation": "sitemap.json",
   "style": "v2"
 }

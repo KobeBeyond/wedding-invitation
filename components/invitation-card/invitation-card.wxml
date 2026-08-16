@@ -37,6 +37,7 @@
 
     <!-- 操作按钮 -->
     <view class="inv-actions" wx:if="{{showActions}}">
+      <view class="action-btn view" catchtap="onView">查看</view>
       <view class="action-btn primary" catchtap="onEdit">编辑</view>
       <view class="action-btn" wx:if="{{invitation.status === 'published'}}" catchtap="onShare">分享</view>
       <view class="action-btn danger" catchtap="onDelete">删除</view>

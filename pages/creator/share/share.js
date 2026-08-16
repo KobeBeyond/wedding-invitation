@@ -96,6 +96,13 @@ Page({
     })
   },
 
+  // 查看请柬（以来宾视角预览）
+  goView() {
+    wx.navigateTo({
+      url: `/pages/guest/view/view?inv=${this.data.invitationId}`
+    })
+  },
+
   // 返回首页
   goBack() {
     wx.redirectTo({ url: '/pages/creator/dashboard/dashboard' })

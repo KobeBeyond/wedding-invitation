@@ -6,7 +6,7 @@ const db = cloud.database()
 exports.main = async (event, context) => {
   const { OPENID } = cloud.getWXContext()
 
-  const { invitationId, name, phone, attending, guestCount, dietary, message } = event
+  const { invitationId, name, phone, attending, guestCount, dietary, message, hasCompanion, companionCount } = event
 
   // 验证必填字段
   if (!name || !name.trim()) {
@@ -41,6 +41,8 @@ exports.main = async (event, context) => {
             phone: phone.trim(),
             attending,
             guestCount: attending === 'yes' ? (guestCount || 1) : 0,
+            hasCompanion: hasCompanion || '',
+            companionCount: hasCompanion === 'yes' ? (companionCount || 0) : 0,
             dietary: dietary || '',
             message: message || ''
           }
@@ -57,6 +59,8 @@ exports.main = async (event, context) => {
         phone: phone.trim(),
         attending,
         guestCount: attending === 'yes' ? (guestCount || 1) : 0,
+        hasCompanion: hasCompanion || '',
+        companionCount: hasCompanion === 'yes' ? (companionCount || 0) : 0,
         dietary: dietary || '',
         message: message || '',
         createdAt: db.serverDate()

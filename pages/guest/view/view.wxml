@@ -1,5 +1,5 @@
 <!-- pages/guest/view/view.wxml — 来宾视角：完整长滚动请柬页面 -->
-<view class="guest-view" wx:if="{{!loading && invitation}}">
+<view class="guest-view" wx:if="{{!loading && invitation}}" bindtap="onPageTap">
 
   <!-- ========== 第一屏：封面 ========== -->
   <view class="cover-section" style="height:100vh;">
@@ -55,7 +55,7 @@
   </view>
 
   <!-- 音乐开关 -->
-  <view class="music-toggle {{playing ? 'playing' : ''}}" bindtap="toggleMusic" wx:if="{{invitation.musicUrl}}">
+  <view class="music-toggle {{playing ? 'playing' : ''}}" bindtap="toggleMusic" wx:if="{{invitation.musicUrl && showMusicBtn}}">
     <view class="music-icon">
       <view class="music-bar"></view>
       <view class="music-bar"></view>
@@ -145,40 +145,57 @@
     </view>
   </view>
 
-  <!-- ========== 第四屏：婚纱照 ========== -->
-  <view class="section photos-section" wx:if="{{invitation.photos && invitation.photos.length > 0}}">
+  <!-- ========== 第四屏：婚纱照 + 弹幕 ========== -->
+  <view class="section photos-section">
     <view class="section-header">
       <view class="header-line"></view>
       <text class="header-title">幸福瞬间</text>
       <view class="header-line"></view>
     </view>
 
-    <swiper
-      class="photo-swiper"
-      indicator-dots="{{true}}"
-      indicator-color="rgba(232,160,160,0.3)"
-      indicator-active-color="#e8a0a0"
-      autoplay="{{true}}"
-      interval="3500"
-      duration="600"
-      circular="{{true}}"
-      current="{{photoIdx}}"
-      bindchange="onSwiperChange"
-    >
-      <swiper-item wx:for="{{invitation.photos}}" wx:key="index">
-        <view class="photo-item" bindtap="previewPhoto" data-idx="{{index}}">
-          <image
-            wx:if="{{item.url}}"
-            src="{{item.url}}"
-            mode="aspectFill"
-            class="photo-img"
-          />
-        </view>
-      </swiper-item>
-    </swiper>
+    <!-- 弹幕覆盖层 -->
+    <view class="gallery-stage">
+      <!-- 有照片时展示轮播 -->
+      <swiper
+        wx:if="{{invitation.photos && invitation.photos.length > 0}}"
+        class="photo-swiper"
+        indicator-dots="{{true}}"
+        indicator-color="rgba(232,160,160,0.3)"
+        indicator-active-color="#e8a0a0"
+        autoplay="{{true}}"
+        interval="3500"
+        duration="600"
+        circular="{{true}}"
+        current="{{photoIdx}}"
+        bindchange="onSwiperChange"
+      >
+        <swiper-item wx:for="{{invitation.photos}}" wx:key="index">
+          <view class="photo-item" bindtap="previewPhoto" data-idx="{{index}}">
+            <image
+              wx:if="{{item.url}}"
+              src="{{item.url}}"
+              mode="aspectFill"
+              class="photo-img"
+            />
+          </view>
+        </swiper-item>
+      </swiper>
 
-    <!-- 缩略图 -->
-    <view class="thumb-strip">
+      <!-- 无照片时兜底 -->
+      <view wx:else class="photo-fallback">
+        <view class="fallback-heart">❤</view>
+        <text class="fallback-text">幸福瞬间 敬请期待</text>
+        <text class="fallback-sub">新人照片上传后将展示在这里</text>
+      </view>
+
+      <!-- 弹幕层 -->
+      <view class="gallery-danmaku-overlay">
+        <danmaku id="danmaku"></danmaku>
+      </view>
+    </view>
+
+    <!-- 缩略图（仅有照片时显示） -->
+    <view class="thumb-strip" wx:if="{{invitation.photos && invitation.photos.length > 0}}">
       <view
         class="thumb-item {{photoIdx === index ? 'active' : ''}}"
         wx:for="{{invitation.photos}}"
@@ -192,7 +209,7 @@
   </view>
 
   <!-- ========== 第五屏：婚礼流程 ========== -->
-  <view class="section timeline-section" wx:if="{{invitation.timeline && invitation.timeline.length > 0}}">
+  <view class="section timeline-section">
     <view class="section-header">
       <view class="header-line"></view>
       <text class="header-title">婚礼流程</text>
@@ -272,6 +289,30 @@
         </picker>
       </view>
 
+      <view class="form-item" wx:if="{{rsvpForm.attending === 'yes'}}">
+        <text class="form-label">是否有同来人员 <text class="form-hint">（订酒店用）</text></text>
+        <radio-group bindchange="onHasCompanionChange">
+          <label class="radio-label {{hasCompanion === 'yes' ? 'checked' : ''}}">
+            <radio value="yes" checked="{{hasCompanion === 'yes'}}" color="#e8a0a0" />
+            <text>有</text>
+          </label>
+          <label class="radio-label {{hasCompanion === 'no' ? 'checked' : ''}}">
+            <radio value="no" checked="{{hasCompanion === 'no'}}" color="#e8a0a0" />
+            <text>无</text>
+          </label>
+        </radio-group>
+      </view>
+
+      <view class="form-item" wx:if="{{rsvpForm.attending === 'yes' && hasCompanion === 'yes'}}">
+        <text class="form-label">同来人员数量</text>
+        <picker bindchange="onCompanionCountChange" value="{{companionCountIndex}}" range="{{companionCountOptions}}">
+          <view class="picker-value">
+            <text>{{companionCountOptions[companionCountIndex]}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
       <view class="form-item">
         <text class="form-label">饮食偏好</text>
         <textarea class="form-textarea" placeholder="如有特殊饮食需求请告知（如素食、过敏等）"
@@ -304,10 +345,8 @@
       <view class="header-line"></view>
     </view>
 
-    <!-- 弹幕区 -->
-    <view class="danmaku-wrap">
-      <danmaku id="danmaku"></danmaku>
-
+    <!-- 祝福统计 -->
+    <view class="blessing-stats">
       <view class="blessing-count" wx:if="{{blessingCount > 0}}">
         已收到 {{blessingCount}} 条祝福
       </view>
