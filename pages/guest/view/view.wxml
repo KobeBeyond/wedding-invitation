@@ -1,0 +1,83 @@
+<!-- pages/guest/view/view.wxml — 访客查看页（基础版） -->
+<view class="guest-view" wx:if="{{!loading && invitation}}">
+
+  <!-- 封面区 -->
+  <view class="cover-section">
+    <image
+      wx:if="{{invitation.coverImage}}"
+      src="{{invitation.coverImage}}"
+      mode="aspectFill"
+      class="cover-bg"
+    />
+    <view wx:else class="cover-gradient"></view>
+
+    <view class="cover-content">
+      <view class="cover-names">
+        <text class="name">{{invitation.groomName}}</text>
+        <text class="ampersand">&</text>
+        <text class="name">{{invitation.brideName}}</text>
+      </view>
+      <view class="cover-date">📅 {{invitation.weddingDate}}</view>
+
+      <!-- 倒计时 -->
+      <view class="countdown" wx:if="{{!countdown.finished}}">
+        <view class="countdown-label">距婚礼还有</view>
+        <view class="countdown-grid">
+          <view class="cd-item">
+            <text class="cd-num">{{countdown.days}}</text>
+            <text class="cd-unit">天</text>
+          </view>
+          <view class="cd-item">
+            <text class="cd-num">{{countdown.hours}}</text>
+            <text class="cd-unit">时</text>
+          </view>
+          <view class="cd-item">
+            <text class="cd-num">{{countdown.minutes}}</text>
+            <text class="cd-unit">分</text>
+          </view>
+          <view class="cd-item">
+            <text class="cd-num">{{countdown.seconds}}</text>
+            <text class="cd-unit">秒</text>
+          </view>
+        </view>
+      </view>
+      <view class="countdown-done" wx:else>🎉 婚礼进行中 🎉</view>
+    </view>
+  </view>
+
+  <!-- 导航卡片 -->
+  <view class="nav-cards">
+    <view class="nav-card" bindtap="goPhotos" wx:if="{{invitation.photos && invitation.photos.length > 0}}">
+      <text class="nav-icon">📷</text>
+      <text class="nav-label">婚纱照</text>
+    </view>
+    <view class="nav-card" bindtap="goVenue" wx:if="{{invitation.venueName}}">
+      <text class="nav-icon">📍</text>
+      <text class="nav-label">地点导航</text>
+    </view>
+    <view class="nav-card" bindtap="goSchedule" wx:if="{{invitation.timeline && invitation.timeline.length > 0}}">
+      <text class="nav-icon">📋</text>
+      <text class="nav-label">婚礼流程</text>
+    </view>
+    <view class="nav-card" bindtap="goRSVP">
+      <text class="nav-icon">✉️</text>
+      <text class="nav-label">回执</text>
+    </view>
+    <view class="nav-card" bindtap="goBlessings">
+      <text class="nav-icon">💬</text>
+      <text class="nav-label">祝福</text>
+    </view>
+  </view>
+
+  <!-- CTA -->
+  <view class="cta-section">
+    <view class="cta-text">想要制作自己的婚礼请柬？</view>
+    <view class="cta-btn" bindtap="goCreate">立即创建 →</view>
+  </view>
+</view>
+
+<!-- 加载中 -->
+<view class="loading-state" wx:else>
+  <view class="loading-spinner"></view>
+  <text>加载请柬中...</text>
+</view>

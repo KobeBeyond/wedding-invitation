@@ -1,0 +1,45 @@
+<!-- components/invitation-card/invitation-card.wxml -->
+<view class="inv-card" bindtap="onTap">
+  <!-- 封面 -->
+  <view class="inv-cover">
+    <image
+      wx:if="{{invitation.coverImage}}"
+      src="{{invitation.coverImage}}"
+      mode="aspectFill"
+      class="cover-img"
+    />
+    <view wx:else class="cover-placeholder">
+      <text class="placeholder-icon">💒</text>
+    </view>
+
+    <!-- 状态标签 -->
+    <view class="status-tag {{invitation.status}}">
+      {{invitation.status === 'draft' ? '草稿' : '已发布'}}
+    </view>
+  </view>
+
+  <!-- 信息区 -->
+  <view class="inv-info">
+    <view class="inv-names">
+      {{invitation.groomName || '新郎'}} <text class="amp">&</text> {{invitation.brideName || '新娘'}}
+    </view>
+    <view class="inv-meta" wx:if="{{invitation.weddingDate}}">
+      📅 {{invitation.weddingDate}}
+    </view>
+    <view class="inv-meta" wx:if="{{invitation.venueName}}">
+      📍 {{invitation.venueName}}
+    </view>
+
+    <!-- 统计 -->
+    <view class="inv-stats" wx:if="{{invitation.status === 'published'}}">
+      <text class="stat">👁 {{invitation.viewCount || 0}}</text>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="inv-actions" wx:if="{{showActions}}">
+      <view class="action-btn primary" catchtap="onEdit">编辑</view>
+      <view class="action-btn" wx:if="{{invitation.status === 'published'}}" catchtap="onShare">分享</view>
+      <view class="action-btn danger" catchtap="onDelete">删除</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,132 @@
+/* pages/photos/photos.wxss */
+
+.photos-page {
+  padding: 30rpx 30rpx env-safe-area-inset-bottom;
+}
+
+/* 标题 */
+.page-title {
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+
+.title-main {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: var(--color-text);
+}
+
+.title-deco {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20rpx;
+  margin-top: 16rpx;
+}
+
+.deco-line {
+  width: 100rpx;
+  height: 2rpx;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+}
+
+.deco-heart {
+  color: var(--color-accent);
+  font-size: 24rpx;
+}
+
+/* 大图轮播 */
+.photo-swiper {
+  width: 100%;
+  height: 600rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 12rpx 40rpx rgba(232,160,160,0.2);
+  margin-bottom: 40rpx;
+}
+
+.photo-item {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-img {
+  width: 100%;
+  height: 100%;
+}
+
+.photo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8e0e0, #f0d0d0, #e8c8c8);
+}
+
+.placeholder-text {
+  font-size: 36rpx;
+  color: #c8a0a0;
+  font-weight: bold;
+}
+
+.placeholder-sub {
+  font-size: 24rpx;
+  color: #d0b0b0;
+  margin-top: 12rpx;
+}
+
+/* 缩略图 */
+.thumb-section {
+  margin-top: 10rpx;
+}
+
+.section-label {
+  font-size: 28rpx;
+  color: var(--color-muted);
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.thumb-grid {
+  width: 100%;
+}
+
+.thumb-row {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.thumb-item {
+  flex: 1;
+  aspect-ratio: 1;
+  border-radius: 16rpx;
+  overflow: hidden;
+  border: 4rpx solid transparent;
+  transition: border-color 0.3s;
+}
+
+.thumb-item.active {
+  border-color: var(--color-primary);
+}
+
+.thumb-img {
+  width: 100%;
+  height: 100%;
+}
+
+.thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8e8e8, #f0d8d8);
+  color: #c8a0a0;
+  font-size: 28rpx;
+}

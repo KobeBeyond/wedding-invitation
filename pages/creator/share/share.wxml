@@ -1,0 +1,72 @@
+<!-- pages/creator/share/share.wxml -->
+<view class="share-page" wx:if="{{!loading && invitation}}">
+
+  <!-- 成功提示 -->
+  <view class="success-banner">
+    <view class="success-icon">🎉</view>
+    <view class="success-text">请柬已发布</view>
+  </view>
+
+  <!-- 请柬预览卡片 -->
+  <view class="inv-preview">
+    <image
+      wx:if="{{invitation.coverImage}}"
+      src="{{invitation.coverImage}}"
+      mode="aspectFill"
+      class="preview-cover"
+    />
+    <view class="preview-info">
+      <view class="preview-names">
+        {{invitation.groomName}} <text class="amp">&</text> {{invitation.brideName}}
+      </view>
+      <view class="preview-date">📅 {{invitation.weddingDate}}</view>
+    </view>
+  </view>
+
+  <!-- 分享操作 -->
+  <view class="share-section">
+    <view class="section-title">分享给好友</view>
+    <view class="share-actions">
+      <button class="share-btn" open-type="share">
+        <view class="share-btn-icon">💌</view>
+        <text>微信好友</text>
+      </button>
+      <view class="share-btn" bindtap="copyInviteText">
+        <view class="share-btn-icon">📋</view>
+        <text>复制文案</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 数据看板 -->
+  <view class="stats-section">
+    <view class="section-title">数据统计</view>
+    <view class="stats-grid">
+      <view class="stat-card">
+        <view class="stat-num">{{stats.views}}</view>
+        <view class="stat-label">浏览</view>
+      </view>
+      <view class="stat-card">
+        <view class="stat-num">{{stats.rsvp}}</view>
+        <view class="stat-label">回执</view>
+      </view>
+      <view class="stat-card">
+        <view class="stat-num">{{stats.blessings}}</view>
+        <view class="stat-label">祝福</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作 -->
+  <view class="bottom-actions">
+    <view class="btn-secondary" bindtap="goEdit">编辑请柬</view>
+    <view class="btn-primary" bindtap="goBack">返回首页</view>
+  </view>
+
+  <view class="bottom-space"></view>
+</view>
+
+<view class="loading-state" wx:else>
+  <view class="loading-spinner"></view>
+  <text>加载中...</text>
+</view>

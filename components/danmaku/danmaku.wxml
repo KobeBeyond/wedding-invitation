@@ -1,0 +1,8 @@
+<!-- components/danmaku/danmaku.wxml -->
+<view class="danmaku-container">
+  <view wx:for="{{danmuList}}" wx:key="id"
+        class="danmaku-item"
+        style="top:{{item.top}}%; color:{{item.color}}; font-size:{{item.fontSize}}rpx; animation-duration:{{item.duration}}s; animation-delay:{{item.delay}}s;">
+    {{item.text}}
+  </view>
+</view>

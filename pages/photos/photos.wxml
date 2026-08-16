@@ -1,0 +1,55 @@
+<!-- pages/photos/photos.wxml -->
+<view class="photos-page">
+
+  <!-- 标题 -->
+  <view class="page-title fade-in">
+    <text class="title-main">我们的幸福瞬间</text>
+    <view class="title-deco">
+      <view class="deco-line"></view>
+      <text class="deco-heart">❤</text>
+      <view class="deco-line"></view>
+    </view>
+  </view>
+
+  <!-- 大图轮播 -->
+  <swiper class="photo-swiper"
+          indicator-dots="{{true}}"
+          indicator-color="rgba(232,160,160,0.3)"
+          indicator-active-color="#e8a0a0"
+          autoplay="{{true}}"
+          interval="3000"
+          duration="600"
+          circular="{{true}}"
+          current="{{currentIdx}}"
+          bindchange="swiperChange">
+
+    <swiper-item wx:for="{{photos}}" wx:key="id">
+      <view class="photo-item" bindtap="previewPhoto" data-idx="{{index}}">
+        <image wx:if="{{item.url}}" src="{{item.url}}" mode="aspectFill" class="photo-img" />
+        <view wx:else class="photo-placeholder">
+          <text class="placeholder-text">婚纱照 {{item.id}}</text>
+          <text class="placeholder-sub">点击替换图片</text>
+        </view>
+      </view>
+    </swiper-item>
+
+  </swiper>
+
+  <!-- 缩略图网格 -->
+  <view class="thumb-section">
+    <text class="section-label">全部照片</text>
+    <scroll-view scroll-y class="thumb-grid">
+      <view class="thumb-row" wx:for="{{photoRows}}" wx:key="index" wx:for-item="row">
+        <view class="thumb-item {{currentIdx === item.idx ? 'active' : ''}}"
+              wx:for="{{row}}" wx:key="idx" wx:for-item="item"
+              bindtap="tapThumbnail" data-idx="{{item.idx}}">
+          <image wx:if="{{item.url}}" src="{{item.url}}" mode="aspectFill" class="thumb-img" />
+          <view wx:else class="thumb-placeholder">
+            <text>{{item.id}}</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+</view>

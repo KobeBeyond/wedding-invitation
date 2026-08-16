@@ -1,0 +1,34 @@
+/* components/danmaku/danmaku.wxss */
+
+.danmaku-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.danmaku-item {
+  position: absolute;
+  right: -100%;
+  white-space: nowrap;
+  font-weight: 600;
+  text-shadow: 0 2rpx 8rpx rgba(0,0,0,0.15);
+  animation-name: danmuMove;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  pointer-events: none;
+  opacity: 0;
+}
+
+@keyframes danmuMove {
+  0% {
+    right: -100%;
+    opacity: 0;
+  }
+  5%  { opacity: 1; }
+  95% { opacity: 1; }
+  100% {
+    right: 100%;
+    opacity: 0;
+  }
+}

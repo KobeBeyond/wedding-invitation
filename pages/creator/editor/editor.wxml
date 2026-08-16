@@ -1,0 +1,254 @@
+<!-- pages/creator/editor/editor.wxml -->
+<view class="editor" wx:if="{{!loading}}">
+
+  <!-- 步骤指示器 -->
+  <scroll-view class="step-bar" scroll-x>
+    <view
+      class="step-item {{currentStep == index ? 'active' : ''}} {{currentStep > index ? 'done' : ''}}"
+      wx:for="{{steps}}"
+      wx:key="index"
+      data-step="{{index}}"
+      bindtap="goStep"
+    >
+      <view class="step-num">{{currentStep > index ? '✓' : index + 1}}</view>
+      <view class="step-label">{{item}}</view>
+    </view>
+  </scroll-view>
+
+  <!-- 步骤1: 基本信息 -->
+  <view class="step-content" wx:if="{{currentStep == 0}}">
+    <view class="section-title">基本信息</view>
+
+    <view class="form-group">
+      <text class="form-label">新郎姓名</text>
+      <input
+        class="form-input"
+        placeholder="请输入新郎姓名"
+        value="{{groomName}}"
+        data-field="groomName"
+        bindinput="onInput"
+      />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">新娘姓名</text>
+      <input
+        class="form-input"
+        placeholder="请输入新娘姓名"
+        value="{{brideName}}"
+        data-field="brideName"
+        bindinput="onInput"
+      />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">婚礼日期</text>
+      <picker mode="date" value="{{weddingDate}}" bindchange="onDateChange">
+        <view class="form-input {{weddingDate ? '' : 'placeholder'}}">
+          {{weddingDate || '请选择日期'}}
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">新郎简介（选填）</text>
+      <textarea
+        class="form-textarea"
+        placeholder="一句话介绍新郎"
+        value="{{groomIntro}}"
+        data-field="groomIntro"
+        bindinput="onInput"
+        maxlength="50"
+      />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">新娘简介（选填）</text>
+      <textarea
+        class="form-textarea"
+        placeholder="一句话介绍新娘"
+        value="{{brideIntro}}"
+        data-field="brideIntro"
+        bindinput="onInput"
+        maxlength="50"
+      />
+    </view>
+  </view>
+
+  <!-- 步骤2: 婚纱照 -->
+  <view class="step-content" wx:if="{{currentStep == 1}}">
+    <view class="section-title">婚纱照片</view>
+    <view class="section-desc">上传你们的婚纱照，访客可以滑动浏览</view>
+    <photo-uploader
+      photos="{{photos}}"
+      max="{{9}}"
+      bind:change="onPhotosChange"
+    />
+  </view>
+
+  <!-- 步骤3: 婚礼地点 -->
+  <view class="step-content" wx:if="{{currentStep == 2}}">
+    <view class="section-title">婚礼地点</view>
+
+    <view class="form-group">
+      <text class="form-label">酒店/场地名称</text>
+      <input
+        class="form-input"
+        placeholder="如：北京XX婚礼酒店"
+        value="{{venueName}}"
+        data-field="venueName"
+        bindinput="onInput"
+      />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">地址</text>
+      <view class="form-input-row">
+        <input
+          class="form-input flex1"
+          placeholder="详细地址"
+          value="{{venueAddress}}"
+          data-field="venueAddress"
+          bindinput="onInput"
+        />
+        <view class="map-btn" bindtap="chooseLocation">📍选点</view>
+      </view>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">厅名（选填）</text>
+      <input
+        class="form-input"
+        placeholder="如：宴会大厅3F"
+        value="{{venueHall}}"
+        data-field="venueHall"
+        bindinput="onInput"
+      />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">联系电话（选填）</text>
+      <input
+        class="form-input"
+        placeholder="如：010-12345678"
+        value="{{venuePhone}}"
+        data-field="venuePhone"
+        bindinput="onInput"
+        type="number"
+      />
+    </view>
+  </view>
+
+  <!-- 步骤4: 时间线 -->
+  <view class="step-content" wx:if="{{currentStep == 3}}">
+    <view class="section-title">婚礼时间线</view>
+    <view class="section-desc">婚礼当天的流程安排</view>
+
+    <view class="timeline-editor">
+      <view class="timeline-item" wx:for="{{timeline}}" wx:key="index">
+        <view class="timeline-item-header">
+          <text class="timeline-item-title">流程 {{index + 1}}</text>
+          <text class="timeline-remove" data-index="{{index}}" bindtap="removeTimelineItem">删除</text>
+        </view>
+        <input
+          class="form-input"
+          placeholder="时间，如：08:30"
+          value="{{item.time}}"
+          data-index="{{index}}"
+          data-field="time"
+          bindinput="onTimelineInput"
+        />
+        <input
+          class="form-input"
+          placeholder="标题，如：迎宾"
+          value="{{item.title}}"
+          data-index="{{index}}"
+          data-field="title"
+          bindinput="onTimelineInput"
+        />
+        <input
+          class="form-input"
+          placeholder="描述（选填）"
+          value="{{item.description}}"
+          data-index="{{index}}"
+          data-field="description"
+          bindinput="onTimelineInput"
+        />
+      </view>
+
+      <view class="add-timeline-btn" bindtap="addTimelineItem">
+        + 添加流程
+      </view>
+    </view>
+  </view>
+
+  <!-- 步骤5: 音乐 & 封面 -->
+  <view class="step-content" wx:if="{{currentStep == 4}}">
+    <view class="section-title">音乐与封面</view>
+
+    <view class="form-group">
+      <text class="form-label">分享封面图</text>
+      <view class="cover-picker" bindtap="chooseCoverImage">
+        <image
+          wx:if="{{coverImage}}"
+          src="{{coverImage}}"
+          mode="aspectFill"
+          class="cover-preview"
+        />
+        <view class="cover-placeholder" wx:else>
+          <text class="cover-icon">📷</text>
+          <text class="cover-text">选择封面图</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">背景音乐（选填）</text>
+      <view class="music-picker" bindtap="chooseMusic">
+        <view class="music-display" wx:if="{{musicUrl}}">
+          <text class="music-icon">🎵</text>
+          <text class="music-name">已上传音乐</text>
+          <text class="music-replace">更换</text>
+        </view>
+        <view class="music-empty" wx:else>
+          <text class="music-icon">🎵</text>
+          <text>选择音乐文件（mp3/m4a，5MB以内）</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">分享标题（选填）</text>
+      <input
+        class="form-input"
+        placeholder="如：张三&李四邀请您参加我们的婚礼"
+        value="{{shareTitle}}"
+        data-field="shareTitle"
+        bindinput="onInput"
+        maxlength="30"
+      />
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <view class="btn-secondary" wx:if="{{currentStep > 0}}" bindtap="prevStep">上一步</view>
+    <view class="btn-secondary save-btn {{saving ? 'disabled' : ''}}" bindtap="saveDraft">
+      {{saving ? '保存中' : '保存草稿'}}
+    </view>
+    <view class="btn-primary" wx:if="{{currentStep < steps.length - 1}}" bindtap="nextStep">
+      下一步
+    </view>
+    <view class="btn-primary publish-btn {{saving ? 'disabled' : ''}}" wx:if="{{currentStep == steps.length - 1}}" bindtap="publish">
+      {{saving ? '处理中' : '发布'}}
+    </view>
+  </view>
+
+  <view class="bottom-space"></view>
+</view>
+
+<!-- 加载中 -->
+<view class="editor-loading" wx:else>
+  <view class="loading-spinner"></view>
+  <text>加载请柬数据...</text>
+</view>

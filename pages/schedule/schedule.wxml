@@ -1,0 +1,49 @@
+<!-- pages/schedule/schedule.wxml -->
+<view class="schedule-page">
+
+  <!-- 标题 -->
+  <view class="page-title fade-in">
+    <text class="title-main">婚礼流程</text>
+    <view class="title-deco">
+      <view class="deco-line"></view>
+      <text class="deco-heart">💍</text>
+      <view class="deco-line"></view>
+    </view>
+    <text class="title-sub">期待与您共度美好时光</text>
+  </view>
+
+  <!-- 时间线 -->
+  <view class="timeline">
+
+    <view class="timeline-item fade-in-up" wx:for="{{schedule}}" wx:key="index"
+          style="animation-delay:{{index * 0.15}}s;">
+      <!-- 左侧时间 -->
+      <view class="time-col">
+        <view class="time-badge">
+          <text class="time-text">{{item.time}}</text>
+        </view>
+        <view class="time-line" wx:if="{{index < schedule.length - 1}}"></view>
+      </view>
+
+      <!-- 右侧内容 -->
+      <view class="content-col">
+        <view class="content-card">
+          <view class="content-header">
+            <text class="content-icon">{{item.icon}}</text>
+            <text class="content-title">{{item.title}}</text>
+          </view>
+          <text class="content-desc">{{item.desc}}</text>
+        </view>
+      </view>
+    </view>
+
+  </view>
+
+  <!-- 底部寄语 -->
+  <view class="ending fade-in">
+    <view class="ending-line"></view>
+    <text class="ending-text">感谢您的到来</text>
+    <view class="ending-line"></view>
+  </view>
+
+</view>

@@ -1,0 +1,26 @@
+{
+  "pages": [
+    "pages/router/router",
+    "pages/creator/dashboard/dashboard",
+    "pages/creator/template/template",
+    "pages/creator/editor/editor",
+    "pages/creator/share/share",
+    "pages/guest/view/view",
+    "pages/home/home",
+    "pages/photos/photos",
+    "pages/venue/venue",
+    "pages/rsvp/rsvp",
+    "pages/blessings/blessings",
+    "pages/schedule/schedule"
+  ],
+  "window": {
+    "navigationBarTitleText": "Nupcias 婚礼请柬",
+    "navigationBarBackgroundColor": "#fdf5f6",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#fdf5f6",
+    "enablePullDownRefresh": false
+  },
+  "cloud": true,
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

@@ -1,0 +1,83 @@
+<!-- pages/venue/venue.wxml -->
+<view class="venue-page">
+
+  <!-- 标题 -->
+  <view class="page-title fade-in">
+    <text class="title-main">婚礼地点</text>
+    <view class="title-deco">
+      <view class="deco-line"></view>
+      <text class="deco-heart">📍</text>
+      <view class="deco-line"></view>
+    </view>
+  </view>
+
+  <!-- 酒店信息卡片 -->
+  <view class="card venue-card fade-in-up">
+    <view class="venue-name">{{venue.name}}</view>
+    <view class="venue-hall">{{venue.hall}}</view>
+
+    <view class="divider"></view>
+
+    <view class="info-row">
+      <text class="info-icon">🏠</text>
+      <text class="info-label">地址</text>
+      <text class="info-value">{{venue.address}}</text>
+    </view>
+
+    <view class="info-row">
+      <text class="info-icon">📞</text>
+      <text class="info-label">电话</text>
+      <text class="info-value" bindtap="callVenue">{{venue.phone}}</text>
+    </view>
+  </view>
+
+  <!-- 地图 -->
+  <view class="map-section fade-in-up">
+    <map class="venue-map"
+         longitude="{{venue.lng}}"
+         latitude="{{venue.lat}}"
+         markers="{{markers}}"
+         scale="16"
+         show-location>
+    </map>
+  </view>
+
+  <!-- 导航按钮 -->
+  <view class="nav-btn-wrap">
+    <button class="btn-primary nav-btn" bindtap="openNavigation">🧭 导航到这里</button>
+  </view>
+
+  <!-- 交通指引 -->
+  <view class="card transport-card fade-in-up">
+    <view class="card-title">交通指引</view>
+
+    <view class="transport-item">
+      <text class="transport-icon">🚗</text>
+      <view class="transport-content">
+        <text class="transport-label">自驾</text>
+        <text class="transport-text">导航至「{{venue.name}}」，酒店设有免费停车场，车位充足</text>
+      </view>
+    </view>
+
+    <view class="divider"></view>
+
+    <view class="transport-item">
+      <text class="transport-icon">🚇</text>
+      <view class="transport-content">
+        <text class="transport-label">地铁</text>
+        <text class="transport-text">乘坐地铁X号线至XX站，从A出口步行约500米即达</text>
+      </view>
+    </view>
+
+    <view class="divider"></view>
+
+    <view class="transport-item">
+      <text class="transport-icon">🚌</text>
+      <view class="transport-content">
+        <text class="transport-label">公交</text>
+        <text class="transport-text">乘坐XX路、XX路公交车至XX站下车，步行200米即达</text>
+      </view>
+    </view>
+  </view>
+
+</view>

@@ -1,0 +1,247 @@
+/* pages/rsvp/rsvp.wxss */
+
+.rsvp-page {
+  padding: 30rpx;
+  padding-bottom: env-safe-area-inset-bottom;
+}
+
+/* 标题 */
+.page-title {
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.title-main {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: var(--color-text);
+}
+
+.title-deco {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20rpx;
+  margin-top: 16rpx;
+  margin-bottom: 12rpx;
+}
+
+.deco-line {
+  width: 100rpx;
+  height: 2rpx;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+}
+
+.deco-heart {
+  font-size: 28rpx;
+}
+
+.title-sub {
+  font-size: 26rpx;
+  color: var(--color-muted);
+}
+
+/* 表单 */
+.form {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 40rpx 32rpx;
+  box-shadow: 0 8rpx 32rpx rgba(232,160,160,0.12);
+}
+
+.form-item {
+  margin-bottom: 36rpx;
+}
+
+.form-label {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--color-text);
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.required {
+  color: var(--color-accent);
+}
+
+.form-input {
+  width: 100%;
+  height: 88rpx;
+  background: #faf5f5;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  font-size: 30rpx;
+  color: var(--color-text);
+  border: 2rpx solid transparent;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+.form-input:focus {
+  border-color: var(--color-primary);
+}
+
+/* 单选 */
+radio-group {
+  display: flex;
+  gap: 40rpx;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 16rpx 28rpx;
+  border-radius: 40rpx;
+  background: #faf5f5;
+  transition: all 0.3s;
+}
+
+.radio-label.checked {
+  background: rgba(232,160,160,0.15);
+}
+
+.radio-label text {
+  font-size: 30rpx;
+  color: var(--color-text);
+}
+
+/* Picker */
+.picker-value {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88rpx;
+  background: #faf5f5;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  font-size: 30rpx;
+  color: var(--color-text);
+}
+
+.picker-arrow {
+  color: var(--color-muted);
+  font-size: 36rpx;
+}
+
+/* Textarea */
+.form-textarea {
+  width: 100%;
+  min-height: 120rpx;
+  background: #faf5f5;
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  font-size: 30rpx;
+  color: var(--color-text);
+  border: 2rpx solid transparent;
+  box-sizing: border-box;
+  line-height: 1.6;
+}
+
+.blessing-input {
+  min-height: 160rpx;
+}
+
+/* 提交按钮 */
+.submit-btn {
+  width: 100%;
+  margin-top: 20rpx;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+}
+
+.submit-btn.loading {
+  opacity: 0.7;
+}
+
+/* 成功视图 */
+.success-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  padding: 40rpx;
+}
+
+.success-icon {
+  margin-bottom: 40rpx;
+}
+
+/* CSS 打勾动画 */
+.checkmark {
+  position: relative;
+  width: 120rpx;
+  height: 120rpx;
+}
+
+.check-circle {
+  position: absolute;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 6rpx solid var(--color-primary);
+  animation: circleAnim 0.5s ease forwards;
+}
+
+@keyframes circleAnim {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+
+.check-stem {
+  position: absolute;
+  top: 56rpx;
+  left: 32rpx;
+  width: 24rpx;
+  height: 6rpx;
+  background: var(--color-primary);
+  border-radius: 3rpx;
+  transform: rotate(45deg);
+  animation: stemAnim 0.3s ease 0.3s forwards;
+  transform-origin: left center;
+  opacity: 0;
+}
+
+@keyframes stemAnim {
+  from { width: 0; opacity: 0; }
+  to   { width: 24rpx; opacity: 1; }
+}
+
+.check-kick {
+  position: absolute;
+  top: 48rpx;
+  left: 48rpx;
+  width: 48rpx;
+  height: 6rpx;
+  background: var(--color-primary);
+  border-radius: 3rpx;
+  transform: rotate(-45deg);
+  animation: kickAnim 0.3s ease 0.5s forwards;
+  transform-origin: left center;
+  opacity: 0;
+}
+
+@keyframes kickAnim {
+  from { width: 0; opacity: 0; }
+  to   { width: 48rpx; opacity: 1; }
+}
+
+.success-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: var(--color-text);
+  margin-bottom: 16rpx;
+}
+
+.success-desc {
+  font-size: 28rpx;
+  color: var(--color-muted);
+  text-align: center;
+  margin-bottom: 50rpx;
+  line-height: 1.6;
+}
+
+.back-btn {
+  width: 320rpx;
+}

@@ -1,0 +1,42 @@
+<!-- pages/creator/dashboard/dashboard.wxml -->
+<view class="dashboard">
+  <!-- 顶部标题栏 -->
+  <view class="header">
+    <view class="header-title">Nupcias</view>
+    <view class="header-sub">制作专属婚礼请柬</view>
+  </view>
+
+  <!-- 新建按钮 -->
+  <view class="create-btn" bindtap="goCreate">
+    <text class="create-icon">+</text>
+    <text>新建请柬</text>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text>加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:elif="{{isEmpty}}">
+    <view class="empty-icon">💒</view>
+    <view class="empty-title">还没有请柬</view>
+    <view class="empty-desc">点击上方按钮，开始制作你的第一份婚礼请柬</view>
+  </view>
+
+  <!-- 请柬列表 -->
+  <view class="inv-list" wx:else>
+    <invitation-card
+      wx:for="{{invitations}}"
+      wx:key="_id"
+      invitation="{{item}}"
+      bind:edit="onEdit"
+      bind:share="onShare"
+      bind:delete="onDelete"
+    />
+  </view>
+
+  <!-- 底部留白 -->
+  <view class="bottom-space"></view>
+</view>

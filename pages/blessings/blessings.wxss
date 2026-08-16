@@ -1,0 +1,105 @@
+/* pages/blessings/blessings.wxss */
+
+.blessings-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* 弹幕区域 */
+.danmaku-area {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, #fff5f5, #fde8e8, #f8d8d8);
+}
+
+/* 计数 */
+.count-badge {
+  position: absolute;
+  top: 24rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 30rpx;
+  padding: 10rpx 32rpx;
+  font-size: 26rpx;
+  color: var(--color-primary);
+  z-index: 10;
+}
+
+/* 空状态 */
+.empty-state {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: var(--color-muted);
+}
+
+/* 加载中 */
+.loading-state {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: var(--color-muted);
+}
+
+/* 输入栏 */
+.input-bar {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 20rpx 30rpx;
+  padding-bottom: calc(20rpx + env-safe-area-inset-bottom);
+  background: #fff;
+  border-top: 2rpx solid rgba(232,160,160,0.15);
+  box-shadow: 0 -8rpx 24rpx rgba(232,160,160,0.08);
+}
+
+.blessing-input {
+  flex: 1;
+  height: 80rpx;
+  background: #f8f0f0;
+  border-radius: 40rpx;
+  padding: 0 32rpx;
+  font-size: 30rpx;
+  color: var(--color-text);
+}
+
+.send-btn {
+  width: 120rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.send-btn.active {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  box-shadow: 0 4rpx 16rpx rgba(232,160,160,0.3);
+}

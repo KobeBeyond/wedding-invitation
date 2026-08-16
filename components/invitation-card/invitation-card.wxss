@@ -1,0 +1,112 @@
+/* components/invitation-card/invitation-card.wxss */
+.inv-card {
+  background: #fff;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 32rpx rgba(232, 160, 160, 0.12);
+  margin-bottom: 24rpx;
+}
+
+.inv-cover {
+  position: relative;
+  height: 300rpx;
+  background: #f5e6e6;
+}
+
+.cover-img {
+  width: 100%;
+  height: 100%;
+}
+
+.cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fdf5f6, #f0e0e0);
+}
+
+.placeholder-icon {
+  font-size: 80rpx;
+}
+
+.status-tag {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  padding: 8rpx 24rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+.status-tag.draft {
+  background: rgba(255, 255, 255, 0.9);
+  color: #999;
+}
+
+.status-tag.published {
+  background: rgba(232, 160, 160, 0.9);
+  color: #fff;
+}
+
+.inv-info {
+  padding: 28rpx 32rpx;
+}
+
+.inv-names {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #4a4a4a;
+  margin-bottom: 12rpx;
+}
+
+.amp {
+  color: #e8a0a0;
+  margin: 0 8rpx;
+}
+
+.inv-meta {
+  font-size: 26rpx;
+  color: #888;
+  margin-bottom: 8rpx;
+}
+
+.inv-stats {
+  margin-top: 12rpx;
+  padding-top: 12rpx;
+  border-top: 1rpx solid #f0e0e0;
+}
+
+.stat {
+  font-size: 24rpx;
+  color: #aaa;
+  margin-right: 24rpx;
+}
+
+.inv-actions {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 24rpx;
+}
+
+.action-btn {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  background: #f8f8f8;
+  color: #666;
+}
+
+.action-btn.primary {
+  background: #e8a0a0;
+  color: #fff;
+}
+
+.action-btn.danger {
+  background: #fff0f0;
+  color: #ff6b6b;
+}

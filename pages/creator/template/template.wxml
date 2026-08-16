@@ -1,0 +1,54 @@
+<!-- pages/creator/template/template.wxml -->
+<view class="template-page">
+  <view class="page-title">选择请柬风格</view>
+  <view class="page-desc">挑一个喜欢的模板，稍后可随时更换</view>
+
+  <!-- 模板列表 -->
+  <view class="template-list">
+    <view
+      class="template-item {{selectedId === item.id ? 'selected' : ''}}"
+      wx:for="{{templates}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="selectTemplate"
+    >
+      <!-- 模板预览 -->
+      <view
+        class="template-preview"
+        style="background: {{item.colors.background}};"
+      >
+        <view
+          class="preview-names"
+          style="color: {{item.colors.primary}}; font-family: {{item.font}};"
+        >
+          新郎 & 新娘
+        </view>
+        <view
+          class="preview-date"
+          style="color: {{item.colors.text}};"
+        >
+          2026.10.01
+        </view>
+        <view class="preview-icon">{{item.icon}}</view>
+      </view>
+
+      <!-- 模板信息 -->
+      <view class="template-info">
+        <view class="template-name">{{item.name}}</view>
+        <view class="template-desc">{{item.desc}}</view>
+      </view>
+
+      <!-- 选中标记 -->
+      <view class="check-mark" wx:if="{{selectedId === item.id}}">
+        <text>✓</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 确认按钮 -->
+  <view class="confirm-btn" bindtap="confirmCreate">
+    开始制作
+  </view>
+
+  <view class="bottom-space"></view>
+</view>

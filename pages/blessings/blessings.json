@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "祝福墙",
+  "navigationBarBackgroundColor": "#fdf5f6",
+  "navigationBarTextStyle": "black",
+  "usingComponents": {
+    "danmaku": "/components/danmaku/danmaku"
+  }
+}

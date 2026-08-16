@@ -1,0 +1,113 @@
+<!-- pages/home/home.wxml -->
+<view class="cover">
+
+  <!-- 飘落花瓣 -->
+  <view class="petals">
+    <view class="petal" wx:for="{{[1,2,3,4,5,6,7,8]}}" wx:key="*this"
+          style="left:{{item * 12}}%; animation-delay:{{item * 0.8}}s; animation-duration:{{6 + item}}s;">
+      <text class="petal-icon">🌸</text>
+    </view>
+  </view>
+
+  <!-- 渐变背景 -->
+  <view class="bg-gradient"></view>
+
+  <!-- 音乐按钮 -->
+  <view class="music-btn {{musicPlaying ? 'playing' : ''}}" bindtap="toggleMusic">
+    <text class="music-icon">{{musicPlaying ? '🎵' : '🎵'}}</text>
+    <view class="music-wave" wx:if="{{musicPlaying}}">
+      <view class="wave-bar"></view>
+      <view class="wave-bar"></view>
+      <view class="wave-bar"></view>
+    </view>
+  </view>
+
+  <!-- 主内容 -->
+  <view class="cover-content">
+
+    <!-- 顶部标题 -->
+    <view class="cover-header fade-in" style="animation-delay:0.2s;">
+      <text class="header-text">我们结婚啦</text>
+    </view>
+
+    <!-- 新人名字 -->
+    <view class="couple-names fade-in-up" style="animation-delay:0.5s;">
+      <text class="name">{{groom}}</text>
+      <view class="heart">❤</view>
+      <text class="name">{{bride}}</text>
+    </view>
+
+    <!-- 分割线 -->
+    <view class="name-divider fade-in" style="animation-delay:0.8s;">
+      <view class="line"></view>
+      <text class="diamond">◆</text>
+      <view class="line"></view>
+    </view>
+
+    <!-- 婚礼日期 -->
+    <view class="wedding-date fade-in-up" style="animation-delay:1s;">
+      <text>{{weddingDateText}}</text>
+    </view>
+
+    <!-- 倒计时 -->
+    <view class="countdown fade-in-up" style="animation-delay:1.2s;" wx:if="{{!countdown.finished}}">
+      <view class="cd-item">
+        <text class="cd-num">{{countdown.days}}</text>
+        <text class="cd-label">天</text>
+      </view>
+      <text class="cd-sep">:</text>
+      <view class="cd-item">
+        <text class="cd-num">{{countdown.hours}}</text>
+        <text class="cd-label">时</text>
+      </view>
+      <text class="cd-sep">:</text>
+      <view class="cd-item">
+        <text class="cd-num">{{countdown.minutes}}</text>
+        <text class="cd-label">分</text>
+      </view>
+      <text class="cd-sep">:</text>
+      <view class="cd-item">
+        <text class="cd-num">{{countdown.seconds}}</text>
+        <text class="cd-label">秒</text>
+      </view>
+    </view>
+
+    <!-- 婚礼当天 -->
+    <view class="wedding-day fade-in" style="animation-delay:1.4s;" wx:if="{{countdown.finished}}">
+      <text class="today-text">今天就是我们大喜的日子</text>
+    </view>
+
+    <!-- 开启请柬按钮 -->
+    <view class="open-btn-wrap fade-in-up" style="animation-delay:1.6s;">
+      <button class="btn-primary open-btn" bindtap="goPhotos">开启请柬</button>
+    </view>
+  </view>
+
+  <!-- 底部导航 -->
+  <view class="nav-bar fade-in" style="animation-delay:2s;">
+    <view class="nav-item" bindtap="goHome">
+      <text class="nav-icon">🏠</text>
+      <text class="nav-text">首页</text>
+    </view>
+    <view class="nav-item" bindtap="goPhotos">
+      <text class="nav-icon">📷</text>
+      <text class="nav-text">相册</text>
+    </view>
+    <view class="nav-item" bindtap="goVenue">
+      <text class="nav-icon">📍</text>
+      <text class="nav-text">地点</text>
+    </view>
+    <view class="nav-item" bindtap="goRsvp">
+      <text class="nav-icon">✉</text>
+      <text class="nav-text">回执</text>
+    </view>
+    <view class="nav-item" bindtap="goBlessings">
+      <text class="nav-icon">💬</text>
+      <text class="nav-text">祝福</text>
+    </view>
+    <view class="nav-item" bindtap="goSchedule">
+      <text class="nav-icon">📋</text>
+      <text class="nav-text">流程</text>
+    </view>
+  </view>
+</view>

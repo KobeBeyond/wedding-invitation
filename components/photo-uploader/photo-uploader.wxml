@@ -1,0 +1,39 @@
+<!-- components/photo-uploader/photo-uploader.wxml -->
+<view class="photo-uploader">
+  <!-- 已上传照片网格 -->
+  <view class="photo-grid">
+    <view class="photo-item" wx:for="{{photos}}" wx:key="id">
+      <image
+        src="{{item.fileID}}"
+        mode="aspectFill"
+        class="photo-img"
+        bindtap="previewPhoto"
+        data-index="{{index}}"
+      />
+      <!-- 操作按钮 -->
+      <view class="photo-actions" wx:if="{{!disabled}}">
+        <view class="photo-btn" bindtap="moveUp" data-index="{{index}}">↑</view>
+        <view class="photo-btn" bindtap="moveDown" data-index="{{index}}">↓</view>
+        <view class="photo-btn delete" bindtap="deletePhoto" data-index="{{index}}">×</view>
+      </view>
+    </view>
+
+    <!-- 添加按钮 -->
+    <view
+      class="photo-add"
+      wx:if="{{photos.length < max && !disabled}}"
+      bindtap="choosePhoto"
+    >
+      <view class="add-icon">+</view>
+      <view class="add-text">添加照片</view>
+    </view>
+  </view>
+
+  <!-- 上传进度 -->
+  <view class="upload-mask" wx:if="{{uploading}}">
+    <view class="upload-progress">
+      <view class="progress-bar" style="width: {{uploadProgress}}%"></view>
+      <text class="progress-text">上传中 {{uploadProgress}}%</text>
+    </view>
+  </view>
+</view>

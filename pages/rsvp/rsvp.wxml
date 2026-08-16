@@ -1,0 +1,104 @@
+<!-- pages/rsvp/rsvp.wxml -->
+<view class="rsvp-page">
+
+  <!-- 表单视图 -->
+  <block wx:if="{{!submitted}}">
+
+    <!-- 标题 -->
+    <view class="page-title fade-in">
+      <text class="title-main">来宾回执</text>
+      <view class="title-deco">
+        <view class="deco-line"></view>
+        <text class="deco-heart">✉</text>
+        <view class="deco-line"></view>
+      </view>
+      <text class="title-sub">请填写您的出席信息</text>
+    </view>
+
+    <!-- 表单 -->
+    <view class="form fade-in-up">
+
+      <!-- 姓名 -->
+      <view class="form-item">
+        <text class="form-label">姓名 <text class="required">*</text></text>
+        <input class="form-input" placeholder="请输入您的姓名" value="{{form.name}}"
+               bindinput="onNameInput" maxlength="20" />
+      </view>
+
+      <!-- 电话 -->
+      <view class="form-item">
+        <text class="form-label">电话 <text class="required">*</text></text>
+        <input class="form-input" type="number" placeholder="请输入手机号码" value="{{form.phone}}"
+               bindinput="onPhoneInput" maxlength="11" />
+      </view>
+
+      <!-- 是否出席 -->
+      <view class="form-item">
+        <text class="form-label">是否出席 <text class="required">*</text></text>
+        <radio-group bindchange="onAttendingChange">
+          <label class="radio-label {{form.attending === 'yes' ? 'checked' : ''}}">
+            <radio value="yes" checked="{{form.attending === 'yes'}}" color="#e8a0a0" />
+            <text>一定出席</text>
+          </label>
+          <label class="radio-label {{form.attending === 'no' ? 'checked' : ''}}">
+            <radio value="no" checked="{{form.attending === 'no'}}" color="#e8a0a0" />
+            <text>无法出席</text>
+          </label>
+        </radio-group>
+      </view>
+
+      <!-- 出席人数（仅出席时显示） -->
+      <view class="form-item" wx:if="{{form.attending === 'yes'}}">
+        <text class="form-label">出席人数</text>
+        <picker bindchange="onGuestCountChange" value="{{guestCountIndex}}" range="{{guestCountOptions}}">
+          <view class="picker-value">
+            <text>{{guestCountOptions[guestCountIndex]}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 饮食偏好 -->
+      <view class="form-item">
+        <text class="form-label">饮食偏好</text>
+        <textarea class="form-textarea" placeholder="如有特殊饮食需求请告知（如素食、过敏等）"
+                  value="{{form.dietary}}" bindinput="onDietaryInput" maxlength="100"
+                  auto-height />
+      </view>
+
+      <!-- 祝福语 -->
+      <view class="form-item">
+        <text class="form-label">祝福语</text>
+        <textarea class="form-textarea blessing-input" placeholder="写下您对新人的祝福..."
+                  value="{{form.message}}" bindinput="onMessageInput" maxlength="200"
+                  auto-height />
+      </view>
+
+      <!-- 提交按钮 -->
+      <button class="btn-primary submit-btn {{submitting ? 'loading' : ''}}"
+              bindtap="submitRSVP" disabled="{{submitting}}">
+        <text wx:if="{{!submitting}}">提交回执</text>
+        <text wx:else>提交中...</text>
+      </button>
+
+    </view>
+  </block>
+
+  <!-- 成功视图 -->
+  <view class="success-view" wx:if="{{submitted}}">
+    <view class="success-icon fade-in">
+      <view class="checkmark">
+        <view class="check-circle"></view>
+        <view class="check-stem"></view>
+        <view class="check-kick"></view>
+      </view>
+    </view>
+    <text class="success-title fade-in-up" style="animation-delay:0.3s;">感谢您的回复！</text>
+    <text class="success-desc fade-in-up" style="animation-delay:0.5s;">
+      {{form.attending === 'yes' ? '期待在婚礼上与您相见' : '感谢您的关注，我们已收到您的回执'}}
+    </text>
+    <button class="btn-outline back-btn fade-in-up" style="animation-delay:0.7s;"
+            bindtap="goHome">返回首页</button>
+  </view>
+
+</view>

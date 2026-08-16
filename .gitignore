@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# WeChat DevTools
+project.private.config.json
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# CatPaw
+.harness/
+
+# Env
+.env
+.env.local
