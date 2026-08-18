@@ -2,7 +2,7 @@
 .editor {
   min-height: 100vh;
   background: #fafafa;
-  padding-bottom: 140rpx;
+  padding-bottom: 320rpx;
 }
 
 /* 步骤指示器 */
@@ -134,7 +134,7 @@
 
 .form-textarea {
   width: 100%;
-  min-height: 120rpx;
+  height: 160rpx;
   background: #fff;
   border-radius: 16rpx;
   padding: 20rpx 24rpx;

@@ -113,16 +113,36 @@ Page({
   },
 
   // 选择地点（地图选点）
-  chooseLocation() {
-    wx.chooseLocation({
+  onPickLocation() {
+    wx.getSetting({
       success: res => {
-        this.setData({
-          venueAddress: res.address || res.name,
-          venueLat: res.latitude,
-          venueLng: res.longitude
+        const hasAuth = res.authSetting['scope.userLocation']
+        if (hasAuth === false) {
+          wx.showModal({
+            title: '需要位置权限',
+            content: '请在设置中开启位置权限后重试',
+            confirmText: '去设置',
+            success: modalRes => {
+              if (modalRes.confirm) wx.openSetting()
+            }
+          })
+          return
+        }
+        wx.chooseLocation({
+          success: res => {
+            this.setData({
+              venueAddress: res.address || res.name,
+              venueLat: res.latitude,
+              venueLng: res.longitude
+            })
+          },
+          fail: err => {
+            console.error('chooseLocation fail', err)
+            if (err.errMsg && err.errMsg.includes('cancel')) return
+            wx.showToast({ title: '选点失败，请重试', icon: 'none' })
+          }
         })
-      },
-      fail: () => {}
+      }
     })
   },
 
@@ -181,8 +201,8 @@ Page({
       extension: ['mp3', 'm4a', 'aac'],
       success: res => {
         const tempFile = res.tempFiles[0]
-        if (tempFile.size > 5 * 1024 * 1024) {
-          wx.showToast({ title: '文件不能超过5MB', icon: 'none' })
+        if (tempFile.size > 10 * 1024 * 1024) {
+          wx.showToast({ title: '文件不能超过10MB', icon: 'none' })
           return
         }
         wx.showLoading({ title: '上传中...' })

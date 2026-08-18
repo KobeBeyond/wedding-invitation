@@ -458,6 +458,12 @@ page {
   overflow-x: auto;
   white-space: nowrap;
   padding: 4rpx 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.thumb-strip::-webkit-scrollbar {
+  display: none;
 }
 
 .thumb-item {
@@ -753,9 +759,20 @@ font-weight: 400;
 
 .blessing-input-bar {
   display: flex;
-  gap: 16rpx;
+  gap: 12rpx;
   margin-top: 24rpx;
   align-items: center;
+}
+
+.blessing-nick-input {
+  flex-shrink: 0;
+  width: 160rpx;
+  height: 80rpx;
+  background: #f9f5f5;
+  border-radius: 40rpx;
+  padding: 0 24rpx;
+  font-size: 26rpx;
+  color: #333;
 }
 
 .blessing-input {
@@ -766,6 +783,38 @@ font-weight: 400;
   padding: 0 32rpx;
   font-size: 28rpx;
   color: #333;
+}
+
+/* 历史祝福列表 */
+.blessing-list {
+  margin-top: 24rpx;
+}
+
+.blessing-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0e0e0;
+}
+
+.blessing-list-item:last-child {
+  border-bottom: none;
+}
+
+.blessing-list-name {
+  flex-shrink: 0;
+  font-size: 26rpx;
+  color: #e8a0a0;
+  font-weight: 500;
+  min-width: 120rpx;
+}
+
+.blessing-list-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.5;
 }
 
 .blessing-send-btn {

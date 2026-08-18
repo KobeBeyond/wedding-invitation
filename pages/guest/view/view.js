@@ -29,8 +29,10 @@ Page({
 
     // 祝福墙
     blessingText: '',
+    userNickName: '',
     blessingCount: 0,
     blessingsLoading: true,
+    blessingList: [],
 
     // 音乐
     playing: false,
@@ -55,11 +57,15 @@ Page({
     }
     this.setData({ inv: options.inv })
     this.loadInvitation(options.inv)
+    this.checkNickName()
   },
 
   onUnload() {
     if (this._timer) clearInterval(this._timer)
-    if (this._blessingWatcher) this._blessingWatcher.close()
+    if (this._pollTimer) clearInterval(this._pollTimer)
+    if (this._blessingWatcher) {
+      try { this._blessingWatcher.close() } catch (e) {}
+    }
     if (this._audioCtx) {
       this._audioCtx.destroy()
     }
@@ -284,7 +290,7 @@ Page({
       })
       if (res.result && res.result.data) {
         const count = res.result.data.length
-        this.setData({ blessingCount: count, blessingsLoading: false })
+        this.setData({ blessingCount: count, blessingList: res.result.data, blessingsLoading: false })
 
         // 逐条播放历史弹幕（昵称: 祝福语）
         const danmaku = this.selectComponent('#danmaku')
@@ -327,12 +333,52 @@ Page({
         },
         onError: (err) => {
           console.error('Blessing watch error:', err)
+          if (this._blessingWatcher) {
+            try { this._blessingWatcher.close() } catch (e) {}
+            this._blessingWatcher = null
+          }
+          this._startPolling(invitationId)
         }
       })
   },
 
+  _startPolling(invitationId) {
+    if (this._pollTimer) return
+    this._pollTimer = setInterval(async () => {
+      try {
+        const res = await wx.cloud.callFunction({
+          name: 'getBlessings',
+          data: { invitationId }
+        })
+        if (!res.result || !res.result.data || res.result.data.length === 0) return
+        const latest = res.result.data[0]
+        if (this._lastBlessingId === latest._id) return
+        this._lastBlessingId = latest._id
+        this.setData({ blessingCount: res.result.data.length })
+        const danmaku = this.selectComponent('#danmaku')
+        if (danmaku) {
+          const name = latest.nickName || '匿名好友'
+          danmaku.addDanmu(`${name}: ${latest.text}`)
+        }
+      } catch (e) {
+        console.error('Polling blessings error:', e)
+      }
+    }, 8000)
+  },
+
+  checkNickName() {
+    const cached = wx.getStorageSync('wedding_nick_name')
+    if (cached) {
+      this.setData({ userNickName: cached })
+    }
+  },
+
   onBlessingInput(e) {
     this.setData({ blessingText: e.detail.value })
+  },
+
+  onNickNameInput(e) {
+    this.setData({ userNickName: e.detail.value })
   },
 
   async sendBlessing() {
@@ -342,19 +388,11 @@ Page({
       return
     }
 
-    // 获取用户昵称
-    let nickName = this.data.userNickName
+    let nickName = this.data.userNickName.trim()
     if (!nickName) {
-      try {
-        const profile = await wx.getUserProfile({
-          desc: '用于祝福墙展示昵称'
-        })
-        nickName = profile.userInfo.nickName || '匿名好友'
-        this.setData({ userNickName: nickName })
-      } catch (e) {
-        nickName = '匿名好友'
-      }
+      nickName = '匿名好友'
     }
+    wx.setStorageSync('wedding_nick_name', nickName)
 
     const danmakuText = `${nickName}: ${text}`
 

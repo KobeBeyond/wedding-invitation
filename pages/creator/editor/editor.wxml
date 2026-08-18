@@ -59,6 +59,7 @@
         data-field="groomIntro"
         bindinput="onInput"
         maxlength="50"
+        auto-height="{{false}}"
       />
     </view>
 
@@ -71,6 +72,7 @@
         data-field="brideIntro"
         bindinput="onInput"
         maxlength="50"
+        auto-height="{{false}}"
       />
     </view>
   </view>
@@ -111,7 +113,7 @@
           data-field="venueAddress"
           bindinput="onInput"
         />
-        <view class="map-btn" bindtap="chooseLocation">📍选点</view>
+        <view class="map-btn" bindtap="onPickLocation">📍选点</view>
       </view>
     </view>
 
@@ -212,7 +214,7 @@
         </view>
         <view class="music-empty" wx:else>
           <text class="music-icon">🎵</text>
-          <text>选择音乐文件（mp3/m4a，5MB以内）</text>
+          <text>选择音乐文件（mp3/m4a，10MB以内）</text>
         </view>
       </view>
     </view>

@@ -357,8 +357,18 @@
       </view>
     </view>
 
+    <!-- 历史祝福列表 -->
+    <view class="blessing-list" wx:if="{{blessingCount > 0}}">
+      <view class="blessing-list-item" wx:for="{{blessingList}}" wx:key="_id">
+        <text class="blessing-list-name">{{item.nickName || '匿名好友'}}</text>
+        <text class="blessing-list-text">{{item.text}}</text>
+      </view>
+    </view>
+
     <!-- 输入栏 -->
     <view class="blessing-input-bar">
+      <input class="blessing-nick-input" placeholder="你的昵称" value="{{userNickName}}"
+             bindinput="onNickNameInput" maxlength="12" />
       <input class="blessing-input" placeholder="写下你的祝福..." value="{{blessingText}}"
              bindinput="onBlessingInput" confirm-type="send" bindconfirm="sendBlessing"
              maxlength="50" />

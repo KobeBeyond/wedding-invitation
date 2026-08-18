@@ -11,8 +11,12 @@
   position: absolute;
   right: -100%;
   white-space: nowrap;
-  font-weight: 600;
-  text-shadow: 0 2rpx 8rpx rgba(0,0,0,0.15);
+  font-weight: 500;
+  color: #8a4a4a;
+  background: rgba(255, 255, 255, 0.82);
+  border-radius: 32rpx;
+  padding: 8rpx 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.08);
   animation-name: danmuMove;
   animation-timing-function: linear;
   animation-fill-mode: forwards;

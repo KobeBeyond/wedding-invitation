@@ -26,7 +26,7 @@
       "desc": "用于显示婚礼地点地图和导航"
     }
   },
-  "requiredPrivateInfos": ["getLocation"],
+  "requiredPrivateInfos": ["getLocation", "chooseLocation"],
   "sitemapLocation": "sitemap.json",
   "style": "v2"
 }

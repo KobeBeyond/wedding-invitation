@@ -2,9 +2,8 @@
 const util = require('../../utils/util.js')
 
 const COLORS = [
-  '#ff6b81', '#e8a0a0', '#d4af37', '#6ab04c',
-  '#5352ed', '#ffa502', '#ff6348', '#7bed9f',
-  '#a29bfe', '#fd79a8'
+  '#fff8f0', '#fff0f0', '#fdf5f6', '#fce8ec',
+  '#fff5e6', '#ffeecc', '#f9f0e8', '#f5ebe0'
 ]
 
 Component({
