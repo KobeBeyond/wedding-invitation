@@ -30,6 +30,7 @@ Page({
     // 祝福墙
     blessingText: '',
     userNickName: '',
+    userAvatar: '',  // 微信头像临时路径
     blessingCount: 0,
     blessingsLoading: true,
     blessingList: [],
@@ -45,8 +46,9 @@ Page({
     companionCountIndex: 0,
     companionCountOptions: ['1人', '2人', '3人', '4人', '5人', '6人', '7人', '8人', '9人', '10人'],
 
-    // 用户昵称
-    userNickName: ''
+    // 用户信息
+    userNickName: '',
+    userAvatar: ''
   },
 
   onLoad(options) {
@@ -58,6 +60,18 @@ Page({
     this.setData({ inv: options.inv })
     this.loadInvitation(options.inv)
     this.checkNickName()
+  },
+
+  // 页面回到前台时恢复音乐播放
+  onShow() {
+    if (this._audioCtx && this.data.musicStarted && this.data.playing) {
+      // 延迟一点确保页面完全显示后再恢复
+      setTimeout(() => {
+        if (this._audioCtx && this.data.musicStarted) {
+          this._audioCtx.play()
+        }
+      }, 300)
+    }
   },
 
   onUnload() {
@@ -153,10 +167,16 @@ Page({
     this._timer = setInterval(() => this.updateCountdown(target), 1000)
   },
 
+  // 上一秒的倒计时值，用于 diff 判断是否需要 setData
+  _lastCD: null,
+
   updateCountdown(target) {
     const diff = target - Date.now()
     if (diff <= 0) {
-      this.setData({ 'countdown.finished': true })
+      if (!this._lastCD || !this._lastCD.finished) {
+        this.setData({ 'countdown.finished': true })
+        this._lastCD = { finished: true }
+      }
       clearInterval(this._timer)
       return
     }
@@ -164,7 +184,20 @@ Page({
     const hours = Math.floor((diff % 86400000) / 3600000)
     const minutes = Math.floor((diff % 3600000) / 60000)
     const seconds = Math.floor((diff % 60000) / 1000)
-    this.setData({ countdown: { days, hours, minutes, seconds, finished: false } })
+
+    // diff 比较：只有值真正变化时才 setData，避免每秒全页重渲染
+    const last = this._lastCD
+    if (!last || last.days !== days || last.hours !== hours ||
+        last.minutes !== minutes || last.seconds !== seconds) {
+      this.setData({
+        'countdown.days': days,
+        'countdown.hours': hours,
+        'countdown.minutes': minutes,
+        'countdown.seconds': seconds,
+        'countdown.finished': false
+      })
+      this._lastCD = { days, hours, minutes, seconds, finished: false }
+    }
   },
 
   // ===== 婚纱照 =====
@@ -292,15 +325,17 @@ Page({
         const count = res.result.data.length
         this.setData({ blessingCount: count, blessingList: res.result.data, blessingsLoading: false })
 
-        // 逐条播放历史弹幕（昵称: 祝福语）
-        const danmaku = this.selectComponent('#danmaku')
-        if (danmaku) {
-          const texts = res.result.data.map(b => {
-            const name = b.nickName || '匿名好友'
-            return `${name}: ${b.text}`
-          })
-          danmaku.addBatch(texts)
-        }
+      // 逐条播放历史弹幕（头像 + 祝福语），按照片轮播时间均匀分布
+      const danmaku = this.selectComponent('#danmaku')
+      if (danmaku) {
+        const items = res.result.data.map(b => ({
+          text: b.text,
+          avatar: b.avatarUrl || '',
+          name: b.nickName || ''
+        }))
+        const photoCount = (this.data.invitation.photos && this.data.invitation.photos.length) || 1
+        danmaku.addBatch(items, { photoCount, interval: 3500 })
+      }
       } else {
         this.setData({ blessingsLoading: false })
       }
@@ -325,11 +360,12 @@ Page({
           this._lastBlessingId = newBlessing._id
 
           this.setData({ blessingCount: this.data.blessingCount + 1 })
-          const danmaku = this.selectComponent('#danmaku')
-          if (danmaku) {
-            const name = newBlessing.nickName || '匿名好友'
-            danmaku.addDanmu(`${name}: ${newBlessing.text}`)
-          }
+      const danmaku = this.selectComponent('#danmaku')
+      if (danmaku) {
+        danmaku.addDanmu(newBlessing.text, newBlessing.avatarUrl || '', newBlessing.nickName || '', {
+          duration: 6 + Math.random() * 4
+        })
+      }
         },
         onError: (err) => {
           console.error('Blessing watch error:', err)
@@ -355,11 +391,12 @@ Page({
         if (this._lastBlessingId === latest._id) return
         this._lastBlessingId = latest._id
         this.setData({ blessingCount: res.result.data.length })
-        const danmaku = this.selectComponent('#danmaku')
-        if (danmaku) {
-          const name = latest.nickName || '匿名好友'
-          danmaku.addDanmu(`${name}: ${latest.text}`)
-        }
+      const danmaku = this.selectComponent('#danmaku')
+      if (danmaku && latest) {
+        danmaku.addDanmu(latest.text, latest.avatarUrl || '', latest.nickName || '', {
+          duration: 6 + Math.random() * 4
+        })
+      }
       } catch (e) {
         console.error('Polling blessings error:', e)
       }
@@ -367,10 +404,23 @@ Page({
   },
 
   checkNickName() {
-    const cached = wx.getStorageSync('wedding_nick_name')
-    if (cached) {
-      this.setData({ userNickName: cached })
+    const cachedName = wx.getStorageSync('wedding_nick_name')
+    const cachedAvatar = wx.getStorageSync('wedding_avatar')
+    if (cachedName) {
+      this.setData({ userNickName: cachedName })
     }
+    if (cachedAvatar) {
+      this.setData({ userAvatar: cachedAvatar })
+    }
+  },
+
+  // chooseAvatar 回调：用户选择微信头像
+  onChooseAvatar(e) {
+    const avatarUrl = e.detail.avatarUrl
+    if (!avatarUrl) return
+    // 临时路径存储到本地，下次进入页面自动回填
+    wx.setStorageSync('wedding_avatar', avatarUrl)
+    this.setData({ userAvatar: avatarUrl })
   },
 
   onBlessingInput(e) {
@@ -392,16 +442,34 @@ Page({
     if (!nickName) {
       nickName = '匿名好友'
     }
+    let avatarUrl = this.data.userAvatar || ''
     wx.setStorageSync('wedding_nick_name', nickName)
 
-    const danmakuText = `${nickName}: ${text}`
-
-    // 先本地飘一条
+    // 先本地飘一条弹幕（用当前路径，无论是临时路径还是 fileID，都能即时显示）
     const danmaku = this.selectComponent('#danmaku')
     if (danmaku) {
-      danmaku.addDanmu(danmakuText)
+      danmaku.addDanmu(text, avatarUrl, nickName)
     }
     this.setData({ blessingText: '' })
+
+    // 头像持久化：临时路径 → 上传云存储 → 拿到 fileID（跨设备可访问）
+    if (avatarUrl && !avatarUrl.startsWith('cloud://')) {
+      try {
+        const uploadRes = await wx.cloud.uploadFile({
+          cloudPath: `avatars/${Date.now()}-${Math.random().toString(36).substr(2, 8)}.jpg`,
+          filePath: avatarUrl
+        })
+        if (uploadRes.fileID) {
+          avatarUrl = uploadRes.fileID
+          // 缓存 fileID，下次发送祝福不用重复上传
+          wx.setStorageSync('wedding_avatar', avatarUrl)
+          this.setData({ userAvatar: avatarUrl })
+        }
+      } catch (err) {
+        console.error('Avatar upload failed, falling back to temp path:', err)
+        // 上传失败时仍用临时路径提交，至少本设备弹幕能显示
+      }
+    }
 
     try {
       await wx.cloud.callFunction({
@@ -409,13 +477,12 @@ Page({
         data: {
           text,
           nickName,
+          avatarUrl,
           invitationId: this.data.inv
         }
       })
-      // watcher 会自动更新计数
     } catch (err) {
       console.error('Submit blessing error:', err)
-      // 云函数失败时本地弹幕已展示
     }
   },
 
@@ -467,7 +534,8 @@ Page({
       this.setData({ playing: false })
     } else {
       this._audioCtx.play()
-      this.setData({ playing: true })
+      // 同步标记 musicStarted，避免后续 onPageTap 重复触发 play
+      this.setData({ playing: true, musicStarted: true })
     }
   },
 

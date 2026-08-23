@@ -15,6 +15,8 @@ exports.main = async (event, context) => {
         template: template || 'classic-rose',
         groomName: '',
         brideName: '',
+        groomAvatar: '',
+        brideAvatar: '',
         weddingDate: '',
         groomIntro: '',
         brideIntro: '',

@@ -5,7 +5,8 @@ const db = cloud.database()
 
 // 允许更新的字段白名单
 const ALLOWED_FIELDS = [
-  'groomName', 'brideName', 'weddingDate', 'groomIntro', 'brideIntro',
+  'groomName', 'brideName', 'groomAvatar', 'brideAvatar',
+  'weddingDate', 'groomIntro', 'brideIntro',
   'venueName', 'venueAddress', 'venueHall', 'venueLat', 'venueLng', 'venuePhone',
   'photos', 'musicUrl', 'coverImage', 'timeline', 'shareTitle', 'expiryDate',
   'template'

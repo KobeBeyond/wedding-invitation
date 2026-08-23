@@ -5,6 +5,9 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const _ = db.command
 
+// 浏览冷却期：同一 openid 在 N 分钟内重复访问只计 1 次
+const COOLDOWN_MS = 5 * 60 * 1000
+
 exports.main = async (event, context) => {
   const { OPENID } = cloud.getWXContext()
   const { invitationId } = event
@@ -22,20 +25,31 @@ exports.main = async (event, context) => {
 
     const inv = res.data
 
-    // 权限判断
+    // 权限判断：草稿只有创建者能看
     if (inv.status === 'draft' && inv.creatorOpenid !== OPENID) {
       return { success: false, message: '请柬尚未发布' }
     }
 
-    // 访客访问时增加浏览量
-    if (inv.creatorOpenid !== OPENID && inv.status === 'published') {
-      try {
-        await db.collection('invitations').doc(invitationId).update({
-          data: { viewCount: _.inc(1) }
-        })
-      } catch (e) {
-        // 浏览量更新失败不影响主流程
-        console.warn('viewCount update failed:', e)
+    // 已发布请柬：增加浏览量（含 5 分钟冷却防刷）
+    if (inv.status === 'published') {
+      const now = Date.now()
+      const lastView = inv.lastViewBy || {}
+      const lastTime = lastView.time ? new Date(lastView.time).getTime() : 0
+      const shouldCount = lastView.openid !== OPENID || (now - lastTime) > COOLDOWN_MS
+
+      if (shouldCount) {
+        try {
+          await db.collection('invitations').doc(invitationId).update({
+            data: {
+              viewCount: _.inc(1),
+              lastViewBy: { openid: OPENID, time: new Date() }
+            }
+          })
+          // 同步更新本地返回值，让前端立刻看到最新 viewCount
+          inv.viewCount = (inv.viewCount || 0) + 1
+        } catch (e) {
+          console.warn('viewCount update failed:', e)
+        }
       }
     }
 

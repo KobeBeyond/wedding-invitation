@@ -132,6 +132,56 @@
   align-items: center;
 }
 
+/* 头像 + 姓名 一行 */
+.avatar-name-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.avatar-picker {
+  flex-shrink: 0;
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2rpx solid #f0e0e0;
+  background: #f9f5f5;
+}
+
+.avatar-preview {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+}
+
+.avatar-placeholder {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-icon {
+  font-size: 32rpx;
+  color: #c98d8d;
+}
+
+.form-address-textarea {
+  flex: 1;
+  min-height: 88rpx;
+  max-height: 240rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx 24rpx;
+  font-size: 30rpx;
+  color: #333;
+  border: 2rpx solid #f0f0f0;
+  box-sizing: border-box;
+}
+
 .form-textarea {
   width: 100%;
   height: 160rpx;

@@ -38,7 +38,7 @@ Component({
       if (!tempFiles || tempFiles.length === 0) return
       this.setData({ uploading: true, uploadProgress: 0 })
 
-      const photos = [...this.properties.photos]
+      const photos = this.properties.photos.slice()
       let completed = 0
       const total = tempFiles.length
 
@@ -73,7 +73,7 @@ Component({
     // 删除照片
     deletePhoto(e) {
       const idx = e.currentTarget.dataset.index
-      const photos = [...this.properties.photos]
+      const photos = this.properties.photos.slice()
       photos.splice(idx, 1)
       this.triggerEvent('change', { photos })
     },
@@ -92,17 +92,21 @@ Component({
     moveUp(e) {
       const idx = e.currentTarget.dataset.index
       if (idx === 0) return
-      const photos = [...this.properties.photos]
-      ;[photos[idx - 1], photos[idx]] = [photos[idx], photos[idx - 1]]
+      const photos = this.properties.photos.slice()
+      const temp = photos[idx - 1]
+      photos[idx - 1] = photos[idx]
+      photos[idx] = temp
       this.triggerEvent('change', { photos })
     },
 
     // 下移
     moveDown(e) {
       const idx = e.currentTarget.dataset.index
-      const photos = [...this.properties.photos]
+      const photos = this.properties.photos.slice()
       if (idx === photos.length - 1) return
-      ;[photos[idx + 1], photos[idx]] = [photos[idx], photos[idx + 1]]
+      const temp = photos[idx + 1]
+      photos[idx + 1] = photos[idx]
+      photos[idx] = temp
       this.triggerEvent('change', { photos })
     }
   }

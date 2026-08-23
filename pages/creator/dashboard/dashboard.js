@@ -9,12 +9,16 @@ Page({
   },
 
   onShow() {
-    this.loadInvitations()
+    // 已有数据时静默刷新，不重置 loading 状态
+    // 避免 wx:if 切换导致图片组件销毁重建
+    const silent = this.data.invitations.length > 0
+    this.loadInvitations(silent)
   },
 
   // 加载我的请柬列表
-  loadInvitations() {
-    this.setData({ loading: true })
+  // silent=true 时不显示 loading 态，已有列表保持可见
+  loadInvitations(silent) {
+    if (!silent) this.setData({ loading: true })
     wx.cloud.callFunction({
       name: 'getMyInvitations',
       success: res => {

@@ -3,6 +3,6 @@
   "navigationBarBackgroundColor": "#fdf5f6",
   "navigationBarTextStyle": "black",
   "usingComponents": {
-    "danmaku": "/components/danmaku/danmaku"
+    "danmaku": "../../components/danmaku/danmaku"
   }
 }

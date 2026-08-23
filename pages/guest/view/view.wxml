@@ -1,3 +1,12 @@
+<!-- 音乐开关（移到 wx:if 外层，避免页面重渲染时闪烁消失） -->
+<view class="music-toggle {{playing ? 'playing' : ''}}" bindtap="toggleMusic" wx:if="{{!loading && invitation && invitation.musicUrl && showMusicBtn}}">
+  <view class="music-icon">
+    <view class="music-bar"></view>
+    <view class="music-bar"></view>
+    <view class="music-bar"></view>
+  </view>
+</view>
+
 <!-- pages/guest/view/view.wxml — 来宾视角：完整长滚动请柬页面 -->
 <view class="guest-view" wx:if="{{!loading && invitation}}" bindtap="onPageTap">
 
@@ -8,6 +17,7 @@
       src="{{invitation.coverImage}}"
       mode="aspectFill"
       class="cover-bg"
+      lazy-load
     />
     <view wx:else class="cover-gradient"></view>
 
@@ -54,15 +64,6 @@
     </view>
   </view>
 
-  <!-- 音乐开关 -->
-  <view class="music-toggle {{playing ? 'playing' : ''}}" bindtap="toggleMusic" wx:if="{{invitation.musicUrl && showMusicBtn}}">
-    <view class="music-icon">
-      <view class="music-bar"></view>
-      <view class="music-bar"></view>
-      <view class="music-bar"></view>
-    </view>
-  </view>
-
   <!-- ========== 第二屏：新人介绍 ========== -->
   <view class="section intro-section" wx:if="{{invitation.groomIntro || invitation.brideIntro}}">
     <view class="section-header">
@@ -74,7 +75,8 @@
     <view class="couple-cards">
       <view class="couple-card">
         <view class="couple-avatar groom-avatar">
-          <text class="couple-initial">{{invitation.groomName ? invitation.groomName[0] : '他'}}</text>
+          <image wx:if="{{invitation.groomAvatar}}" src="{{invitation.groomAvatar}}" class="couple-avatar-img" mode="aspectFill" />
+          <text wx:else class="couple-initial">{{invitation.groomName ? invitation.groomName[0] : '他'}}</text>
         </view>
         <text class="couple-name">{{invitation.groomName}}</text>
         <text class="couple-intro" wx:if="{{invitation.groomIntro}}">{{invitation.groomIntro}}</text>
@@ -86,7 +88,8 @@
 
       <view class="couple-card">
         <view class="couple-avatar bride-avatar">
-          <text class="couple-initial">{{invitation.brideName ? invitation.brideName[0] : '她'}}</text>
+          <image wx:if="{{invitation.brideAvatar}}" src="{{invitation.brideAvatar}}" class="couple-avatar-img" mode="aspectFill" />
+          <text wx:else class="couple-initial">{{invitation.brideName ? invitation.brideName[0] : '她'}}</text>
         </view>
         <text class="couple-name">{{invitation.brideName}}</text>
         <text class="couple-intro" wx:if="{{invitation.brideIntro}}">{{invitation.brideIntro}}</text>
@@ -176,6 +179,7 @@
               src="{{item.url}}"
               mode="aspectFill"
               class="photo-img"
+              lazy-load
             />
           </view>
         </swiper-item>
@@ -195,7 +199,7 @@
     </view>
 
     <!-- 缩略图（仅有照片时显示） -->
-    <view class="thumb-strip" wx:if="{{invitation.photos && invitation.photos.length > 0}}">
+    <scroll-view scroll-x enable-flex enhanced show-scrollbar="{{false}}" class="thumb-strip" wx:if="{{invitation.photos && invitation.photos.length > 0}}">
       <view
         class="thumb-item {{photoIdx === index ? 'active' : ''}}"
         wx:for="{{invitation.photos}}"
@@ -203,9 +207,9 @@
         data-idx="{{index}}"
         bindtap="tapThumbnail"
       >
-        <image wx:if="{{item.url}}" src="{{item.url}}" mode="aspectFill" class="thumb-img" />
+        <image wx:if="{{item.url}}" src="{{item.url}}" mode="aspectFill" class="thumb-img" lazy-load />
       </view>
-    </view>
+    </scroll-view>
   </view>
 
   <!-- ========== 第五屏：婚礼流程 ========== -->
@@ -359,24 +363,35 @@
 
     <!-- 历史祝福列表 -->
     <view class="blessing-list" wx:if="{{blessingCount > 0}}">
-      <view class="blessing-list-item" wx:for="{{blessingList}}" wx:key="_id">
-        <text class="blessing-list-name">{{item.nickName || '匿名好友'}}</text>
-        <text class="blessing-list-text">{{item.text}}</text>
-      </view>
+<view class="blessing-list-item" wx:for="{{blessingList}}" wx:key="_id">
+  <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" class="blessing-list-avatar" mode="aspectFill" />
+  <view wx:else class="blessing-list-avatar blessing-list-avatar-default">{{item.nickName ? item.nickName.charAt(0) : '♥'}}</view>
+  <view class="blessing-list-content">
+    <text class="blessing-list-name">{{item.nickName || '匿名好友'}}</text>
+    <text class="blessing-list-text">{{item.text}}</text>
+  </view>
+</view>
     </view>
 
-    <!-- 输入栏 -->
-    <view class="blessing-input-bar">
-      <input class="blessing-nick-input" placeholder="你的昵称" value="{{userNickName}}"
-             bindinput="onNickNameInput" maxlength="12" />
-      <input class="blessing-input" placeholder="写下你的祝福..." value="{{blessingText}}"
-             bindinput="onBlessingInput" confirm-type="send" bindconfirm="sendBlessing"
-             maxlength="50" />
-      <view class="blessing-send-btn {{blessingText.trim() ? 'active' : ''}}" bindtap="sendBlessing">
-        发送
-      </view>
+<!-- 输入栏 -->
+<view class="blessing-input-bar">
+  <!-- 头像选择按钮 -->
+  <button class="blessing-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+    <image wx:if="{{userAvatar}}" src="{{userAvatar}}" class="blessing-avatar-img" mode="aspectFill" />
+    <view wx:else class="blessing-avatar-placeholder">
+      <text class="blessing-avatar-icon">😀</text>
     </view>
+  </button>
+  <input class="blessing-nick-input" placeholder="昵称" value="{{userNickName}}"
+    type="nickname" bindinput="onNickNameInput" maxlength="12" />
+  <input class="blessing-input" placeholder="写下祝福..." value="{{blessingText}}"
+    bindinput="onBlessingInput" confirm-type="send" bindconfirm="sendBlessing"
+    maxlength="50" />
+  <view class="blessing-send-btn {{blessingText.trim() ? 'active' : ''}}" bindtap="sendBlessing">
+    发送
   </view>
+</view>
+</view>
 
   <!-- ========== 底部 ========== -->
   <view class="footer-section">

@@ -20,25 +20,41 @@
     <view class="section-title">基本信息</view>
 
     <view class="form-group">
-      <text class="form-label">新郎姓名</text>
-      <input
-        class="form-input"
-        placeholder="请输入新郎姓名"
-        value="{{groomName}}"
-        data-field="groomName"
-        bindinput="onInput"
-      />
+      <text class="form-label">新郎</text>
+      <view class="avatar-name-row">
+        <view class="avatar-picker" bindtap="chooseGroomAvatar">
+          <image wx:if="{{groomAvatar}}" src="{{groomAvatar}}" class="avatar-preview" mode="aspectFill" />
+          <view wx:else class="avatar-placeholder">
+            <text class="avatar-icon">📷</text>
+          </view>
+        </view>
+        <input
+          class="form-input flex1"
+          placeholder="新郎姓名"
+          value="{{groomName}}"
+          data-field="groomName"
+          bindinput="onInput"
+        />
+      </view>
     </view>
 
     <view class="form-group">
-      <text class="form-label">新娘姓名</text>
-      <input
-        class="form-input"
-        placeholder="请输入新娘姓名"
-        value="{{brideName}}"
-        data-field="brideName"
-        bindinput="onInput"
-      />
+      <text class="form-label">新娘</text>
+      <view class="avatar-name-row">
+        <view class="avatar-picker" bindtap="chooseBrideAvatar">
+          <image wx:if="{{brideAvatar}}" src="{{brideAvatar}}" class="avatar-preview" mode="aspectFill" />
+          <view wx:else class="avatar-placeholder">
+            <text class="avatar-icon">📷</text>
+          </view>
+        </view>
+        <input
+          class="form-input flex1"
+          placeholder="新娘姓名"
+          value="{{brideName}}"
+          data-field="brideName"
+          bindinput="onInput"
+        />
+      </view>
     </view>
 
     <view class="form-group">
@@ -106,12 +122,14 @@
     <view class="form-group">
       <text class="form-label">地址</text>
       <view class="form-input-row">
-        <input
-          class="form-input flex1"
+        <textarea
+          class="form-address-textarea flex1"
+          auto-height
           placeholder="详细地址"
           value="{{venueAddress}}"
           data-field="venueAddress"
           bindinput="onInput"
+          maxlength="200"
         />
         <view class="map-btn" bindtap="onPickLocation">📍选点</view>
       </view>

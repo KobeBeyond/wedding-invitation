@@ -25,7 +25,7 @@
 
     <swiper-item wx:for="{{photos}}" wx:key="id">
       <view class="photo-item" bindtap="previewPhoto" data-idx="{{index}}">
-        <image wx:if="{{item.url}}" src="{{item.url}}" mode="aspectFill" class="photo-img" />
+        <image wx:if="{{item.url}}" src="{{item.url}}" mode="aspectFill" class="photo-img" lazy-load />
         <view wx:else class="photo-placeholder">
           <text class="placeholder-text">婚纱照 {{item.id}}</text>
           <text class="placeholder-sub">点击替换图片</text>
@@ -43,7 +43,7 @@
         <view class="thumb-item {{currentIdx === item.idx ? 'active' : ''}}"
               wx:for="{{row}}" wx:key="idx" wx:for-item="item"
               bindtap="tapThumbnail" data-idx="{{item.idx}}">
-          <image wx:if="{{item.url}}" src="{{item.url}}" mode="aspectFill" class="thumb-img" />
+          <image wx:if="{{item.url}}" src="{{item.url}}" mode="aspectFill" class="thumb-img" lazy-load />
           <view wx:else class="thumb-placeholder">
             <text>{{item.id}}</text>
           </view>

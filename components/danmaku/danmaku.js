@@ -1,11 +1,6 @@
 // components/danmaku/danmaku.js
 const util = require('../../utils/util.js')
 
-const COLORS = [
-  '#fff8f0', '#fff0f0', '#fdf5f6', '#fce8ec',
-  '#fff5e6', '#ffeecc', '#f9f0e8', '#f5ebe0'
-]
-
 Component({
   data: {
     danmuList: []
@@ -13,20 +8,49 @@ Component({
 
   methods: {
     /**
-     * 添加一条弹幕
-     * @param {string} text - 弹幕文字
+     * 生成一个不与其他弹幕太近的垂直位置
+     * @param {Array<number>} usedTops - 已占用的位置
+     * @param {number} minGap - 最小间距（百分比）
      */
-    addDanmu(text) {
+    _generateTop(usedTops, minGap = 12) {
+      let attempts = 0
+      let top
+      do {
+        top = Math.random() * 85 + 5   // 5% ~ 90%
+        attempts++
+      } while (attempts < 20 && usedTops.some(t => Math.abs(t - top) < minGap))
+      return top
+    },
+
+    /**
+     * 添加一条弹幕
+     * @param {string} text     - 祝福语
+     * @param {string} [avatar] - 头像 url
+     * @param {string} [name]   - 昵称
+     * @param {Object} [options] - 可选参数 { top, duration, delay }
+     */
+    addDanmu(text, avatar, name, options = {}) {
       if (!text || !text.trim()) return
 
       const id = util.generateId()
-      const top = Math.random() * 70 + 5       // 5% ~ 75%
-      const color = COLORS[Math.floor(Math.random() * COLORS.length)]
-      const fontSize = Math.floor(Math.random() * 16) + 28  // 28~44rpx
-      const duration = Math.random() * 7 + 8    // 8~15s
-      const delay = Math.random() * 0.5         // 0~0.5s
 
-      const danmu = { id, text, top, color, fontSize, duration, delay }
+      // 垂直位置：优先用传入的，否则做碰撞避让
+      const usedTops = this.data.danmuList.map(d => d.top)
+      const top = options.top !== undefined
+        ? options.top
+        : this._generateTop(usedTops)
+
+      const duration = options.duration !== undefined
+        ? options.duration
+        : (Math.random() * 4 + 6)   // 6~10s，比之前短，减少重叠感
+
+      const delay = options.delay !== undefined
+        ? options.delay
+        : (Math.random() * 0.5)
+
+      const initial = (name && name.trim()) ? name.trim().charAt(0).toUpperCase() : '♥'
+
+      const danmu = { id, text, avatar: avatar || '', initial, top, duration, delay }
 
       this.setData({
         danmuList: this.data.danmuList.concat([danmu])
@@ -41,13 +65,42 @@ Component({
     },
 
     /**
-     * 批量添加弹幕（用于加载历史数据时）
-     * @param {Array} items - 文字数组
+     * 批量添加弹幕，按照片轮播时间均匀分布
+     * @param {Array} items    - [{ text, avatar, name }, ...]
+     * @param {Object} options - { photoCount, interval }
+     *   photoCount: 照片数量（决定时间窗口数）
+     *   interval:  轮播间隔 ms，默认 3500
      */
-    addBatch(items) {
+    addBatch(items, options = {}) {
       if (!items || !items.length) return
-      items.forEach((text, i) => {
-        setTimeout(() => this.addDanmu(text), i * 800)
+
+      const photoCount = options.photoCount || 1
+      const interval = (options.interval || 3500) / 1000   // 转成秒
+
+    // 把弹幕随机打乱，再分配到各个照片的时间窗口
+    const shuffled = items.slice().sort(() => Math.random() - 0.5)
+
+      // 预先生成一组不重叠的垂直位置，循环复用
+      const preAllocatedTops = []
+      for (let i = 0; i < shuffled.length; i++) {
+        preAllocatedTops.push(this._generateTop(preAllocatedTops))
+      }
+
+      shuffled.forEach((item, i) => {
+        // 决定这条弹幕落在第几张照片的时间窗口
+        const photoIndex = i % photoCount
+        const windowStart = photoIndex * interval
+        // 在窗口内随机偏移，留 1.5s 缓冲避免切到下一页时还在开头
+        const randomOffset = Math.random() * (interval - 1.5)
+        const startTime = (windowStart + randomOffset) * 1000
+
+        setTimeout(() => {
+          this.addDanmu(item.text, item.avatar, item.name, {
+            top: preAllocatedTops[i],
+            duration: Math.random() * 4 + 6,   // 6~10s
+            delay: 0
+          })
+        }, startTime)
       })
     },
 

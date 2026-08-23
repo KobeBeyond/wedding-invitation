@@ -2,7 +2,11 @@
 <view class="danmaku-container">
   <view wx:for="{{danmuList}}" wx:key="id"
         class="danmaku-item"
-        style="top:{{item.top}}%; color:{{item.color}}; font-size:{{item.fontSize}}rpx; animation-duration:{{item.duration}}s; animation-delay:{{item.delay}}s;">
-    {{item.text}}
+        style="top:{{item.top}}%; animation-duration:{{item.duration}}s; animation-delay:{{item.delay}}s;">
+    <!-- 圆形头像 -->
+    <image wx:if="{{item.avatar}}" src="{{item.avatar}}" class="danmaku-avatar" mode="aspectFill" />
+    <view wx:else class="danmaku-avatar danmaku-avatar-default">{{item.initial}}</view>
+    <!-- 祝福语 -->
+    <text class="danmaku-text">{{item.text}}</text>
   </view>
 </view>

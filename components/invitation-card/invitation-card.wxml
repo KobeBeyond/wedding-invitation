@@ -7,6 +7,7 @@
       src="{{invitation.coverImage}}"
       mode="aspectFill"
       class="cover-img"
+      lazy-load
     />
     <view wx:else class="cover-placeholder">
       <text class="placeholder-icon">💒</text>

@@ -13,6 +13,8 @@ Page({
     // 表单数据
     groomName: '',
     brideName: '',
+    groomAvatar: '',
+    brideAvatar: '',
     weddingDate: '',
     groomIntro: '',
     brideIntro: '',
@@ -50,6 +52,8 @@ Page({
             invitation: d,
             groomName: d.groomName || '',
             brideName: d.brideName || '',
+            groomAvatar: d.groomAvatar || '',
+            brideAvatar: d.brideAvatar || '',
             weddingDate: d.weddingDate || '',
             groomIntro: d.groomIntro || '',
             brideIntro: d.brideIntro || '',
@@ -148,23 +152,59 @@ Page({
 
   // 时间线操作
   addTimelineItem() {
-    const timeline = [...this.data.timeline]
+    const timeline = this.data.timeline.slice()
     timeline.push({ time: '', title: '', description: '' })
     this.setData({ timeline })
   },
 
   onTimelineInput(e) {
     const { index, field } = e.currentTarget.dataset
-    const timeline = [...this.data.timeline]
+    const timeline = this.data.timeline.slice()
     timeline[index][field] = e.detail.value
     this.setData({ timeline })
   },
 
   removeTimelineItem(e) {
     const index = e.currentTarget.dataset.index
-    const timeline = [...this.data.timeline]
+    const timeline = this.data.timeline.slice()
     timeline.splice(index, 1)
     this.setData({ timeline })
+  },
+
+  // 选择新郎头像
+  chooseGroomAvatar() {
+    this.chooseAvatar('groomAvatar')
+  },
+
+  // 选择新娘头像
+  chooseBrideAvatar() {
+    this.chooseAvatar('brideAvatar')
+  },
+
+  // 通用头像选择
+  chooseAvatar(field) {
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sizeType: ['compressed'],
+      success: res => {
+        const tempFile = res.tempFiles[0]
+        wx.showLoading({ title: '上传中...' })
+        wx.cloud.uploadFile({
+          cloudPath: `avatars/${field}_${Date.now()}.jpg`,
+          filePath: tempFile.tempFilePath,
+          success: res => {
+            this.setData({ [field]: res.fileID })
+          },
+          fail: () => {
+            wx.showToast({ title: '上传失败', icon: 'none' })
+          },
+          complete: () => {
+            wx.hideLoading()
+          }
+        })
+      }
+    })
   },
 
   // 选择封面图
@@ -230,6 +270,8 @@ Page({
       invitationId: this.data.invitationId,
       groomName: this.data.groomName,
       brideName: this.data.brideName,
+      groomAvatar: this.data.groomAvatar,
+      brideAvatar: this.data.brideAvatar,
       weddingDate: this.data.weddingDate,
       groomIntro: this.data.groomIntro,
       brideIntro: this.data.brideIntro,

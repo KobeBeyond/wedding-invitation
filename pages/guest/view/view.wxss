@@ -256,6 +256,13 @@ page {
   align-items: center;
   justify-content: center;
   margin-bottom: 20rpx;
+  overflow: hidden;
+}
+
+.couple-avatar-img {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
 }
 
 .groom-avatar {
@@ -455,15 +462,8 @@ page {
   display: flex;
   gap: 12rpx;
   margin-top: 24rpx;
-  overflow-x: auto;
-  white-space: nowrap;
   padding: 4rpx 0;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.thumb-strip::-webkit-scrollbar {
-  display: none;
+  white-space: nowrap;
 }
 
 .thumb-item {
@@ -759,33 +759,94 @@ font-weight: 400;
 
 .blessing-input-bar {
   display: flex;
-  gap: 12rpx;
+  gap: 10rpx;
   margin-top: 24rpx;
   align-items: center;
 }
 
+/* 头像选择按钮 */
+.blessing-avatar-btn {
+  flex-shrink: 0;
+  width: 64rpx;
+  height: 64rpx;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  line-height: normal;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.blessing-avatar-btn::after {
+  border: none;
+}
+
+.blessing-avatar-img {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  border: 2rpx solid #e8a0a0;
+}
+
+.blessing-avatar-placeholder {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: #f9f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid #e0d0d0;
+}
+
+.blessing-avatar-icon {
+  font-size: 36rpx;
+}
+
 .blessing-nick-input {
   flex-shrink: 0;
-  width: 160rpx;
-  height: 80rpx;
+  width: 100rpx;
+  height: 64rpx;
   background: #f9f5f5;
-  border-radius: 40rpx;
-  padding: 0 24rpx;
-  font-size: 26rpx;
+  border-radius: 32rpx;
+  padding: 0 16rpx;
+  font-size: 24rpx;
   color: #333;
+  min-width: 0;
 }
 
 .blessing-input {
   flex: 1;
-  height: 80rpx;
+  min-width: 0;
+  height: 64rpx;
   background: #f9f5f5;
-  border-radius: 40rpx;
-  padding: 0 32rpx;
-  font-size: 28rpx;
+  border-radius: 32rpx;
+  padding: 0 20rpx;
+  font-size: 26rpx;
   color: #333;
 }
 
-/* 历史祝福列表 */
+.blessing-send-btn {
+  flex-shrink: 0;
+  width: 88rpx;
+  height: 64rpx;
+  background: #e0e0e0;
+  border-radius: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  color: #fff;
+  transition: background 0.3s;
+}
+
+.blessing-send-btn.active {
+  background: #c98d8d;
+}
+
 .blessing-list {
   margin-top: 24rpx;
 }
@@ -800,6 +861,28 @@ font-weight: 400;
 
 .blessing-list-item:last-child {
   border-bottom: none;
+}
+
+.blessing-list-avatar {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.blessing-list-avatar-default {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e8a0a0, #d48888);
+  color: #fff;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.blessing-list-content {
+  flex: 1;
+  min-width: 0;
 }
 
 .blessing-list-name {

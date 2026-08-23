@@ -19,7 +19,8 @@ Component({
       this.triggerEvent('delete', { id: this.properties.invitation._id })
     },
     onTap() {
-      this.triggerEvent('tap', { id: this.properties.invitation._id })
+      // 整张卡片可点击 → 触发 view 事件
+      this.triggerEvent('view', { id: this.properties.invitation._id })
     }
   }
 })
