@@ -47,6 +47,9 @@ Page({
     musicStarted: false,
     showMusicBtn: true,
 
+    // 婚礼流程默认折叠（只显示前5个）
+    timelineExpanded: false,
+
   },
 
   onLoad(options) {
@@ -611,6 +614,11 @@ Page({
     if (this.data.musicStarted || !this._audioCtx) return
     this._audioCtx.play()
     this.setData({ musicStarted: true, playing: true })
+  },
+
+  // 展开/收起婚礼流程
+  toggleTimeline() {
+    this.setData({ timelineExpanded: !this.data.timelineExpanded })
   },
 
   toggleMusic() {

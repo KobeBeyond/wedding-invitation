@@ -509,6 +509,18 @@ page {
   padding: 0 16rpx;
 }
 
+.timeline-toggle {
+  margin: 24rpx auto 0;
+  width: fit-content;
+  padding: 14rpx 40rpx;
+  border-radius: 36rpx;
+  background: #fdf5f6;
+  border: 2rpx solid #f0dcdc;
+  font-size: 26rpx;
+  color: #c07070;
+  text-align: center;
+}
+
 .timeline-item {
   display: flex;
   gap: 24rpx;

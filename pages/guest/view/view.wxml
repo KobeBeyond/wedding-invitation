@@ -225,6 +225,7 @@
         class="timeline-item"
         wx:for="{{invitation.timeline}}"
         wx:key="index"
+        wx:if="{{timelineExpanded || index < 5}}"
       >
         <view class="time-col">
           <view class="time-badge">
@@ -242,6 +243,11 @@
           </view>
         </view>
       </view>
+    </view>
+
+    <!-- 展开/收起 -->
+    <view class="timeline-toggle" wx:if="{{invitation.timeline.length > 5}}" bindtap="toggleTimeline">
+      <text>{{timelineExpanded ? '收起流程 ▲' : '查看全部 ' + invitation.timeline.length + ' 个流程 ▼'}}</text>
     </view>
   </view>
 
