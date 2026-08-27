@@ -206,7 +206,7 @@ Page({
     }
   },
 
-  // ===== 婚纱照 =====
+  // ===== 婚纱照（堆叠卡片轮播）=====
   onSwiperChange(e) {
     this.setData({ photoIdx: e.detail.current })
   },

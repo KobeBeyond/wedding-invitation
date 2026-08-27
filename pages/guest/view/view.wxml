@@ -105,30 +105,30 @@
       <view class="header-line"></view>
     </view>
 
-    <!-- 弹幕覆盖层 -->
+    <!-- 堆叠卡片轮播 -->
     <view class="gallery-stage">
-      <!-- 有照片时展示轮播 -->
+      <!-- 有照片时展示堆叠卡片轮播 -->
       <swiper
         wx:if="{{invitation.photos && invitation.photos.length > 0}}"
-        class="photo-swiper"
-        indicator-dots="{{true}}"
-        indicator-color="rgba(232,160,160,0.3)"
-        indicator-active-color="#e8a0a0"
-        autoplay="{{true}}"
-        interval="3500"
-        duration="600"
-        circular="{{true}}"
+        class="card-swiper"
+        previous-margin="115rpx"
+        next-margin="115rpx"
+        indicator-dots="{{false}}"
+        autoplay="{{false}}"
+        duration="300"
         current="{{photoIdx}}"
         bindchange="onSwiperChange"
       >
         <swiper-item wx:for="{{invitation.photos}}" wx:key="index">
-          <view class="photo-item" bindtap="previewPhoto" data-idx="{{index}}">
+          <view class="card-item {{photoIdx === index ? 'active' : ''}}">
             <image
               wx:if="{{item.url}}"
               src="{{item.url}}"
-              mode="aspectFill"
-              class="photo-img"
+              mode="aspectFit"
+              class="card-img"
               lazy-load
+              bindtap="previewPhoto"
+              data-idx="{{index}}"
             />
           </view>
         </swiper-item>
