@@ -47,12 +47,6 @@ Page({
     musicStarted: false,
     showMusicBtn: true,
 
-    // 同来人员
-    hasCompanion: '',
-    companionCount: 0,
-    companionCountIndex: 0,
-    companionCountOptions: ['1人', '2人', '3人', '4人', '5人', '6人', '7人', '8人', '9人', '10人'],
-
   },
 
   onLoad(options) {
@@ -273,18 +267,6 @@ Page({
     })
   },
 
-  onHasCompanionChange(e) {
-    this.setData({ hasCompanion: e.detail.value })
-  },
-
-  onCompanionCountChange(e) {
-    const idx = e.detail.value
-    this.setData({
-      companionCountIndex: idx,
-      companionCount: idx + 1
-    })
-  },
-
   async submitRSVP() {
     const { name, phone, attending } = this.data.rsvpForm
 
@@ -308,8 +290,6 @@ Page({
         name: 'submitRSVP',
         data: {
           ...this.data.rsvpForm,
-          hasCompanion: this.data.hasCompanion,
-          companionCount: this.data.hasCompanion === 'yes' ? this.data.companionCount : 0,
           invitationId: this.data.inv
         }
       })

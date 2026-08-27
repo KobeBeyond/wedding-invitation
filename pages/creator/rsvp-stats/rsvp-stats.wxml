@@ -60,10 +60,7 @@
       <view class="guest-detail">
         <text class="detail-item">📱 {{item.phone}}</text>
         <text class="detail-item" wx:if="{{item.attending === 'yes' && item.guestCount > 1}}">
-          👥 随行 {{item.guestCount}} 人
-        </text>
-        <text class="detail-item" wx:if="{{item.hasCompanion === 'yes' && item.companionCount > 0}}">
-          🤝 携伴 {{item.companionCount}} 人
+          👥 共 {{item.guestCount}} 人
         </text>
         <text class="detail-item" wx:if="{{item.dietary}}">
           🍽 饮食备注：{{item.dietary}}

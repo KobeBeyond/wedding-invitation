@@ -293,30 +293,6 @@
         </picker>
       </view>
 
-      <view class="form-item" wx:if="{{rsvpForm.attending === 'yes'}}">
-        <text class="form-label">是否有同来人员 <text class="form-hint">（订酒店用）</text></text>
-        <radio-group bindchange="onHasCompanionChange">
-          <label class="radio-label {{hasCompanion === 'yes' ? 'checked' : ''}}">
-            <radio value="yes" checked="{{hasCompanion === 'yes'}}" color="#e8a0a0" />
-            <text>有</text>
-          </label>
-          <label class="radio-label {{hasCompanion === 'no' ? 'checked' : ''}}">
-            <radio value="no" checked="{{hasCompanion === 'no'}}" color="#e8a0a0" />
-            <text>无</text>
-          </label>
-        </radio-group>
-      </view>
-
-      <view class="form-item" wx:if="{{rsvpForm.attending === 'yes' && hasCompanion === 'yes'}}">
-        <text class="form-label">同来人员数量</text>
-        <picker bindchange="onCompanionCountChange" value="{{companionCountIndex}}" range="{{companionCountOptions}}">
-          <view class="picker-value">
-            <text>{{companionCountOptions[companionCountIndex]}}</text>
-            <text class="picker-arrow">›</text>
-          </view>
-        </picker>
-      </view>
-
       <view class="form-item">
         <text class="form-label">饮食偏好</text>
         <textarea class="form-textarea" placeholder="如有特殊饮食需求请告知（如素食、过敏等）"
