@@ -113,9 +113,6 @@
         class="card-swiper"
         previous-margin="115rpx"
         next-margin="115rpx"
-        indicator-dots="{{true}}"
-        indicator-color="rgba(232,160,160,0.3)"
-        indicator-active-color="#e8a0a0"
         autoplay="{{true}}"
         interval="4000"
         circular="{{true}}"
@@ -149,6 +146,17 @@
       <view class="gallery-danmaku-overlay">
         <danmaku id="danmaku"></danmaku>
       </view>
+    </view>
+
+    <!-- 自定义指示器 -->
+    <view class="custom-dots" wx:if="{{invitation.photos && invitation.photos.length > 1}}">
+      <view
+        wx:for="{{invitation.photos}}"
+        wx:key="index"
+        class="dot {{photoIdx === index ? 'active' : ''}}"
+        data-idx="{{index}}"
+        bindtap="tapThumbnail"
+      ></view>
     </view>
 
   </view>

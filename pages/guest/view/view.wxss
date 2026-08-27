@@ -387,7 +387,6 @@ page {
 /* ========== 第四屏：婚纱照 + 弹幕 ========== */
 .photos-section {
   background: #fdf5f6;
-  padding-bottom: 60rpx;
 }
 
 .gallery-stage {
@@ -413,21 +412,28 @@ page {
   height: 100%;
 }
 
-/* swiper 指示器：放到图片下方，不遮挡 */
-.card-swiper .wx-swiper-dots {
-  bottom: -44rpx;
+/* 自定义指示器 */
+.custom-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16rpx;
+  margin-top: 24rpx;
+  padding-bottom: 8rpx;
 }
 
-.card-swiper .wx-swiper-dot {
+.dot {
   width: 12rpx;
   height: 12rpx;
-  margin: 0 8rpx;
   border-radius: 50%;
+  background: rgba(232, 160, 160, 0.35);
+  transition: width 0.25s ease, background 0.25s ease;
 }
 
-.card-swiper .wx-swiper-dot-active {
-  width: 24rpx;
+.dot.active {
+  width: 28rpx;
   border-radius: 6rpx;
+  background: #e8a0a0;
 }
 
 .card-item {
