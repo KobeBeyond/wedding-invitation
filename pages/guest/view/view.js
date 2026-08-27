@@ -342,6 +342,12 @@ Page({
         })
         this.updatePagedBlessings()
 
+        // 预加载所有头像，避免换页时图片重新从网络拉取
+        const avatarUrls = list.filter(b => b.avatarUrl).map(b => b.avatarUrl)
+        if (avatarUrls.length > 0) {
+          preloadImages(avatarUrls)
+        }
+
         // 逐条播放历史弹幕（头像 + 祝福语），按照片轮播时间均匀分布
         const danmaku = this.selectComponent('#danmaku')
         if (danmaku) {
@@ -515,6 +521,11 @@ Page({
       blessingText: value,
       canSend: value.trim().length > 0
     })
+    // 首次输入且未选头像时，温和提示引导点击左侧头像按钮
+    if (value.trim().length > 0 && !this.data.userAvatar && !this._avatarPrompted) {
+      this._avatarPrompted = true
+      wx.showToast({ title: '点击左侧头像可选微信头像', icon: 'none', duration: 2000 })
+    }
   },
 
   async sendBlessing() {

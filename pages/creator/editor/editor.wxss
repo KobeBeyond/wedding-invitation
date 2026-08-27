@@ -321,6 +321,7 @@
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 9;
   display: flex;
   gap: 16rpx;
   padding: 20rpx 32rpx;
