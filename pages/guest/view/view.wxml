@@ -113,7 +113,9 @@
         class="card-swiper"
         previous-margin="115rpx"
         next-margin="115rpx"
-        indicator-dots="{{false}}"
+        indicator-dots="{{true}}"
+        indicator-color="rgba(232,160,160,0.3)"
+        indicator-active-color="#e8a0a0"
         autoplay="{{false}}"
         duration="300"
         current="{{photoIdx}}"
@@ -147,18 +149,6 @@
       </view>
     </view>
 
-    <!-- 缩略图（仅有照片时显示） -->
-    <scroll-view scroll-x enable-flex enhanced show-scrollbar="{{false}}" class="thumb-strip" wx:if="{{invitation.photos && invitation.photos.length > 0}}">
-      <view
-        class="thumb-item {{photoIdx === index ? 'active' : ''}}"
-        wx:for="{{invitation.photos}}"
-        wx:key="index"
-        data-idx="{{index}}"
-        bindtap="tapThumbnail"
-      >
-        <image wx:if="{{item.url}}" src="{{item.url}}" mode="aspectFill" class="thumb-img" lazy-load />
-      </view>
-    </scroll-view>
   </view>
 
   <!-- ========== 第四屏：婚礼信息 ========== -->
