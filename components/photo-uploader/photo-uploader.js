@@ -1,4 +1,6 @@
 // components/photo-uploader/photo-uploader.js
+const { compressImage } = require('../../utils/util.js')
+
 Component({
   properties: {
     photos: { type: Array, value: [] },
@@ -33,41 +35,42 @@ Component({
       })
     },
 
-    // 上传文件到云存储
-    uploadFiles(tempFiles) {
+    // 上传文件到云存储（串行压缩+上传，避免并发过大）
+    async uploadFiles(tempFiles) {
       if (!tempFiles || tempFiles.length === 0) return
       this.setData({ uploading: true, uploadProgress: 0 })
 
       const photos = this.properties.photos.slice()
-      let completed = 0
       const total = tempFiles.length
 
-      tempFiles.forEach((file, index) => {
-        const timestamp = Date.now()
-        const cloudPath = `photos/${timestamp}_${index}.${file.tempFilePath.split('.').pop()}`
-        const task = wx.cloud.uploadFile({
-          cloudPath,
-          filePath: file.tempFilePath,
-          success: res => {
-            photos.push({
-              id: `${timestamp}_${index}`,
-              fileID: res.fileID
+      for (let i = 0; i < total; i++) {
+        const file = tempFiles[i]
+        try {
+          // 先压缩到 2M 以内
+          const compressedPath = await compressImage(file.tempFilePath)
+          const timestamp = Date.now()
+          const cloudPath = `photos/${timestamp}_${i}.jpg`
+          const res = await new Promise((resolve, reject) => {
+            wx.cloud.uploadFile({
+              cloudPath,
+              filePath: compressedPath,
+              success: resolve,
+              fail: reject
             })
-          },
-          fail: err => {
-            console.error('上传失败', err)
-            wx.showToast({ title: `第${index + 1}张上传失败`, icon: 'none' })
-          },
-          complete: () => {
-            completed++
-            this.setData({ uploadProgress: Math.round(completed / total * 100) })
-            if (completed === total) {
-              this.setData({ uploading: false, uploadProgress: 0 })
-              this.triggerEvent('change', { photos })
-            }
-          }
-        })
-      })
+          })
+          photos.push({
+            id: `${timestamp}_${i}`,
+            fileID: res.fileID
+          })
+        } catch (err) {
+          console.error('上传失败', err)
+          wx.showToast({ title: `第${i + 1}张上传失败`, icon: 'none' })
+        }
+        this.setData({ uploadProgress: Math.round((i + 1) / total * 100) })
+      }
+
+      this.setData({ uploading: false, uploadProgress: 0 })
+      this.triggerEvent('change', { photos })
     },
 
     // 删除照片

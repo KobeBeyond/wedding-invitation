@@ -1,5 +1,6 @@
 // pages/guest/view/view.js — 来宾视角：完整请柬页面
 const app = getApp()
+const { preloadImages } = require('../../utils/util.js')
 
 Page({
   data: {
@@ -140,6 +141,14 @@ Page({
             markers,
             loading: false
           })
+
+          // 预加载关键图片，减少滑动时的白屏
+          const urls = []
+          if (d.coverImage) urls.push(d.coverImage)
+          if (d.groomAvatar) urls.push(d.groomAvatar)
+          if (d.brideAvatar) urls.push(d.brideAvatar)
+          if (d.photos) d.photos.forEach(p => { if (p.url) urls.push(p.url) })
+          preloadImages(urls)
 
           this.startCountdown(d.weddingDate)
           this.loadBlessings(id)

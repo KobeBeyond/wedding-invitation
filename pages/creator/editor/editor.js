@@ -1,4 +1,6 @@
 // pages/creator/editor/editor.js
+const { compressImage } = require('../../utils/util.js')
+
 Page({
   data: {
     invitationId: '',
@@ -182,53 +184,61 @@ Page({
   },
 
   // 通用头像选择
-  chooseAvatar(field) {
+  async chooseAvatar(field) {
     wx.chooseMedia({
       count: 1,
       mediaType: ['image'],
       sizeType: ['compressed'],
-      success: res => {
+      success: async res => {
         const tempFile = res.tempFiles[0]
         wx.showLoading({ title: '上传中...' })
-        wx.cloud.uploadFile({
-          cloudPath: `avatars/${field}_${Date.now()}.jpg`,
-          filePath: tempFile.tempFilePath,
-          success: res => {
-            this.setData({ [field]: res.fileID })
-          },
-          fail: () => {
-            wx.showToast({ title: '上传失败', icon: 'none' })
-          },
-          complete: () => {
-            wx.hideLoading()
-          }
-        })
+        try {
+          const compressedPath = await compressImage(tempFile.tempFilePath)
+          const uploadRes = await new Promise((resolve, reject) => {
+            wx.cloud.uploadFile({
+              cloudPath: `avatars/${field}_${Date.now()}.jpg`,
+              filePath: compressedPath,
+              success: resolve,
+              fail: reject
+            })
+          })
+          this.setData({ [field]: uploadRes.fileID })
+        } catch (err) {
+          console.error('Avatar upload failed:', err)
+          wx.showToast({ title: '上传失败', icon: 'none' })
+        } finally {
+          wx.hideLoading()
+        }
       }
     })
   },
 
   // 选择封面图
-  chooseCoverImage() {
+  async chooseCoverImage() {
     wx.chooseMedia({
       count: 1,
       mediaType: ['image'],
       sizeType: ['compressed'],
-      success: res => {
+      success: async res => {
         const tempFile = res.tempFiles[0]
         wx.showLoading({ title: '上传中...' })
-        wx.cloud.uploadFile({
-          cloudPath: `covers/${Date.now()}.jpg`,
-          filePath: tempFile.tempFilePath,
-          success: res => {
-            this.setData({ coverImage: res.fileID })
-          },
-          fail: () => {
-            wx.showToast({ title: '上传失败', icon: 'none' })
-          },
-          complete: () => {
-            wx.hideLoading()
-          }
-        })
+        try {
+          const compressedPath = await compressImage(tempFile.tempFilePath)
+          const uploadRes = await new Promise((resolve, reject) => {
+            wx.cloud.uploadFile({
+              cloudPath: `covers/${Date.now()}.jpg`,
+              filePath: compressedPath,
+              success: resolve,
+              fail: reject
+            })
+          })
+          this.setData({ coverImage: uploadRes.fileID })
+        } catch (err) {
+          console.error('Cover upload failed:', err)
+          wx.showToast({ title: '上传失败', icon: 'none' })
+        } finally {
+          wx.hideLoading()
+        }
       }
     })
   },

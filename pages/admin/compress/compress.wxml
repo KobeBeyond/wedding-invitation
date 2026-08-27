@@ -1,0 +1,21 @@
+<view class="compress-page">
+  <view class="header">
+    <text class="title">批量压缩图片</text>
+    <text class="subtitle">遍历所有请柬，将超过2MB的图片压缩替换</text>
+  </view>
+
+  <view class="progress" wx:if="{{total > 0}}">
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: {{done / total * 100}}%"></view>
+    </view>
+    <text class="progress-text">{{done}} / {{total}}</text>
+  </view>
+
+  <view class="log-panel">
+    <view wx:for="{{logs}}" wx:key="index" class="log-line">{{item}}</view>
+  </view>
+
+  <view class="footer" wx:if="{{!loading && total === 0}}">
+    <button class="btn-primary" bindtap="startCompress">开始处理</button>
+  </view>
+</view>
