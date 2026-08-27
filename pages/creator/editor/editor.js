@@ -1,5 +1,5 @@
 // pages/creator/editor/editor.js
-const { compressImage } = require('../../utils/util.js')
+const { compressImage } = require('../../../utils/util.js')
 
 Page({
   data: {
@@ -84,23 +84,29 @@ Page({
     })
   },
 
-  // 步骤切换
-  goStep(e) {
-    const step = e.currentTarget.dataset.step
-    this.setData({ currentStep: step })
-  },
+// 步骤切换
+goStep(e) {
+  const step = e.currentTarget.dataset.step
+  this.switchToStep(step)
+},
 
-  prevStep() {
-    if (this.data.currentStep > 0) {
-      this.setData({ currentStep: this.data.currentStep - 1 })
-    }
-  },
+prevStep() {
+  if (this.data.currentStep > 0) {
+    this.switchToStep(this.data.currentStep - 1)
+  }
+},
 
-  nextStep() {
-    if (this.data.currentStep < this.data.steps.length - 1) {
-      this.setData({ currentStep: this.data.currentStep + 1 })
-    }
-  },
+nextStep() {
+  if (this.data.currentStep < this.data.steps.length - 1) {
+    this.switchToStep(this.data.currentStep + 1)
+  }
+},
+
+switchToStep(step) {
+  this.setData({ currentStep: step })
+  // 重置页面滚动位置，新步骤从顶部开始
+  wx.pageScrollTo({ scrollTop: 0, duration: 0 })
+},
 
   // 输入框绑定
   onInput(e) {

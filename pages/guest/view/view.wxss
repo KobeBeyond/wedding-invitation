@@ -767,7 +767,7 @@ font-weight: 400;
 /* 头像选择按钮 */
 .blessing-avatar-btn {
   flex-shrink: 0;
-  width: 64rpx;
+  width: 64rpx!important;
   height: 64rpx;
   padding: 0;
   margin: 0;

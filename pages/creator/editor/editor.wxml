@@ -16,7 +16,7 @@
   </scroll-view>
 
   <!-- 步骤1: 基本信息 -->
-  <view class="step-content" wx:if="{{currentStep == 0}}">
+  <view class="step-content" hidden="{{currentStep != 0}}">
     <view class="section-title">基本信息</view>
 
     <view class="form-group">
@@ -94,7 +94,7 @@
   </view>
 
   <!-- 步骤2: 婚纱照 -->
-  <view class="step-content" wx:if="{{currentStep == 1}}">
+  <view class="step-content" hidden="{{currentStep != 1}}">
     <view class="section-title">婚纱照片</view>
     <view class="section-desc">上传你们的婚纱照，访客可以滑动浏览</view>
     <photo-uploader
@@ -105,7 +105,7 @@
   </view>
 
   <!-- 步骤3: 婚礼地点 -->
-  <view class="step-content" wx:if="{{currentStep == 2}}">
+  <view class="step-content" hidden="{{currentStep != 2}}">
     <view class="section-title">婚礼地点</view>
 
     <view class="form-group">
@@ -160,7 +160,7 @@
   </view>
 
   <!-- 步骤4: 时间线 -->
-  <view class="step-content" wx:if="{{currentStep == 3}}">
+  <view class="step-content" hidden="{{currentStep != 3}}">
     <view class="section-title">婚礼时间线</view>
     <view class="section-desc">婚礼当天的流程安排</view>
 
@@ -203,7 +203,7 @@
   </view>
 
   <!-- 步骤5: 音乐 & 封面 -->
-  <view class="step-content" wx:if="{{currentStep == 4}}">
+  <view class="step-content" hidden="{{currentStep != 4}}">
     <view class="section-title">音乐与封面</view>
 
     <view class="form-group">

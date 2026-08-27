@@ -1,6 +1,6 @@
 // pages/guest/view/view.js — 来宾视角：完整请柬页面
 const app = getApp()
-const { preloadImages } = require('../../utils/util.js')
+const { preloadImages } = require('../../../utils/util.js')
 
 Page({
   data: {
@@ -410,19 +410,36 @@ Page({
   },
 
   checkUserAvatar() {
-    const cachedAvatar = wx.getStorageSync('wedding_avatar')
+    let cachedAvatar = wx.getStorageSync('wedding_avatar')
+    // 过滤掉旧版临时路径（http://tmp/ 开头），这些路径会报 CORS
+    if (cachedAvatar && cachedAvatar.startsWith('http')) {
+      wx.removeStorageSync('wedding_avatar')
+      cachedAvatar = ''
+    }
     if (cachedAvatar) {
       this.setData({ userAvatar: cachedAvatar })
     }
   },
 
-  // chooseAvatar 回调：用户选择微信头像
-  onChooseAvatar(e) {
-    const avatarUrl = e.detail.avatarUrl
-    if (!avatarUrl) return
-    // 临时路径存储到本地，下次进入页面自动回填
-    wx.setStorageSync('wedding_avatar', avatarUrl)
-    this.setData({ userAvatar: avatarUrl })
+  // chooseAvatar 回调：用户选择微信头像后立即上传云存储
+  async onChooseAvatar(e) {
+    const tempPath = e.detail.avatarUrl
+    if (!tempPath) return
+    wx.showLoading({ title: '上传中...' })
+    try {
+      const uploadRes = await wx.cloud.uploadFile({
+        cloudPath: `avatars/visitor_${Date.now()}.jpg`,
+        filePath: tempPath
+      })
+      const fileID = uploadRes.fileID
+      wx.setStorageSync('wedding_avatar', fileID)
+      this.setData({ userAvatar: fileID })
+    } catch (err) {
+      console.error('Avatar upload failed:', err)
+      wx.showToast({ title: '头像上传失败', icon: 'none' })
+    } finally {
+      wx.hideLoading()
+    }
   },
 
   onBlessingInput(e) {
