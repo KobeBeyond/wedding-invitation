@@ -68,8 +68,9 @@ Page({
 
   // 页面回到前台时恢复音乐播放
   onShow() {
-    if (this._audioCtx && this.data.musicStarted && this.data.playing) {
-      // 延迟一点确保页面完全显示后再恢复
+    // 只要用户之前启动过音乐（musicStarted），就恢复播放
+    // 不依赖 playing 状态，因为 wx.previewImage 等操作会触发 onPause 把 playing 设为 false
+    if (this._audioCtx && this.data.musicStarted) {
       setTimeout(() => {
         if (this._audioCtx && this.data.musicStarted) {
           this._audioCtx.play()
