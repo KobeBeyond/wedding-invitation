@@ -170,14 +170,11 @@
           <text class="timeline-item-title">流程 {{index + 1}}</text>
           <text class="timeline-remove" data-index="{{index}}" bindtap="removeTimelineItem">删除</text>
         </view>
-        <input
-          class="form-input"
-          placeholder="时间，如：08:30"
-          value="{{item.time}}"
-          data-index="{{index}}"
-          data-field="time"
-          bindinput="onTimelineInput"
-        />
+        <picker mode="time" value="{{item.time}}" data-index="{{index}}" data-field="time" bindchange="onTimelineInput">
+          <view class="form-input picker-input {{item.time ? '' : 'placeholder'}}">
+            {{item.time || '时间，如：08:30'}}
+          </view>
+        </picker>
         <input
           class="form-input"
           placeholder="标题，如：迎宾"

@@ -94,6 +94,7 @@
 }
 
 .form-input {
+  width: 100%;
   height: 88rpx;
   background: #fff;
   border-radius: 16rpx;
@@ -101,12 +102,16 @@
   font-size: 30rpx;
   color: #333;
   border: 2rpx solid #f0f0f0;
-  display: flex;
-  align-items: center;
+  box-sizing: border-box;
 }
 
 .form-input.placeholder {
   color: #ccc;
+}
+
+.picker-input {
+  display: flex;
+  align-items: center;
 }
 
 .form-input-row {
