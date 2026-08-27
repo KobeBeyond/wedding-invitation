@@ -436,14 +436,17 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  transform: scale(0.88);
-  opacity: 0.55;
+  will-change: transform;
 }
 
-.card-item.active {
+.card-item.active .card-img {
   transform: scale(1);
   opacity: 1;
+}
+
+.card-item:not(.active) .card-img {
+  transform: scale(0.9);
+  opacity: 0.6;
 }
 
 .card-img {
@@ -451,7 +454,8 @@ page {
   height: 100%;
   border-radius: 20rpx;
   background: #f5f0f0;
-  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.12);
+  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+  will-change: transform, opacity;
 }
 
 /* 无照片时兜底 */
