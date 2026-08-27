@@ -39,7 +39,6 @@
   background: linear-gradient(135deg, #e8a0a0, #d48888);
   color: #fff;
   font-size: 22rpx;
-  font-weight: 600;
 }
 
 .danmaku-text {

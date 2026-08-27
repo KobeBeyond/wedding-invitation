@@ -29,7 +29,7 @@ Page({
 
     // 祝福墙
     blessingText: '',
-    userNickName: '',
+    canSend: false,
     userAvatar: '',  // 微信头像临时路径
     blessingCount: 0,
     blessingsLoading: true,
@@ -46,9 +46,6 @@ Page({
     companionCountIndex: 0,
     companionCountOptions: ['1人', '2人', '3人', '4人', '5人', '6人', '7人', '8人', '9人', '10人'],
 
-    // 用户信息
-    userNickName: '',
-    userAvatar: ''
   },
 
   onLoad(options) {
@@ -59,7 +56,7 @@ Page({
     }
     this.setData({ inv: options.inv })
     this.loadInvitation(options.inv)
-    this.checkNickName()
+    this.checkUserAvatar()
   },
 
   // 页面回到前台时恢复音乐播放
@@ -403,12 +400,8 @@ Page({
     }, 8000)
   },
 
-  checkNickName() {
-    const cachedName = wx.getStorageSync('wedding_nick_name')
+  checkUserAvatar() {
     const cachedAvatar = wx.getStorageSync('wedding_avatar')
-    if (cachedName) {
-      this.setData({ userNickName: cachedName })
-    }
     if (cachedAvatar) {
       this.setData({ userAvatar: cachedAvatar })
     }
@@ -424,11 +417,11 @@ Page({
   },
 
   onBlessingInput(e) {
-    this.setData({ blessingText: e.detail.value })
-  },
-
-  onNickNameInput(e) {
-    this.setData({ userNickName: e.detail.value })
+    const value = e.detail.value
+    this.setData({
+      blessingText: value,
+      canSend: value.trim().length > 0
+    })
   },
 
   async sendBlessing() {
@@ -438,21 +431,16 @@ Page({
       return
     }
 
-    let nickName = this.data.userNickName.trim()
-    if (!nickName) {
-      nickName = '匿名好友'
-    }
     let avatarUrl = this.data.userAvatar || ''
-    wx.setStorageSync('wedding_nick_name', nickName)
 
-    // 先本地飘一条弹幕（用当前路径，无论是临时路径还是 fileID，都能即时显示）
+    // 先本地飘一条弹幕
     const danmaku = this.selectComponent('#danmaku')
     if (danmaku) {
-      danmaku.addDanmu(text, avatarUrl, nickName)
+      danmaku.addDanmu(text, avatarUrl, '')
     }
     this.setData({ blessingText: '' })
 
-    // 头像持久化：临时路径 → 上传云存储 → 拿到 fileID（跨设备可访问）
+    // 头像持久化：临时路径 → 上传云存储 → 拿到 fileID
     if (avatarUrl && !avatarUrl.startsWith('cloud://')) {
       try {
         const uploadRes = await wx.cloud.uploadFile({
@@ -461,13 +449,11 @@ Page({
         })
         if (uploadRes.fileID) {
           avatarUrl = uploadRes.fileID
-          // 缓存 fileID，下次发送祝福不用重复上传
           wx.setStorageSync('wedding_avatar', avatarUrl)
           this.setData({ userAvatar: avatarUrl })
         }
       } catch (err) {
         console.error('Avatar upload failed, falling back to temp path:', err)
-        // 上传失败时仍用临时路径提交，至少本设备弹幕能显示
       }
     }
 
@@ -476,7 +462,7 @@ Page({
         name: 'submitBlessing',
         data: {
           text,
-          nickName,
+          nickName: '',
           avatarUrl,
           invitationId: this.data.inv
         }

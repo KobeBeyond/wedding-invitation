@@ -5,7 +5,7 @@
         style="top:{{item.top}}%; animation-duration:{{item.duration}}s; animation-delay:{{item.delay}}s;">
     <!-- 圆形头像 -->
     <image wx:if="{{item.avatar}}" src="{{item.avatar}}" class="danmaku-avatar" mode="aspectFill" />
-    <view wx:else class="danmaku-avatar danmaku-avatar-default">{{item.initial}}</view>
+    <view wx:else class="danmaku-avatar danmaku-avatar-default">♥</view>
     <!-- 祝福语 -->
     <text class="danmaku-text">{{item.text}}</text>
   </view>

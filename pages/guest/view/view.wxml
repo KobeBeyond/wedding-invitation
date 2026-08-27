@@ -97,58 +97,7 @@
     </view>
   </view>
 
-  <!-- ========== 第三屏：婚礼信息 ========== -->
-  <view class="section wedding-info-section" wx:if="{{invitation.venueName || invitation.venueAddress}}">
-    <view class="section-header">
-      <view class="header-line"></view>
-      <text class="header-title">婚礼地点</text>
-      <view class="header-line"></view>
-    </view>
-
-    <view class="info-card">
-      <view class="venue-name" wx:if="{{invitation.venueName}}">{{invitation.venueName}}</view>
-      <view class="venue-hall" wx:if="{{invitation.venueHall}}">{{invitation.venueHall}}</view>
-
-      <view class="info-row" wx:if="{{invitation.weddingDate}}">
-        <text class="info-icon">📅</text>
-        <view class="info-content">
-          <text class="info-label">婚期</text>
-          <text class="info-value">{{invitation.weddingDate}}</text>
-        </view>
-      </view>
-
-      <view class="info-row" wx:if="{{invitation.venueAddress}}">
-        <text class="info-icon">📍</text>
-        <view class="info-content">
-          <text class="info-label">地址</text>
-          <text class="info-value">{{invitation.venueAddress}}</text>
-        </view>
-      </view>
-
-      <view class="info-row" wx:if="{{invitation.venuePhone}}">
-        <text class="info-icon">📞</text>
-        <view class="info-content">
-          <text class="info-label">电话</text>
-          <text class="info-value" bindtap="callVenue">{{invitation.venuePhone}}</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- 地图 -->
-    <view class="map-wrap" wx:if="{{invitation.venueLat && invitation.venueLng}}">
-      <map
-        class="venue-map"
-        longitude="{{invitation.venueLng}}"
-        latitude="{{invitation.venueLat}}"
-        markers="{{markers}}"
-        scale="16"
-        show-location
-      ></map>
-      <view class="map-nav-btn" bindtap="openNavigation">🧭 导航到这里</view>
-    </view>
-  </view>
-
-  <!-- ========== 第四屏：婚纱照 + 弹幕 ========== -->
+  <!-- ========== 第三屏：婚纱照 + 弹幕 ========== -->
   <view class="section photos-section">
     <view class="section-header">
       <view class="header-line"></view>
@@ -210,6 +159,57 @@
         <image wx:if="{{item.url}}" src="{{item.url}}" mode="aspectFill" class="thumb-img" lazy-load />
       </view>
     </scroll-view>
+  </view>
+
+  <!-- ========== 第四屏：婚礼信息 ========== -->
+  <view class="section wedding-info-section" wx:if="{{invitation.venueName || invitation.venueAddress}}">
+    <view class="section-header">
+      <view class="header-line"></view>
+      <text class="header-title">婚礼地点</text>
+      <view class="header-line"></view>
+    </view>
+
+    <view class="info-card">
+      <view class="venue-name" wx:if="{{invitation.venueName}}">{{invitation.venueName}}</view>
+      <view class="venue-hall" wx:if="{{invitation.venueHall}}">{{invitation.venueHall}}</view>
+
+      <view class="info-row" wx:if="{{invitation.weddingDate}}">
+        <text class="info-icon">📅</text>
+        <view class="info-content">
+          <text class="info-label">婚期</text>
+          <text class="info-value">{{invitation.weddingDate}}</text>
+        </view>
+      </view>
+
+      <view class="info-row" wx:if="{{invitation.venueAddress}}">
+        <text class="info-icon">📍</text>
+        <view class="info-content">
+          <text class="info-label">地址</text>
+          <text class="info-value">{{invitation.venueAddress}}</text>
+        </view>
+      </view>
+
+      <view class="info-row" wx:if="{{invitation.venuePhone}}">
+        <text class="info-icon">📞</text>
+        <view class="info-content">
+          <text class="info-label">电话</text>
+          <text class="info-value" bindtap="callVenue">{{invitation.venuePhone}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 地图 -->
+    <view class="map-wrap" wx:if="{{invitation.venueLat && invitation.venueLng}}">
+      <map
+        class="venue-map"
+        longitude="{{invitation.venueLng}}"
+        latitude="{{invitation.venueLat}}"
+        markers="{{markers}}"
+        scale="16"
+        show-location
+      ></map>
+      <view class="map-nav-btn" bindtap="openNavigation">🧭 导航到这里</view>
+    </view>
   </view>
 
   <!-- ========== 第五屏：婚礼流程 ========== -->
@@ -365,11 +365,8 @@
     <view class="blessing-list" wx:if="{{blessingCount > 0}}">
 <view class="blessing-list-item" wx:for="{{blessingList}}" wx:key="_id">
   <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" class="blessing-list-avatar" mode="aspectFill" />
-  <view wx:else class="blessing-list-avatar blessing-list-avatar-default">{{item.nickName ? item.nickName.charAt(0) : '♥'}}</view>
-  <view class="blessing-list-content">
-    <text class="blessing-list-name">{{item.nickName || '匿名好友'}}</text>
-    <text class="blessing-list-text">{{item.text}}</text>
-  </view>
+  <view wx:else class="blessing-list-avatar blessing-list-avatar-default">♥</view>
+  <text class="blessing-list-text">{{item.text}}</text>
 </view>
     </view>
 
@@ -379,15 +376,13 @@
   <button class="blessing-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
     <image wx:if="{{userAvatar}}" src="{{userAvatar}}" class="blessing-avatar-img" mode="aspectFill" />
     <view wx:else class="blessing-avatar-placeholder">
-      <text class="blessing-avatar-icon">😀</text>
+      <text class="blessing-avatar-icon">♥</text>
     </view>
   </button>
-  <input class="blessing-nick-input" placeholder="昵称" value="{{userNickName}}"
-    type="nickname" bindinput="onNickNameInput" maxlength="12" />
-  <input class="blessing-input" placeholder="写下祝福..." value="{{blessingText}}"
+  <input class="blessing-input" placeholder="写下你的祝福..." value="{{blessingText}}"
     bindinput="onBlessingInput" confirm-type="send" bindconfirm="sendBlessing"
     maxlength="50" />
-  <view class="blessing-send-btn {{blessingText.trim() ? 'active' : ''}}" bindtap="sendBlessing">
+  <view class="blessing-send-btn {{canSend ? 'active' : ''}}" bindtap="sendBlessing">
     发送
   </view>
 </view>
