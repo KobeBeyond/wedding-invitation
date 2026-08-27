@@ -381,11 +381,10 @@ Page({
     })
   },
 
-  // 切换到指定页
+  // 切换到指定页（dataset 取出的是字符串，必须转成数字，否则高亮和边界判断全错）
   goBlessingPage(e) {
-    const page = e.currentTarget.dataset.page
-    const totalPages = Math.ceil(this.data.blessingCount / this.data.blessingPageSize)
-    if (page < 0 || page >= totalPages) return
+    const page = parseInt(e.currentTarget.dataset.page, 10)
+    if (isNaN(page) || page < 0 || page >= this.data.blessingTotalPages) return
     this.setData({ blessingPage: page }, () => {
       this.updatePagedBlessings()
     })
@@ -401,8 +400,7 @@ Page({
 
   // 下一页
   nextBlessingPage() {
-    const totalPages = Math.ceil(this.data.blessingCount / this.data.blessingPageSize)
-    if (this.data.blessingPage >= totalPages - 1) return
+    if (this.data.blessingPage >= this.data.blessingTotalPages - 1) return
     this.setData({ blessingPage: this.data.blessingPage + 1 }, () => {
       this.updatePagedBlessings()
     })
@@ -421,13 +419,26 @@ Page({
           if (this._lastBlessingId === newBlessing._id) return
           this._lastBlessingId = newBlessing._id
 
-          this.setData({ blessingCount: this.data.blessingCount + 1 })
-      const danmaku = this.selectComponent('#danmaku')
-      if (danmaku) {
-        danmaku.addDanmu(newBlessing.text, newBlessing.avatarUrl || '', newBlessing.nickName || '', {
-          duration: 6 + Math.random() * 4
-        })
-      }
+          // 新祝福加入列表头部（列表按 createdAt 倒序，最新在前），并刷新分页
+          const list = this.data.blessingList.slice()
+          // 防重复：发送时已乐观插入过
+          const exists = list.some(b => b._id === newBlessing._id)
+          if (!exists) {
+            list.unshift(newBlessing)
+          }
+          this.setData({
+            blessingCount: exists ? this.data.blessingCount : this.data.blessingCount + 1,
+            blessingList: list
+          }, () => {
+            this.updatePagedBlessings()
+          })
+
+          const danmaku = this.selectComponent('#danmaku')
+          if (danmaku) {
+            danmaku.addDanmu(newBlessing.text, newBlessing.avatarUrl || '', newBlessing.nickName || '', {
+              duration: 6 + Math.random() * 4
+            })
+          }
         },
         onError: (err) => {
           console.error('Blessing watch error:', err)
@@ -540,7 +551,7 @@ Page({
     }
 
     try {
-      await wx.cloud.callFunction({
+      const submitRes = await wx.cloud.callFunction({
         name: 'submitBlessing',
         data: {
           text,
@@ -549,6 +560,19 @@ Page({
           invitationId: this.data.inv
         }
       })
+      // 乐观更新：立即把新祝福插入列表头部并刷新分页
+      if (submitRes.result && submitRes.result._id) {
+        this._lastBlessingId = submitRes.result._id // 防止 watcher 重复插入
+        const newItem = { _id: submitRes.result._id, text, nickName: '', avatarUrl }
+        const list = this.data.blessingList.slice()
+        list.unshift(newItem)
+        this.setData({
+          blessingCount: this.data.blessingCount + 1,
+          blessingList: list
+        }, () => {
+          this.updatePagedBlessings()
+        })
+      }
     } catch (err) {
       console.error('Submit blessing error:', err)
     }
