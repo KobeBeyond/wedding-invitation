@@ -85,6 +85,11 @@
   margin-right: 24rpx;
 }
 
+.rsvp-stat {
+  color: #e8a0a0;
+  font-weight: 500;
+}
+
 .inv-actions {
   display: flex;
   gap: 16rpx;

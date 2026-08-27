@@ -12,7 +12,8 @@
     "pages/rsvp/rsvp",
     "pages/blessings/blessings",
     "pages/schedule/schedule",
-    "pages/admin/compress/compress"
+    "pages/admin/compress/compress",
+    "pages/creator/rsvp-stats/rsvp-stats"
   ],
   "window": {
     "navigationBarTitleText": "Nupcias 婚礼请柬",

@@ -1,0 +1,78 @@
+<!-- pages/creator/rsvp-stats/rsvp-stats.wxml -->
+<view class="rsvp-stats">
+
+  <!-- 统计概览 -->
+  <view class="stats-overview">
+    <view class="stat-card">
+      <text class="stat-num">{{stats.rsvpCount}}</text>
+      <text class="stat-label">总回复</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-num">{{stats.attendingGuests}}</text>
+      <text class="stat-label">出席人数</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-num">{{stats.notAttendingGuests}}</text>
+      <text class="stat-label">缺席人数</text>
+    </view>
+    <view class="stat-card highlight">
+      <text class="stat-num">{{stats.totalAttendingPeople}}</text>
+      <text class="stat-label">预计到场</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-num">{{stats.blessingCount}}</text>
+      <text class="stat-label">收到祝福</text>
+    </view>
+  </view>
+
+  <!-- 筛选标签 -->
+  <view class="filter-bar">
+    <view
+      wx:for="{{filterOptions}}"
+      wx:key="key"
+      class="filter-tag {{filter === item.key ? 'active' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="switchFilter"
+    >{{item.label}}</view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text>加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:elif="{{filteredList.length === 0}}">
+    <text class="empty-icon">📋</text>
+    <text class="empty-text">{{filter === 'all' ? '暂无任何 RSVP 回复' : '该分类下暂无数据'}}</text>
+  </view>
+
+  <!-- 来宾列表 -->
+  <view class="guest-list" wx:else>
+    <view class="guest-item" wx:for="{{filteredList}}" wx:key="_id">
+      <view class="guest-header">
+        <text class="guest-name">{{item.name}}</text>
+        <view class="guest-status {{item.attending}}">
+          {{item.attending === 'yes' ? '✅ 出席' : '❌ 缺席'}}
+        </view>
+      </view>
+      <view class="guest-detail">
+        <text class="detail-item">📱 {{item.phone}}</text>
+        <text class="detail-item" wx:if="{{item.attending === 'yes' && item.guestCount > 1}}">
+          👥 随行 {{item.guestCount}} 人
+        </text>
+        <text class="detail-item" wx:if="{{item.hasCompanion === 'yes' && item.companionCount > 0}}">
+          🤝 携伴 {{item.companionCount}} 人
+        </text>
+        <text class="detail-item" wx:if="{{item.dietary}}">
+          🍽 饮食备注：{{item.dietary}}
+        </text>
+        <text class="detail-item" wx:if="{{item.message}}">
+          💬 留言：{{item.message}}
+        </text>
+      </view>
+    </view>
+  </view>
+
+</view>

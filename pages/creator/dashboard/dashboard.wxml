@@ -35,6 +35,7 @@
       bind:edit="onEdit"
       bind:share="onShare"
       bind:delete="onDelete"
+      bind:stats="onStats"
     />
   </view>
 

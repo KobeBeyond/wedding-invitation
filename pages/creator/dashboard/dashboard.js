@@ -71,6 +71,14 @@ Page({
     })
   },
 
+  // RSVP 统计
+  onStats(e) {
+    const id = e.detail.id
+    wx.navigateTo({
+      url: `/pages/creator/rsvp-stats/rsvp-stats?id=${id}`
+    })
+  },
+
   // 删除请柬
   onDelete(e) {
     const id = e.detail.id

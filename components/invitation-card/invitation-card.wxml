@@ -34,6 +34,7 @@
     <!-- 统计 -->
     <view class="inv-stats" wx:if="{{invitation.status === 'published'}}">
       <text class="stat">👁 {{invitation.viewCount || 0}}</text>
+      <text class="stat rsvp-stat" catchtap="onStats">📋 查看RSVP</text>
     </view>
 
     <!-- 操作按钮 -->
