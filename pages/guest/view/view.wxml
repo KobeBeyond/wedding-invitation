@@ -363,11 +363,27 @@
 
     <!-- 历史祝福列表 -->
     <view class="blessing-list" wx:if="{{blessingCount > 0}}">
-<view class="blessing-list-item" wx:for="{{blessingList}}" wx:key="_id">
-  <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" class="blessing-list-avatar" mode="aspectFill" />
-  <view wx:else class="blessing-list-avatar blessing-list-avatar-default">♥</view>
-  <text class="blessing-list-text">{{item.text}}</text>
-</view>
+      <view class="blessing-list-item" wx:for="{{pagedBlessings}}" wx:key="_id">
+        <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" class="blessing-list-avatar" mode="aspectFill" />
+        <view wx:else class="blessing-list-avatar blessing-list-avatar-default">♥</view>
+        <text class="blessing-list-text">{{item.text}}</text>
+      </view>
+    </view>
+
+    <!-- 分页控件 -->
+    <view class="pagination" wx:if="{{blessingCount > blessingPageSize}}">
+      <view class="page-btn {{blessingPage <= 0 ? 'disabled' : ''}}" bindtap="prevBlessingPage">上一页</view>
+      <view class="page-numbers">
+        <view
+          wx:for="{{blessingPageNumbers}}"
+          wx:for-item="pageNum"
+          wx:key="*this"
+          class="page-num {{blessingPage === pageNum ? 'active' : ''}}"
+          data-page="{{pageNum}}"
+          bindtap="goBlessingPage"
+        >{{pageNum + 1}}</view>
+      </view>
+      <view class="page-btn {{blessingPage >= blessingTotalPages - 1 ? 'disabled' : ''}}" bindtap="nextBlessingPage">下一页</view>
     </view>
 
 <!-- 输入栏 -->

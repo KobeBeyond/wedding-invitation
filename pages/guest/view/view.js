@@ -35,6 +35,11 @@ Page({
     blessingCount: 0,
     blessingsLoading: true,
     blessingList: [],
+    pagedBlessings: [],
+    blessingPage: 0,
+    blessingPageSize: 6,
+    blessingTotalPages: 0,
+    blessingPageNumbers: [],
 
     // 音乐
     playing: false,
@@ -329,19 +334,25 @@ Page({
       })
       if (res.result && res.result.data) {
         const count = res.result.data.length
-        this.setData({ blessingCount: count, blessingList: res.result.data, blessingsLoading: false })
+        const list = res.result.data
+        this.setData({
+          blessingCount: count,
+          blessingList: list,
+          blessingsLoading: false
+        })
+        this.updatePagedBlessings()
 
-      // 逐条播放历史弹幕（头像 + 祝福语），按照片轮播时间均匀分布
-      const danmaku = this.selectComponent('#danmaku')
-      if (danmaku) {
-        const items = res.result.data.map(b => ({
-          text: b.text,
-          avatar: b.avatarUrl || '',
-          name: b.nickName || ''
-        }))
-        const photoCount = (this.data.invitation.photos && this.data.invitation.photos.length) || 1
-        danmaku.addBatch(items, { photoCount, interval: 3500 })
-      }
+        // 逐条播放历史弹幕（头像 + 祝福语），按照片轮播时间均匀分布
+        const danmaku = this.selectComponent('#danmaku')
+        if (danmaku) {
+          const items = list.map(b => ({
+            text: b.text,
+            avatar: b.avatarUrl || '',
+            name: b.nickName || ''
+          }))
+          const photoCount = (this.data.invitation.photos && this.data.invitation.photos.length) || 1
+          danmaku.addBatch(items, { photoCount, interval: 3500 })
+        }
       } else {
         this.setData({ blessingsLoading: false })
       }
@@ -350,6 +361,51 @@ Page({
       this.setData({ blessingsLoading: false })
     }
     this.startBlessingWatch(invitationId)
+  },
+
+  // 根据当前页码，从 blessingList 切片生成 pagedBlessings
+  updatePagedBlessings() {
+    const { blessingList, blessingPage, blessingPageSize } = this.data
+    const totalPages = Math.ceil(blessingList.length / blessingPageSize) || 0
+    const start = blessingPage * blessingPageSize
+    const end = start + blessingPageSize
+    // 生成页码数组 [0, 1, 2, ...]
+    const pageNumbers = []
+    for (let i = 0; i < totalPages; i++) {
+      pageNumbers.push(i)
+    }
+    this.setData({
+      pagedBlessings: blessingList.slice(start, end),
+      blessingTotalPages: totalPages,
+      blessingPageNumbers: pageNumbers
+    })
+  },
+
+  // 切换到指定页
+  goBlessingPage(e) {
+    const page = e.currentTarget.dataset.page
+    const totalPages = Math.ceil(this.data.blessingCount / this.data.blessingPageSize)
+    if (page < 0 || page >= totalPages) return
+    this.setData({ blessingPage: page }, () => {
+      this.updatePagedBlessings()
+    })
+  },
+
+  // 上一页
+  prevBlessingPage() {
+    if (this.data.blessingPage <= 0) return
+    this.setData({ blessingPage: this.data.blessingPage - 1 }, () => {
+      this.updatePagedBlessings()
+    })
+  },
+
+  // 下一页
+  nextBlessingPage() {
+    const totalPages = Math.ceil(this.data.blessingCount / this.data.blessingPageSize)
+    if (this.data.blessingPage >= totalPages - 1) return
+    this.setData({ blessingPage: this.data.blessingPage + 1 }, () => {
+      this.updatePagedBlessings()
+    })
   },
 
   startBlessingWatch(invitationId) {
@@ -555,7 +611,7 @@ Page({
   onShareAppMessage() {
     const d = this.data.invitation || {}
     return {
-      title: d.shareTitle || `${d.groomName}&${d.brideName}邀请您参加我们的婚礼`,
+      title: d.shareTitle || `${d.groomName} & ${d.brideName}的婚礼请柬`,
       path: `/pages/router/router?inv=${this.data.inv}`,
       imageUrl: d.coverImage || ''
     }
@@ -564,7 +620,7 @@ Page({
   onShareTimeline() {
     const d = this.data.invitation || {}
     return {
-      title: d.shareTitle || `${d.groomName}&${d.brideName}的婚礼邀请`,
+      title: d.shareTitle || `${d.groomName} & ${d.brideName}的婚礼请柬`,
       query: `inv=${this.data.inv}`,
       imageUrl: d.coverImage || ''
     }

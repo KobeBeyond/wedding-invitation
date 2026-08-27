@@ -890,6 +890,54 @@ font-weight: 400;
   line-height: 1.5;
 }
 
+/* 分页控件 */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+  margin-top: 24rpx;
+  padding: 16rpx 0;
+}
+
+.page-btn {
+  padding: 10rpx 24rpx;
+  font-size: 24rpx;
+  color: #c98d8d;
+  background: #fff;
+  border-radius: 28rpx;
+  border: 2rpx solid #f0e0e0;
+}
+
+.page-btn.disabled {
+  color: #ccc;
+  border-color: #eee;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 12rpx;
+}
+
+.page-num {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #999;
+  background: #fff;
+  border-radius: 50%;
+  border: 2rpx solid #f0e0e0;
+}
+
+.page-num.active {
+  color: #fff;
+  background: #c98d8d;
+  border-color: #c98d8d;
+}
+
 .blessing-send-btn {
   flex-shrink: 0;
   height: 80rpx;
