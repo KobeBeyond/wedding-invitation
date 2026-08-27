@@ -35,9 +35,10 @@ Page({
     blessingCount: 0,
     blessingsLoading: true,
     blessingList: [],
-    pagedBlessings: [],
     blessingPage: 0,
     blessingPageSize: 6,
+    blessingPageStart: 0,
+    blessingPageEnd: 6,
     blessingTotalPages: 0,
     blessingPageNumbers: [],
 
@@ -369,7 +370,7 @@ Page({
     this.startBlessingWatch(invitationId)
   },
 
-  // 根据当前页码，从 blessingList 切片生成 pagedBlessings
+  // 根据当前页码，计算分页显示范围（用 hidden 控制，不 slice 数组，避免换页时 image 重建重载）
   updatePagedBlessings() {
     const { blessingList, blessingPage, blessingPageSize } = this.data
     const totalPages = Math.ceil(blessingList.length / blessingPageSize) || 0
@@ -381,7 +382,8 @@ Page({
       pageNumbers.push(i)
     }
     this.setData({
-      pagedBlessings: blessingList.slice(start, end),
+      blessingPageStart: start,
+      blessingPageEnd: end,
       blessingTotalPages: totalPages,
       blessingPageNumbers: pageNumbers
     })

@@ -361,9 +361,9 @@
       </view>
     </view>
 
-    <!-- 历史祝福列表 -->
+    <!-- 历史祝福列表：遍历完整数组，用 hidden 控制分页，避免换页时 image 重建重载 -->
     <view class="blessing-list" wx:if="{{blessingCount > 0}}">
-      <view class="blessing-list-item" wx:for="{{pagedBlessings}}" wx:key="_id">
+      <view class="blessing-list-item" wx:for="{{blessingList}}" wx:key="_id" hidden="{{index < blessingPageStart || index >= blessingPageEnd}}">
         <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" class="blessing-list-avatar" mode="aspectFill" />
         <view wx:else class="blessing-list-avatar blessing-list-avatar-default">♥</view>
         <text class="blessing-list-text">{{item.text}}</text>
