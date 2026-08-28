@@ -67,7 +67,11 @@ Page({
     }
     this.setData({ inv: options.inv })
     this.loadInvitation(options.inv)
-    this.checkUserInfo()
+    // 检查头像，没有则自动弹出设置弹窗
+    const hasAvatar = this.checkUserInfo()
+    if (!hasAvatar) {
+      this.openUserModal()
+    }
   },
 
   // 页面回到前台时恢复音乐播放

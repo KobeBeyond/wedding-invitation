@@ -5,13 +5,62 @@ Page({
   data: {
     invitations: [],
     loading: true,
-    isEmpty: false
+    isEmpty: false,
+    showAvatarModal: false,
+    modalAvatarUrl: ''
   },
 
   onShow() {
+    // 先检查头像，没有则拦截
+    if (!this.checkAvatar()) {
+      this.setData({ showAvatarModal: true })
+      return
+    }
     // 已有数据时静默刷新，不重置 loading 状态
     const silent = this.data.invitations.length > 0
     this.loadInvitations(silent)
+  },
+
+  // 检查本地是否有头像
+  checkAvatar() {
+    const cached = wx.getStorageSync('wedding_avatar')
+    return !!cached
+  },
+
+  // 头像弹窗 — 选择头像
+  onModalChooseAvatar(e) {
+    const tempPath = e.detail.avatarUrl
+    if (!tempPath) return
+    this.setData({ modalAvatarUrl: tempPath }, () => {
+      this.saveAvatar()
+    })
+  },
+
+  // 保存头像
+  async saveAvatar() {
+    const { modalAvatarUrl } = this.data
+    if (!modalAvatarUrl) return
+    wx.showLoading({ title: '保存中...' })
+    try {
+      let avatarUrl = modalAvatarUrl
+      if (modalAvatarUrl.startsWith('http://tmp') || modalAvatarUrl.startsWith('wxfile://')) {
+        const uploadRes = await wx.cloud.uploadFile({
+          cloudPath: `avatars/user_${Date.now()}.jpg`,
+          filePath: modalAvatarUrl
+        })
+        avatarUrl = uploadRes.fileID
+      }
+      wx.setStorageSync('wedding_avatar', avatarUrl)
+      getApp().updateUserInfo('', avatarUrl)
+      this.setData({ showAvatarModal: false, modalAvatarUrl: '' })
+      // 保存成功后加载数据
+      this.loadInvitations(false)
+    } catch (err) {
+      console.error('保存头像失败:', err)
+      wx.showToast({ title: '保存失败', icon: 'none' })
+    } finally {
+      wx.hideLoading()
+    }
   },
 
   // 退出登录

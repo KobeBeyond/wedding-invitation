@@ -418,11 +418,11 @@
     </view>
   </view>
 
-  <!-- 头像选择弹窗 -->
+  <!-- 头像设置弹窗 -->
   <view class="user-modal-mask" wx:if="{{showUserModal}}" bindtap="closeUserModal">
     <view class="user-modal" catchtap="noop">
-      <view class="modal-title">选择您的头像</view>
-      <view class="modal-sub">发送祝福前，请设置一个头像</view>
+      <view class="modal-title">欢迎来到 Nupcias</view>
+      <view class="modal-sub">请选择您的头像，开始使用</view>
 
       <button class="modal-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onModalChooseAvatar">
         <image wx:if="{{modalAvatarUrl}}" src="{{modalAvatarUrl}}" class="modal-avatar-img" mode="aspectFill" />

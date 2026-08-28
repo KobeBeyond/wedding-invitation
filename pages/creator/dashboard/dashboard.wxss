@@ -114,3 +114,74 @@
   text-decoration: underline;
 }
 
+/* ===== 头像设置遮罩 ===== */
+.avatar-mask {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(180deg, #fdf5f6 0%, #fff 100%);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-panel {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-title {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #d45d5d;
+  margin-bottom: 12rpx;
+}
+
+.avatar-sub {
+  font-size: 28rpx;
+  color: #aaa;
+  margin-bottom: 80rpx;
+}
+
+.avatar-btn {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  padding: 0;
+  margin: 0 0 40rpx 0;
+  background: #fdf5f6;
+  border: 4rpx solid #f0dcdc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-btn::after {
+  border: none;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-icon {
+  font-size: 64rpx;
+}
+
+.avatar-hint {
+  font-size: 24rpx;
+  color: #ccc;
+}
+

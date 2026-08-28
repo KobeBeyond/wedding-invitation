@@ -46,3 +46,20 @@
 
   <view class="bottom-space"></view>
 </view>
+
+<!-- 头像设置遮罩 — 无头像时拦截 -->
+<view class="avatar-mask" wx:if="{{showAvatarModal}}">
+  <view class="avatar-panel">
+    <view class="avatar-title">欢迎使用 Nupcias</view>
+    <view class="avatar-sub">请选择您的头像，开始使用</view>
+
+    <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onModalChooseAvatar">
+      <image wx:if="{{modalAvatarUrl}}" src="{{modalAvatarUrl}}" class="avatar-img" mode="aspectFill" />
+      <view wx:else class="avatar-placeholder">
+        <text class="avatar-icon">📷</text>
+      </view>
+    </button>
+
+    <view class="avatar-hint">点击上方选择微信头像</view>
+  </view>
+</view>
