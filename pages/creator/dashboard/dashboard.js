@@ -28,16 +28,35 @@ Page({
     return loggedIn
   },
 
-  // 登录遮罩 — 选择头像
+  // 登录遮罩 — 选择头像（微信自动填充后触发自动登录）
   onLoginChooseAvatar(e) {
     const tempPath = e.detail.avatarUrl
     if (!tempPath) return
-    this.setData({ loginAvatarUrl: tempPath })
+    this.setData({ loginAvatarUrl: tempPath }, () => {
+      // 如果昵称也已获取，自动完成登录
+      if (this.data.loginNickName && this.data.loginNickName.trim()) {
+        this.autoLogin()
+      }
+    })
   },
 
-  // 登录遮罩 — 输入昵称
+  // 登录遮罩 — 输入昵称（微信自动填充后触发自动登录）
   onLoginNickNameInput(e) {
-    this.setData({ loginNickName: e.detail.value })
+    const nickName = e.detail.value
+    this.setData({ loginNickName: nickName })
+    // 如果头像和昵称都已获取，自动完成登录
+    if (nickName && nickName.trim() && this.data.loginAvatarUrl) {
+      this.autoLogin()
+    }
+  },
+
+  // 自动登录（头像和昵称都已获取时触发）
+  autoLogin() {
+    if (this._autoLogging) return
+    this._autoLogging = true
+    this.confirmLogin().finally(() => {
+      this._autoLogging = false
+    })
   },
 
   // 登录遮罩 — 确认进入

@@ -47,30 +47,30 @@
   <view class="bottom-space"></view>
 </view>
 
-<!-- 未登录遮罩 — 必须设置头像昵称才能使用 -->
+<!-- 未登录遮罩 — 微信授权获取头像昵称 -->
 <view class="login-mask" wx:if="{{!isLoggedIn}}">
   <view class="login-panel">
-    <view class="login-title">欢迎来到 Nupcias</view>
-    <view class="login-sub">请设置您的头像和昵称，开始使用婚礼请柬</view>
+    <view class="login-title">Nupcias</view>
+    <view class="login-sub">婚礼请柬制作工具</view>
 
-    <view class="login-avatar-row">
-      <button class="login-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onLoginChooseAvatar">
-        <image wx:if="{{loginAvatarUrl}}" src="{{loginAvatarUrl}}" class="login-avatar-img" mode="aspectFill" />
-        <view wx:else class="login-avatar-placeholder">
-          <text class="login-avatar-icon">📷</text>
-          <text class="login-avatar-text">点击选头像</text>
-        </view>
-      </button>
-    </view>
+    <!-- 头像选择 — 正圆 -->
+    <button class="login-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onLoginChooseAvatar">
+      <image wx:if="{{loginAvatarUrl}}" src="{{loginAvatarUrl}}" class="login-avatar-img" mode="aspectFill" />
+      <view wx:else class="login-avatar-placeholder">
+        <text class="login-avatar-icon">📷</text>
+      </view>
+    </button>
 
+    <!-- 昵称输入 — 微信自动填充 -->
     <input
       class="login-nickname-input"
       type="nickname"
-      placeholder="请输入昵称"
+      placeholder="点击获取微信昵称"
       value="{{loginNickName}}"
       bindinput="onLoginNickNameInput"
+      bindblur="onLoginNickNameInput"
     />
 
-    <view class="login-btn" bindtap="confirmLogin">进入小程序</view>
+    <view class="login-hint">点击头像和昵称区域，自动获取微信信息</view>
   </view>
 </view>
