@@ -11,11 +11,6 @@ Page({
   },
 
   onShow() {
-    // 先检查头像，没有则拦截
-    if (!this.checkAvatar()) {
-      this.setData({ showAvatarModal: true })
-      return
-    }
     // 已有数据时静默刷新，不重置 loading 状态
     const silent = this.data.invitations.length > 0
     this.loadInvitations(silent)

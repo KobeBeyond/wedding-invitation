@@ -67,11 +67,8 @@ Page({
     }
     this.setData({ inv: options.inv })
     this.loadInvitation(options.inv)
-    // 检查头像，没有则自动弹出设置弹窗
-    const hasAvatar = this.checkUserInfo()
-    if (!hasAvatar) {
-      this.openUserModal()
-    }
+    // 静默检查头像（不弹窗），有则显示在输入栏
+    this.checkUserInfo()
   },
 
   // 页面回到前台时恢复音乐播放
@@ -284,6 +281,14 @@ Page({
     }
     if (!attending) {
       wx.showToast({ title: '请选择是否出席', icon: 'none' })
+      return
+    }
+
+    // 提交前检查头像，没有则引导设置
+    const hasAvatar = this.checkUserInfo()
+    if (!hasAvatar) {
+      this.openUserModal()
+      wx.showToast({ title: '请先选择头像', icon: 'none' })
       return
     }
 
