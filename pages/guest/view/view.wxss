@@ -45,6 +45,16 @@ page {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
+  opacity: 0;
+  transform: scale(1.06);
+  filter: blur(4rpx);
+  transition: opacity 0.8s ease-out, transform 1.2s ease-out, filter 1s ease-out;
+}
+
+.cover-bg.loaded {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0);
 }
 
 .cover-gradient {
@@ -63,15 +73,16 @@ page {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, #b81d48 0%, #8a0a2e 50%, #5c0018 100%);
+  background: radial-gradient(circle at 50% 42%, #c41e3a 0%, #a01030 40%, #6b0a1e 100%);
   z-index: 9999;
-  transition: opacity 0.6s ease-out;
+  transition: opacity 0.5s ease-in 0.15s, transform 0.6s ease-in 0.1s;
   overflow: hidden;
 }
 
 .cover-loading.hidden {
   opacity: 0;
   pointer-events: none;
+  transform: scale(0.96);
 }
 
 /* 双戒指 */
@@ -86,9 +97,9 @@ page {
   position: absolute;
   width: 110rpx;
   height: 110rpx;
-  border: 6rpx solid #d4af37;
+  border: 6rpx solid #e8c05a;
   border-radius: 50%;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.35), 0 0 8rpx rgba(212, 175, 55, 0.25);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.35), 0 0 10rpx rgba(232, 192, 90, 0.3);
 }
 
 .ring-1 {
@@ -133,10 +144,10 @@ page {
   position: absolute;
   width: 6rpx;
   height: 6rpx;
-  background: #ffd700;
+  background: #e8c05a;
   border-radius: 50%;
   opacity: 0;
-  box-shadow: 0 0 8rpx rgba(255, 215, 0, 0.8);
+  box-shadow: 0 0 8rpx rgba(232, 192, 90, 0.8);
 }
 
 .pa1  { left: 8%;  animation: particleUp 5s linear infinite; animation-delay: 0s;    }
