@@ -60,7 +60,6 @@ page {
   top: 0; left: 0;
   width: 100%; height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: linear-gradient(180deg, #8a1c2c 0%, #6b1220 100%);
@@ -73,47 +72,13 @@ page {
   pointer-events: none;
 }
 
-.logo-loader {
-  position: relative;
-  width: 240rpx;
-  height: 240rpx;
-  overflow: hidden;
-  border-radius: 0;
+.loading-gif {
+  width: 300rpx;
+  height: 300rpx;
+  border-radius: 24rpx;
 }
 
-.logo-img {
-  position: absolute;
-  top: -12%;
-  left: -12%;
-  width: 124%;
-  height: 124%;
-}
-
-/* 光束 — 绕戒指交叉处走 8 字（根据 logo 戒指位置精确调整） */
-.ring-shine {
-  position: absolute;
-  width: 24rpx;
-  height: 24rpx;
-  background: radial-gradient(circle, rgba(255, 245, 200, 1) 0%, rgba(255, 220, 100, 0.7) 40%, transparent 70%);
-  border-radius: 50%;
-  filter: blur(1rpx);
-  box-shadow: 0 0 20rpx 8rpx rgba(255, 223, 100, 0.8);
-  animation: shineFigure8 2.4s linear infinite;
-}
-
-@keyframes shineFigure8 {
-  0%   { left: 32%; top: 30%; opacity: 0; }
-  6%   { opacity: 1; }
-  17%  { left: 42%; top: 42%; }
-  33%  { left: 58%; top: 56%; }
-  50%  { left: 46%; top: 68%; }
-  67%  { left: 32%; top: 56%; }
-  83%  { left: 42%; top: 42%; }
-  94%  { opacity: 1; }
-  100% { left: 58%; top: 30%; opacity: 0; }
-}
-
-/* 全页 loading（替代旧版 loading-state） */
+/* 全页 loading */
 .cover-loading.full-page {
   position: fixed;
   z-index: 999;
