@@ -158,8 +158,9 @@ page {
 
 .ampersand {
   font-size: 56rpx;
-  color: #ffd700;
+  color: #fff;
   font-style: italic;
+  text-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.4);
 }
 
 .cover-date {
