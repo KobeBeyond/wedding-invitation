@@ -1,10 +1,10 @@
 <!-- components/invitation-card/invitation-card.wxml -->
 <view class="inv-card" bindtap="onTap">
-  <!-- 封面 -->
+  <!-- 封面 — 展示分享卡片图（4:3 横向图） -->
   <view class="inv-cover">
     <image
-      wx:if="{{invitation.coverImage}}"
-      src="{{invitation.coverImage}}"
+      wx:if="{{invitation.shareImage || invitation.coverImage}}"
+      src="{{invitation.shareImage || invitation.coverImage}}"
       mode="aspectFill"
       class="cover-img"
       lazy-load

@@ -9,7 +9,7 @@
 
 .inv-cover {
   position: relative;
-  height: 300rpx;
+  height: 400rpx;
   background: #f5e6e6;
 }
 
