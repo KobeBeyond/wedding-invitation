@@ -5,14 +5,104 @@ Page({
   data: {
     invitations: [],
     loading: true,
-    isEmpty: false
+    isEmpty: false,
+    isLoggedIn: true,
+    loginAvatarUrl: '',
+    loginNickName: ''
   },
 
   onShow() {
+    // 先检查登录态
+    this.checkLoginState()
     // 已有数据时静默刷新，不重置 loading 状态
-    // 避免 wx:if 切换导致图片组件销毁重建
     const silent = this.data.invitations.length > 0
     this.loadInvitations(silent)
+  },
+
+  // 检查登录态
+  checkLoginState() {
+    const app = getApp()
+    const userInfo = app.globalData.userInfo || {}
+    const loggedIn = !!(userInfo.avatarUrl && userInfo.nickName)
+    this.setData({ isLoggedIn: loggedIn })
+    return loggedIn
+  },
+
+  // 登录遮罩 — 选择头像
+  onLoginChooseAvatar(e) {
+    const tempPath = e.detail.avatarUrl
+    if (!tempPath) return
+    this.setData({ loginAvatarUrl: tempPath })
+  },
+
+  // 登录遮罩 — 输入昵称
+  onLoginNickNameInput(e) {
+    this.setData({ loginNickName: e.detail.value })
+  },
+
+  // 登录遮罩 — 确认进入
+  async confirmLogin() {
+    const { loginAvatarUrl, loginNickName } = this.data
+    if (!loginNickName.trim()) {
+      wx.showToast({ title: '请输入昵称', icon: 'none' })
+      return
+    }
+    if (!loginAvatarUrl) {
+      wx.showToast({ title: '请选择头像', icon: 'none' })
+      return
+    }
+    wx.showLoading({ title: '保存中...' })
+    try {
+      let avatarUrl = loginAvatarUrl
+      if (loginAvatarUrl.startsWith('http://tmp') || loginAvatarUrl.startsWith('wxfile://')) {
+        const uploadRes = await wx.cloud.uploadFile({
+          cloudPath: `avatars/user_${Date.now()}.jpg`,
+          filePath: loginAvatarUrl
+        })
+        avatarUrl = uploadRes.fileID
+      }
+      wx.setStorageSync('wedding_avatar', avatarUrl)
+      wx.setStorageSync('wedding_nickname', loginNickName)
+      getApp().updateUserInfo(loginNickName, avatarUrl)
+      this.setData({
+        isLoggedIn: true,
+        loginAvatarUrl: '',
+        loginNickName: ''
+      })
+      wx.showToast({ title: '欢迎回来', icon: 'success' })
+    } catch (err) {
+      console.error('登录保存失败:', err)
+      wx.showToast({ title: '保存失败', icon: 'none' })
+    } finally {
+      wx.hideLoading()
+    }
+  },
+
+  // 退出登录
+  logout() {
+    wx.showModal({
+      title: '退出登录',
+      content: '退出后将清除您的头像和昵称，需要重新设置才能使用',
+      confirmColor: '#ff6b6b',
+      success: res => {
+        if (res.confirm) {
+          // 清除本地缓存
+          wx.removeStorageSync('wedding_avatar')
+          wx.removeStorageSync('wedding_nickname')
+          // 清除全局数据
+          const app = getApp()
+          app.globalData.userInfo = null
+          app.globalData.userOpenId = ''
+          // 刷新状态
+          this.setData({
+            isLoggedIn: false,
+            loginAvatarUrl: '',
+            loginNickName: ''
+          })
+          wx.showToast({ title: '已退出登录', icon: 'none' })
+        }
+      }
+    })
   },
 
   // 加载我的请柬列表

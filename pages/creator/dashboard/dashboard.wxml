@@ -39,6 +39,38 @@
     />
   </view>
 
-  <!-- 底部留白 -->
+  <!-- 退出登录 -->
+  <view class="logout-bar" bindtap="logout">
+    <text class="logout-text">退出登录</text>
+  </view>
+
   <view class="bottom-space"></view>
+</view>
+
+<!-- 未登录遮罩 — 必须设置头像昵称才能使用 -->
+<view class="login-mask" wx:if="{{!isLoggedIn}}">
+  <view class="login-panel">
+    <view class="login-title">欢迎来到 Nupcias</view>
+    <view class="login-sub">请设置您的头像和昵称，开始使用婚礼请柬</view>
+
+    <view class="login-avatar-row">
+      <button class="login-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onLoginChooseAvatar">
+        <image wx:if="{{loginAvatarUrl}}" src="{{loginAvatarUrl}}" class="login-avatar-img" mode="aspectFill" />
+        <view wx:else class="login-avatar-placeholder">
+          <text class="login-avatar-icon">📷</text>
+          <text class="login-avatar-text">点击选头像</text>
+        </view>
+      </button>
+    </view>
+
+    <input
+      class="login-nickname-input"
+      type="nickname"
+      placeholder="请输入昵称"
+      value="{{loginNickName}}"
+      bindinput="onLoginNickNameInput"
+    />
+
+    <view class="login-btn" bindtap="confirmLogin">进入小程序</view>
+  </view>
 </view>
