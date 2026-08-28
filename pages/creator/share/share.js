@@ -100,15 +100,28 @@ Page({
           }
         })
       } else {
-        // 短链生成失败，fallback 到复制文案
-        this.copyInviteText()
+        this.copyPathFallback()
       }
     } catch (err) {
       console.error('copyLink error:', err)
-      this.copyInviteText()
+      this.copyPathFallback()
     } finally {
       wx.hideLoading()
     }
+  },
+
+  // fallback：复制小程序路径（云函数不可用或权限不足时）
+  copyPathFallback() {
+    const inv = this.data.invitation || {}
+    const path = `pages/router/router?inv=${this.data.invitationId}`
+    const text = `${inv.shareTitle || inv.groomName + '与' + inv.brideName + '的婚礼'}\n${inv.weddingDate} ${inv.venueName || ''}\n\n#小程序://Nupcias/${path}`
+
+    wx.setClipboardData({
+      data: text,
+      success: () => {
+        wx.showToast({ title: '链接已复制', icon: 'success' })
+      }
+    })
   },
 
   // 复制邀请文案（fallback）
