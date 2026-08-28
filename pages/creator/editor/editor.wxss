@@ -249,11 +249,20 @@
 /* 封面选择器 */
 .cover-picker {
   width: 100%;
-  height: 360rpx;
   border-radius: 16rpx;
   overflow: hidden;
   background: #fff;
   border: 2rpx solid #f0f0f0;
+}
+
+/* 竖向封面图（9:16） */
+.cover-picker.portrait {
+  height: 640rpx;
+}
+
+/* 横向分享卡片图（4:3） */
+.cover-picker.landscape {
+  height: 360rpx;
 }
 
 .cover-preview {
@@ -279,6 +288,12 @@
 .cover-text {
   font-size: 28rpx;
   color: #aaa;
+}
+
+.cover-hint {
+  font-size: 22rpx;
+  color: #ccc;
+  margin-top: 8rpx;
 }
 
 /* 音乐选择器 */

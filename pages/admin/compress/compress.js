@@ -62,11 +62,7 @@ Page({
     const updateData = {}
     const MAX_SIZE = 2 * 1024 * 1024
 
-    // 处理封面图
-    if (inv.coverImage) {
-      const newFileID = await this.compressAndReupload(inv.coverImage, 'cover', MAX_SIZE)
-      if (newFileID) updateData.coverImage = newFileID
-    }
+    // 封面图和分享卡片图不做压缩，保留原图画质
 
     // 处理新郎头像
     if (inv.groomAvatar) {

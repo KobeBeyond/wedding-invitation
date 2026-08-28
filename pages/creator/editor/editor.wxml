@@ -203,18 +203,38 @@
   <view class="step-content" hidden="{{currentStep != 4}}">
     <view class="section-title">音乐与封面</view>
 
+    <!-- 封面图（竖向长图，请柬首屏铺满展示） -->
     <view class="form-group">
-      <text class="form-label">分享封面图</text>
-      <view class="cover-picker" bindtap="chooseCoverImage">
+      <text class="form-label">封面图 <text class="form-hint">（竖向长图，请柬首屏铺满展示）</text></text>
+      <view class="cover-picker portrait" bindtap="chooseCoverImage">
         <image
           wx:if="{{coverImage}}"
           src="{{coverImage}}"
           mode="aspectFill"
-          class="cover-preview"
+          class="cover-preview portrait-preview"
         />
         <view class="cover-placeholder" wx:else>
           <text class="cover-icon">📷</text>
           <text class="cover-text">选择封面图</text>
+          <text class="cover-hint">竖向长图，建议 9:16</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 分享卡片图（4:3 横向图，转发/分享时展示） -->
+    <view class="form-group">
+      <text class="form-label">分享卡片图 <text class="form-hint">（4:3 横向图，转发好友时展示）</text></text>
+      <view class="cover-picker landscape" bindtap="chooseShareImage">
+        <image
+          wx:if="{{shareImage}}"
+          src="{{shareImage}}"
+          mode="aspectFill"
+          class="cover-preview landscape-preview"
+        />
+        <view class="cover-placeholder" wx:else>
+          <text class="cover-icon">🖼</text>
+          <text class="cover-text">选择分享卡片图</text>
+          <text class="cover-hint">横向图，建议 4:3</text>
         </view>
       </view>
     </view>

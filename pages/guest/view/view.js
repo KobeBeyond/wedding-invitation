@@ -50,6 +50,9 @@ Page({
     // 婚礼流程默认折叠（只显示前5个）
     timelineExpanded: false,
 
+    // 封面图加载状态
+    coverLoaded: false,
+
   },
 
   onLoad(options) {
@@ -143,7 +146,8 @@ Page({
           this.setData({
             invitation: d,
             markers,
-            loading: false
+            loading: false,
+            coverLoaded: !d.coverImage
           })
 
           // 预加载关键图片，减少滑动时的白屏
@@ -619,6 +623,11 @@ Page({
   // 展开/收起婚礼流程
   toggleTimeline() {
     this.setData({ timelineExpanded: !this.data.timelineExpanded })
+  },
+
+  // 封面图加载完成
+  onCoverLoad() {
+    this.setData({ coverLoaded: true })
   },
 
   toggleMusic() {

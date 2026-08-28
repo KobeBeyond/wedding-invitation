@@ -30,6 +30,7 @@ Page({
     timeline: [],
     musicUrl: '',
     coverImage: '',
+    shareImage: '',
     shareTitle: ''
   },
 
@@ -69,6 +70,7 @@ Page({
             timeline: d.timeline || [],
             musicUrl: d.musicUrl || '',
             coverImage: d.coverImage || '',
+            shareImage: d.shareImage || '',
             shareTitle: d.shareTitle || '',
             loading: false
           })
@@ -219,21 +221,20 @@ switchToStep(step) {
     })
   },
 
-  // 选择封面图
+  // 选择封面图（竖向长图，铺满屏幕，不压缩）
   async chooseCoverImage() {
     wx.chooseMedia({
       count: 1,
       mediaType: ['image'],
-      sizeType: ['compressed'],
+      sizeType: ['original'],
       success: async res => {
         const tempFile = res.tempFiles[0]
         wx.showLoading({ title: '上传中...' })
         try {
-          const compressedPath = await compressImage(tempFile.tempFilePath)
           const uploadRes = await new Promise((resolve, reject) => {
             wx.cloud.uploadFile({
               cloudPath: `covers/${Date.now()}.jpg`,
-              filePath: compressedPath,
+              filePath: tempFile.tempFilePath,
               success: resolve,
               fail: reject
             })
@@ -241,6 +242,35 @@ switchToStep(step) {
           this.setData({ coverImage: uploadRes.fileID })
         } catch (err) {
           console.error('Cover upload failed:', err)
+          wx.showToast({ title: '上传失败', icon: 'none' })
+        } finally {
+          wx.hideLoading()
+        }
+      }
+    })
+  },
+
+  // 选择分享卡片图（4:3 横向图，不压缩）
+  async chooseShareImage() {
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sizeType: ['original'],
+      success: async res => {
+        const tempFile = res.tempFiles[0]
+        wx.showLoading({ title: '上传中...' })
+        try {
+          const uploadRes = await new Promise((resolve, reject) => {
+            wx.cloud.uploadFile({
+              cloudPath: `share/${Date.now()}.jpg`,
+              filePath: tempFile.tempFilePath,
+              success: resolve,
+              fail: reject
+            })
+          })
+          this.setData({ shareImage: uploadRes.fileID })
+        } catch (err) {
+          console.error('Share image upload failed:', err)
           wx.showToast({ title: '上传失败', icon: 'none' })
         } finally {
           wx.hideLoading()
@@ -301,6 +331,7 @@ switchToStep(step) {
       timeline: this.data.timeline,
       musicUrl: this.data.musicUrl,
       coverImage: this.data.coverImage,
+      shareImage: this.data.shareImage,
       shareTitle: this.data.shareTitle
     }
   },

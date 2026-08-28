@@ -8,7 +8,7 @@ const ALLOWED_FIELDS = [
   'groomName', 'brideName', 'groomAvatar', 'brideAvatar',
   'weddingDate', 'groomIntro', 'brideIntro',
   'venueName', 'venueAddress', 'venueHall', 'venueLat', 'venueLng', 'venuePhone',
-  'photos', 'musicUrl', 'coverImage', 'timeline', 'shareTitle', 'expiryDate',
+  'photos', 'musicUrl', 'coverImage', 'shareImage', 'timeline', 'shareTitle', 'expiryDate',
   'template'
 ]
 

@@ -29,6 +29,7 @@ exports.main = async (event, context) => {
         photos: [],
         musicUrl: '',
         coverImage: '',
+        shareImage: '',
         timeline: [],
         shareTitle: '',
         expiryDate: null,

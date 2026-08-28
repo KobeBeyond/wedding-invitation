@@ -68,7 +68,7 @@ Page({
     return {
       title,
       path: `/pages/router/router?inv=${this.data.invitationId}`,
-      imageUrl: inv.coverImage || ''
+      imageUrl: inv.shareImage || inv.coverImage || ''
     }
   },
 
@@ -79,7 +79,7 @@ Page({
     return {
       title,
       query: `inv=${this.data.invitationId}`,
-      imageUrl: inv.coverImage || ''
+      imageUrl: inv.shareImage || inv.coverImage || ''
     }
   },
 

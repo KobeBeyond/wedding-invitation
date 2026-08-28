@@ -16,10 +16,21 @@
       wx:if="{{invitation.coverImage}}"
       src="{{invitation.coverImage}}"
       mode="aspectFill"
-      class="cover-bg"
+      class="cover-bg {{coverLoaded ? 'loaded' : ''}}"
       lazy-load
+      bindload="onCoverLoad"
     />
     <view wx:else class="cover-gradient"></view>
+
+    <!-- 封面加载动画 -->
+    <view class="cover-loading {{coverLoaded ? 'hidden' : ''}}" wx:if="{{invitation.coverImage && !coverLoaded}}">
+      <view class="ring-loader">
+        <view class="ring ring-left"></view>
+        <view class="ring ring-right"></view>
+        <view class="ring-shine"></view>
+      </view>
+      <text class="loading-text">加载中...</text>
+    </view>
 
     <view class="cover-overlay"></view>
 
