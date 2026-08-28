@@ -329,6 +329,19 @@ lazy-load
                   maxlength="100" auto-height />
       </view>
 
+      <!-- 协议勾选 -->
+      <view class="agreement-check">
+        <view class="agreement-checkbox {{rsvpAgreed ? 'checked' : ''}}" bindtap="toggleAgreement">
+          <text wx:if="{{rsvpAgreed}}" class="agreement-check-mark">✓</text>
+        </view>
+        <view class="agreement-text" catchtap="toggleAgreement">
+          我已阅读并同意
+          <text class="agreement-link" catchtap="viewServiceAgreement">《用户服务协议》</text>
+          和
+          <text class="agreement-link" catchtap="viewPrivacyPolicy">《隐私政策》</text>
+        </view>
+      </view>
+
       <button class="rsvp-submit-btn" bindtap="submitRSVP" disabled="{{rsvpSubmitting}}">
         <text wx:if="{{!rsvpSubmitting}}">提交回执</text>
         <text wx:else>提交中...</text>

@@ -27,6 +27,7 @@ Page({
     guestCountIndex: 0,
     rsvpSubmitting: false,
     rsvpSubmitted: false,
+    rsvpAgreed: false,  // 是否同意协议
 
     // 祝福墙
     blessingText: '',
@@ -268,6 +269,21 @@ Page({
     })
   },
 
+  // 切换协议勾选
+  toggleAgreement() {
+    this.setData({ rsvpAgreed: !this.data.rsvpAgreed })
+  },
+
+  // 查看用户服务协议
+  viewServiceAgreement() {
+    wx.navigateTo({ url: '/pages/common/agreement/agreement?type=service' })
+  },
+
+  // 查看隐私政策
+  viewPrivacyPolicy() {
+    wx.navigateTo({ url: '/pages/common/agreement/agreement?type=privacy' })
+  },
+
   async submitRSVP() {
     const { name, phone, attending } = this.data.rsvpForm
 
@@ -288,6 +304,12 @@ Page({
     const hasAvatar = this.checkUserInfo()
     if (!hasAvatar) {
       wx.navigateTo({ url: '/pages/common/avatar-setup/avatar-setup' })
+      return
+    }
+
+    // 检查协议勾选
+    if (!this.data.rsvpAgreed) {
+      wx.showToast({ title: '请先阅读并同意协议', icon: 'none' })
       return
     }
 

@@ -7,6 +7,7 @@
     "pages/creator/share/share",
     "pages/guest/view/view",
     "pages/common/avatar-setup/avatar-setup",
+    "pages/common/agreement/agreement",
     "pages/home/home",
     "pages/photos/photos",
     "pages/venue/venue",

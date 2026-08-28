@@ -807,6 +807,49 @@ font-weight: 400;
   font-size: 32rpx;
 }
 
+/* 协议勾选 */
+.agreement-check {
+  display: flex;
+  align-items: flex-start;
+  margin: 24rpx 0 8rpx;
+}
+
+.agreement-checkbox {
+  width: 32rpx;
+  height: 32rpx;
+  border: 2rpx solid #d97a7a;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12rpx;
+  margin-top: 4rpx;
+  flex-shrink: 0;
+  background: #fff;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.agreement-checkbox.checked {
+  background: #e8a0a0;
+  border-color: #e8a0a0;
+}
+
+.agreement-check-mark {
+  font-size: 22rpx;
+  color: #fff;
+  line-height: 1;
+}
+
+.agreement-text {
+  font-size: 24rpx;
+  color: #999;
+  line-height: 1.6;
+}
+
+.agreement-link {
+  color: #d97a7a;
+}
+
 .rsvp-submit-btn {
   width: 100%;
   height: 88rpx;
