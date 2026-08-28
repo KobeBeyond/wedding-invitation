@@ -693,7 +693,7 @@ Page({
     return {
       title: d.shareTitle || `${d.groomName} & ${d.brideName}的婚礼请柬`,
       path: `/pages/router/router?inv=${this.data.inv}`,
-      imageUrl: d.coverImage || ''
+      imageUrl: d.shareImage || d.coverImage || ''
     }
   },
 
@@ -702,7 +702,7 @@ Page({
     return {
       title: d.shareTitle || `${d.groomName} & ${d.brideName}的婚礼请柬`,
       query: `inv=${this.data.inv}`,
-      imageUrl: d.coverImage || ''
+      imageUrl: d.shareImage || d.coverImage || ''
     }
   },
 

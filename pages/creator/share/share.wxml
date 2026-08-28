@@ -10,8 +10,8 @@
   <!-- 请柬预览卡片 -->
   <view class="inv-preview">
     <image
-      wx:if="{{invitation.coverImage}}"
-      src="{{invitation.coverImage}}"
+      wx:if="{{invitation.shareImage || invitation.coverImage}}"
+      src="{{invitation.shareImage || invitation.coverImage}}"
       mode="aspectFill"
       class="preview-cover"
     />
