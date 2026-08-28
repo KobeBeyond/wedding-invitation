@@ -1181,6 +1181,8 @@ font-weight: 400;
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 1;
+  box-sizing: border-box;
 }
 
 .modal-avatar-btn::after {
@@ -1190,6 +1192,7 @@ font-weight: 400;
 .modal-avatar-img {
   width: 100%;
   height: 100%;
+  border-radius: 50%;
 }
 
 .modal-avatar-placeholder {
