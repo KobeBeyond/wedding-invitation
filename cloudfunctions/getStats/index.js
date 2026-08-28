@@ -32,7 +32,7 @@ exports.main = async (event, context) => {
       ? db.collection('guests').where({ invitationId, attending: 'yes' }).field({ guestCount: true }).get()
       : db.collection('guests').where({ attending: 'yes' }).field({ guestCount: true }).get())
     const totalAttendingPeople = attendingList.data.reduce(
-      (sum, g) => sum + (g.guestCount || 1), 0
+      (sum, g) => sum + (parseInt(g.guestCount, 10) || 1), 0
     )
 
     // 祝福总数

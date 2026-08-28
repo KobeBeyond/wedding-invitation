@@ -264,7 +264,7 @@ Page({
   },
 
   onGuestCountChange(e) {
-    const idx = e.detail.value
+    const idx = parseInt(e.detail.value, 10)
     this.setData({
       guestCountIndex: idx,
       'rsvpForm.guestCount': idx + 1

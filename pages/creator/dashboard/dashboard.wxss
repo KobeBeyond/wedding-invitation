@@ -149,6 +149,8 @@
 .avatar-btn {
   width: 200rpx;
   height: 200rpx;
+  min-width: 200rpx;
+  min-height: 200rpx;
   border-radius: 50%;
   overflow: hidden;
   padding: 0;
@@ -160,6 +162,7 @@
   justify-content: center;
   line-height: 1;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .avatar-btn::after {
