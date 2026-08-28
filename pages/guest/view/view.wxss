@@ -86,24 +86,28 @@ page {
   border-radius: 24rpx;
 }
 
-/* 光束扫过动画 */
+/* 光束 — 绕戒指交叉处走 8 字 */
 .ring-shine {
   position: absolute;
-  top: 0;
-  left: -40rpx;
-  width: 60rpx;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 223, 100, 0.8), transparent);
-  filter: blur(12rpx);
-  animation: shineSweep 2.2s ease-in-out infinite;
+  width: 28rpx;
+  height: 28rpx;
+  background: radial-gradient(circle, rgba(255, 240, 180, 1) 0%, rgba(255, 215, 100, 0.6) 40%, transparent 70%);
   border-radius: 50%;
+  filter: blur(2rpx);
+  box-shadow: 0 0 16rpx 6rpx rgba(255, 223, 100, 0.7);
+  animation: shineFigure8 2.5s linear infinite;
 }
 
-@keyframes shineSweep {
-  0% { left: -60rpx; opacity: 0; }
-  15% { opacity: 1; }
-  85% { opacity: 1; }
-  100% { left: 220rpx; opacity: 0; }
+@keyframes shineFigure8 {
+  0%   { left: 38%; top: 22%; opacity: 0; }
+  8%   { opacity: 1; }
+  16%  { left: 50%; top: 38%; }
+  32%  { left: 62%; top: 55%; }
+  48%  { left: 50%; top: 70%; }
+  64%  { left: 38%; top: 55%; }
+  80%  { left: 50%; top: 38%; }
+  92%  { opacity: 1; }
+  100% { left: 62%; top: 22%; opacity: 0; }
 }
 
 .loading-text {
