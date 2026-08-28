@@ -251,30 +251,46 @@ switchToStep(step) {
   },
 
   // 选择分享卡片图（4:3 横向图，不压缩）
-  async chooseShareImage() {
+  chooseShareImage() {
+    if (this.data.uploading) return
     wx.chooseMedia({
       count: 1,
       mediaType: ['image'],
       sizeType: ['original'],
       success: async res => {
-        const tempFile = res.tempFiles[0]
+        const tempFile = res.tempFiles && res.tempFiles[0]
+        if (!tempFile || !tempFile.tempFilePath) {
+          wx.showToast({ title: '选择图片失败', icon: 'none' })
+          return
+        }
         wx.showLoading({ title: '上传中...' })
         try {
           const uploadRes = await new Promise((resolve, reject) => {
             wx.cloud.uploadFile({
-              cloudPath: `share/${Date.now()}.jpg`,
+              cloudPath: `share/${Date.now()}_${Math.floor(Math.random() * 1000)}.jpg`,
               filePath: tempFile.tempFilePath,
               success: resolve,
               fail: reject
             })
           })
+          // 校验 fileID 有效性
+          if (!uploadRes || !uploadRes.fileID || !uploadRes.fileID.startsWith('cloud://')) {
+            console.error('Invalid fileID:', uploadRes)
+            wx.showToast({ title: '上传异常，请重试', icon: 'none' })
+            return
+          }
+          console.log('✅ shareImage uploaded:', uploadRes.fileID)
           this.setData({ shareImage: uploadRes.fileID })
+          wx.showToast({ title: '分享图已上传', icon: 'success', duration: 1500 })
         } catch (err) {
           console.error('Share image upload failed:', err)
-          wx.showToast({ title: '上传失败', icon: 'none' })
+          wx.showToast({ title: '上传失败: ' + (err.errMsg || ''), icon: 'none' })
         } finally {
           wx.hideLoading()
         }
+      },
+      fail: err => {
+        console.error('chooseMedia failed:', err)
       }
     })
   },
