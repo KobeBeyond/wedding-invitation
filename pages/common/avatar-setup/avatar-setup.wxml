@@ -1,0 +1,44 @@
+<!-- pages/common/avatar-setup/avatar-setup.wxml -->
+<view class="avatar-setup-page">
+  <!-- 背景装饰 -->
+  <view class="deco-circle dc1"></view>
+  <view class="deco-circle dc2"></view>
+  <view class="deco-circle dc3"></view>
+
+  <!-- 飘落花瓣 -->
+  <view class="petal p1"></view>
+  <view class="petal p2"></view>
+  <view class="petal p3"></view>
+  <view class="petal p4"></view>
+  <view class="petal p5"></view>
+  <view class="petal p6"></view>
+  <view class="petal p7"></view>
+  <view class="petal p8"></view>
+  <view class="petal p9"></view>
+  <view class="petal p10"></view>
+  <view class="petal p11"></view>
+  <view class="petal p12"></view>
+
+  <!-- 返回按钮 -->
+  <view class="back-btn" bindtap="goBack">
+    <text class="back-arrow">‹</text>
+    <text class="back-text">返回</text>
+  </view>
+
+  <view class="avatar-panel">
+    <view class="avatar-title">设置头像</view>
+    <view class="avatar-sub">选择您的头像，让祝福更有温度</view>
+
+    <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+      <image wx:if="{{modalAvatarUrl}}" src="{{modalAvatarUrl}}" class="avatar-img" mode="aspectFill" />
+      <view wx:else class="avatar-placeholder">
+        <view class="camera-icon">
+          <view class="camera-body"></view>
+          <view class="camera-lens"></view>
+        </view>
+      </view>
+    </button>
+
+    <view class="avatar-hint">点击上方选择微信头像</view>
+  </view>
+</view>

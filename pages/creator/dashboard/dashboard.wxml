@@ -39,11 +39,6 @@
     />
   </view>
 
-  <!-- 退出登录 -->
-  <view class="logout-bar" bindtap="logout">
-    <text class="logout-text">退出登录</text>
-  </view>
-
   <view class="bottom-space"></view>
 </view>
 

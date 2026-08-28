@@ -58,29 +58,6 @@ Page({
     }
   },
 
-  // 退出登录
-  logout() {
-    wx.showModal({
-      title: '退出登录',
-      content: '退出后将清除本地缓存，需要重新进入小程序',
-      confirmColor: '#ff6b6b',
-      success: res => {
-        if (res.confirm) {
-          wx.removeStorageSync('wedding_avatar')
-          wx.removeStorageSync('wedding_nickname')
-          const app = getApp()
-          app.globalData.userInfo = null
-          app.globalData.userOpenId = ''
-          wx.showToast({ title: '已退出登录', icon: 'none' })
-          // 清空页面状态并重新检查头像
-          this.setData({ invitations: [], isEmpty: false, loading: false })
-          const hasAvatar = this.checkAvatar()
-          this.setData({ showAvatarModal: !hasAvatar })
-        }
-      }
-    })
-  },
-
   // 加载我的请柬列表
   // silent=true 时不显示 loading 态，已有列表保持可见
   loadInvitations(silent) {

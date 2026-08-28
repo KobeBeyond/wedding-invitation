@@ -284,11 +284,10 @@ Page({
       return
     }
 
-    // 提交前检查头像，没有则引导设置
+    // 提交前检查头像，没有则跳转头像设置页
     const hasAvatar = this.checkUserInfo()
     if (!hasAvatar) {
-      this.openUserModal()
-      wx.showToast({ title: '请先选择头像', icon: 'none' })
+      wx.navigateTo({ url: '/pages/common/avatar-setup/avatar-setup' })
       return
     }
 
@@ -574,10 +573,10 @@ Page({
       return
     }
 
-    // 未设置头像/昵称时，弹出补全弹窗
+    // 未设置头像时，跳转头像设置页
     const hasUserInfo = this.checkUserInfo()
     if (!hasUserInfo) {
-      this.openUserModal()
+      wx.navigateTo({ url: '/pages/common/avatar-setup/avatar-setup' })
       return
     }
 
