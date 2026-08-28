@@ -660,7 +660,7 @@ Page({
   },
 
   // 阻止 loading 遮罩下的页面滑动
-  preventScroll() {}
+  preventScroll() {},
 
   // 封面图加载完成
   onCoverLoad() {

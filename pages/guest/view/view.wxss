@@ -54,17 +54,19 @@ page {
   background: linear-gradient(180deg, #e8a0a0 0%, #d4af37 100%);
 }
 
-/* 封面加载动画 — 纯色背景 + 旋转 logo */
+/* 封面加载动画 — 径向渐变背景 + 双戒指旋转 + 金色粒子 */
 .cover-loading {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #a60b3a;
+  background: linear-gradient(180deg, #b81d48 0%, #8a0a2e 50%, #5c0018 100%);
   z-index: 9999;
   transition: opacity 0.6s ease-out;
+  overflow: hidden;
 }
 
 .cover-loading.hidden {
@@ -72,16 +74,89 @@ page {
   pointer-events: none;
 }
 
-.loading-logo {
-  width: 240rpx;
-  height: 240rpx;
-  border-radius: 48rpx;
-  animation: logoRotate 3s linear infinite;
+/* 双戒指 */
+.rings-loader {
+  width: 180rpx;
+  height: 180rpx;
+  position: relative;
+  animation: ringSpin 4s linear infinite;
 }
 
-@keyframes logoRotate {
+.ring {
+  position: absolute;
+  width: 110rpx;
+  height: 110rpx;
+  border: 6rpx solid #d4af37;
+  border-radius: 50%;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.35), 0 0 8rpx rgba(212, 175, 55, 0.25);
+}
+
+.ring-1 {
+  top: 12rpx;
+  left: 12rpx;
+}
+
+.ring-2 {
+  top: 48rpx;
+  left: 48rpx;
+}
+
+@keyframes ringSpin {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
+}
+
+/* 品牌文字 */
+.loading-brand {
+  margin-top: 60rpx;
+  font-size: 40rpx;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 10rpx;
+  font-weight: 300;
+  animation: brandFade 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes brandFade {
+  from { opacity: 0.35; }
+  to   { opacity: 1; }
+}
+
+/* 金色粒子 */
+.loading-particles {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 6rpx;
+  height: 6rpx;
+  background: #ffd700;
+  border-radius: 50%;
+  opacity: 0;
+  box-shadow: 0 0 8rpx rgba(255, 215, 0, 0.8);
+}
+
+.pa1  { left: 8%;  animation: particleUp 5s linear infinite; animation-delay: 0s;    }
+.pa2  { left: 18%; animation: particleUp 7s linear infinite; animation-delay: 1.2s;  width: 4rpx; height: 4rpx; }
+.pa3  { left: 28%; animation: particleUp 6s linear infinite; animation-delay: 2.5s;  }
+.pa4  { left: 38%; animation: particleUp 8s linear infinite; animation-delay: 0.8s;  width: 8rpx; height: 8rpx; }
+.pa5  { left: 48%; animation: particleUp 5.5s linear infinite; animation-delay: 3.2s; }
+.pa6  { left: 58%; animation: particleUp 7.5s linear infinite; animation-delay: 1.8s; width: 4rpx; height: 4rpx; }
+.pa7  { left: 68%; animation: particleUp 6.5s linear infinite; animation-delay: 4s;   }
+.pa8  { left: 78%; animation: particleUp 9s linear infinite; animation-delay: 2.2s;   width: 8rpx; height: 8rpx; }
+.pa9  { left: 88%; animation: particleUp 5s linear infinite; animation-delay: 0.5s;   }
+.pa10 { left: 15%; animation: particleUp 8s linear infinite; animation-delay: 3.8s;   width: 4rpx; height: 4rpx; }
+.pa11 { left: 65%; animation: particleUp 6s linear infinite; animation-delay: 5s;     }
+.pa12 { left: 85%; animation: particleUp 7s linear infinite; animation-delay: 1s;     width: 8rpx; height: 8rpx; }
+
+@keyframes particleUp {
+  0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+  10%  { opacity: 0.9; }
+  90%  { opacity: 0.2; }
+  100% { transform: translateY(-20rpx) scale(1); opacity: 0; }
 }
 
 /* 全页 loading */

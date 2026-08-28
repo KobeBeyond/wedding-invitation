@@ -77,6 +77,10 @@ Page({
           app.globalData.userInfo = null
           app.globalData.userOpenId = ''
           wx.showToast({ title: '已退出登录', icon: 'none' })
+          // 清空页面状态并重新检查头像
+          this.setData({ invitations: [], isEmpty: false, loading: false })
+          const hasAvatar = this.checkAvatar()
+          this.setData({ showAvatarModal: !hasAvatar })
         }
       }
     })

@@ -24,7 +24,26 @@
 
     <!-- 封面加载动画 -->
     <view class="cover-loading {{coverLoaded ? 'hidden' : ''}}" wx:if="{{invitation.coverImage && !coverLoaded}}" catchtouchmove="preventScroll">
-      <image class="loading-logo" src="/static/images/logo.jpg" mode="aspectFit" />
+      <view class="rings-loader">
+        <view class="ring ring-1"></view>
+        <view class="ring ring-2"></view>
+        <view class="ring-shine"></view>
+      </view>
+      <view class="loading-particles">
+        <view class="particle pa1"></view>
+        <view class="particle pa2"></view>
+        <view class="particle pa3"></view>
+        <view class="particle pa4"></view>
+        <view class="particle pa5"></view>
+        <view class="particle pa6"></view>
+        <view class="particle pa7"></view>
+        <view class="particle pa8"></view>
+        <view class="particle pa9"></view>
+        <view class="particle pa10"></view>
+        <view class="particle pa11"></view>
+        <view class="particle pa12"></view>
+      </view>
+      <text class="loading-brand">Nupcias</text>
     </view>
 
     <view class="cover-overlay"></view>
@@ -436,7 +455,26 @@ lazy-load
 
 </view>
 
-<!-- 加载中 — 旋转 logo -->
+<!-- 加载中 — 双戒指旋转 -->
 <view class="cover-loading full-page" wx:else catchtouchmove="preventScroll">
-  <image class="loading-logo" src="/static/images/logo.jpg" mode="aspectFit" />
+  <view class="rings-loader">
+    <view class="ring ring-1"></view>
+    <view class="ring ring-2"></view>
+    <view class="ring-shine"></view>
+  </view>
+  <view class="loading-particles">
+    <view class="particle pa1"></view>
+    <view class="particle pa2"></view>
+    <view class="particle pa3"></view>
+    <view class="particle pa4"></view>
+    <view class="particle pa5"></view>
+    <view class="particle pa6"></view>
+    <view class="particle pa7"></view>
+    <view class="particle pa8"></view>
+    <view class="particle pa9"></view>
+    <view class="particle pa10"></view>
+    <view class="particle pa11"></view>
+    <view class="particle pa12"></view>
+  </view>
+  <text class="loading-brand">Nupcias</text>
 </view>

@@ -119,30 +119,44 @@
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: linear-gradient(180deg, #fdf5f6 0%, #fff 100%);
+  background: linear-gradient(160deg, #fff0f3 0%, #ffe4e9 35%, #ffd6df 70%, #fff 100%);
   z-index: 999;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
+
+/* 背景装饰圆 */
+.deco-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 182, 193, 0.35) 0%, rgba(255, 182, 193, 0) 70%);
+  pointer-events: none;
+}
+.dc1 { width: 600rpx; height: 600rpx; top: -200rpx; left: -150rpx; }
+.dc2 { width: 500rpx; height: 500rpx; bottom: -180rpx; right: -120rpx; }
+.dc3 { width: 400rpx; height: 400rpx; top: 40%; left: 60%; opacity: 0.6; }
 
 .avatar-panel {
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 2;
 }
 
 .avatar-title {
   font-size: 48rpx;
   font-weight: 700;
-  color: #d45d5d;
+  color: #c94f6d;
   margin-bottom: 12rpx;
+  text-shadow: 0 2rpx 8rpx rgba(201, 79, 109, 0.15);
 }
 
 .avatar-sub {
   font-size: 28rpx;
-  color: #aaa;
+  color: #d48a9e;
   margin-bottom: 80rpx;
 }
 
@@ -157,8 +171,8 @@
   overflow: hidden;
   padding: 0 !important;
   margin: 0 0 40rpx 0;
-  background: #fdf5f6;
-  border: 4rpx solid #f0dcdc;
+  background: linear-gradient(145deg, #fff5f7, #ffe8ed);
+  border: 4rpx solid #f5c6d0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -166,6 +180,7 @@
   box-sizing: border-box;
   flex-shrink: 0;
   font-size: 0;
+  box-shadow: 0 8rpx 32rpx rgba(201, 79, 109, 0.12);
 }
 
 .avatar-btn::after {
@@ -187,43 +202,79 @@
   justify-content: center;
 }
 
-.avatar-icon {
-  font-size: 64rpx;
-  line-height: 1;
+/* CSS 相机图标 */
+.camera-icon {
+  position: relative;
+  width: 64rpx;
+  height: 48rpx;
+}
+.camera-body {
+  width: 64rpx;
+  height: 40rpx;
+  background: #e8a0a0;
+  border-radius: 8rpx;
+  position: absolute;
+  bottom: 0;
+}
+.camera-body::before {
+  content: '';
+  position: absolute;
+  top: -10rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20rpx;
+  height: 10rpx;
+  background: #e8a0a0;
+  border-radius: 4rpx 4rpx 0 0;
+}
+.camera-lens {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24rpx;
+  height: 24rpx;
+  border: 4rpx solid #fff;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
 }
 
 .avatar-hint {
   font-size: 24rpx;
-  color: #ccc;
+  color: #d48a9e;
 }
 
-/* ===== 飘落花瓣 ===== */
+/* ===== 飘落花瓣 — CSS 花瓣形状 ===== */
 .petal {
   position: absolute;
   top: -60rpx;
-  font-size: 32rpx;
-  opacity: 0.7;
+  width: 22rpx;
+  height: 34rpx;
+  background: linear-gradient(180deg, #ffb7c5 0%, #ff8da1 60%, #ff6b8a 100%);
+  border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%;
+  opacity: 0.75;
   pointer-events: none;
   animation: fall linear infinite;
+  transform-origin: center bottom;
 }
 
-.p1 { left: 5%;  animation-duration: 6s; animation-delay: 0s;   font-size: 28rpx; }
-.p2 { left: 15%; animation-duration: 8s; animation-delay: 1s;   font-size: 36rpx; }
-.p3 { left: 25%; animation-duration: 7s; animation-delay: 2.5s; font-size: 24rpx; }
-.p4 { left: 35%; animation-duration: 9s; animation-delay: 0.5s; font-size: 40rpx; }
-.p5 { left: 45%; animation-duration: 6.5s; animation-delay: 3s;  font-size: 30rpx; }
-.p6 { left: 55%; animation-duration: 8.5s; animation-delay: 1.5s; font-size: 34rpx; }
-.p7 { left: 65%; animation-duration: 7.5s; animation-delay: 4s;   font-size: 26rpx; }
-.p8 { left: 75%; animation-duration: 9.5s; animation-delay: 2s;   font-size: 38rpx; }
-.p9 { left: 85%; animation-duration: 6s; animation-delay: 5s;    font-size: 32rpx; }
-.p10 { left: 10%; animation-duration: 8s; animation-delay: 3.5s;  font-size: 28rpx; }
-.p11 { left: 50%; animation-duration: 7s; animation-delay: 0.8s;  font-size: 36rpx; }
-.p12 { left: 90%; animation-duration: 9s; animation-delay: 4.5s;  font-size: 30rpx; }
+.p1  { left: 5%;  animation-duration: 6s;  animation-delay: 0s;    width: 20rpx; height: 30rpx; opacity: 0.6; }
+.p2  { left: 15%; animation-duration: 8s;  animation-delay: 1s;    width: 26rpx; height: 38rpx; background: linear-gradient(180deg, #ffd1dc 0%, #ffb7c5 100%); }
+.p3  { left: 25%; animation-duration: 7s;  animation-delay: 2.5s;  width: 18rpx; height: 28rpx; opacity: 0.5; }
+.p4  { left: 35%; animation-duration: 9s;  animation-delay: 0.5s;  width: 28rpx; height: 42rpx; }
+.p5  { left: 45%; animation-duration: 6.5s; animation-delay: 3s;   width: 22rpx; height: 34rpx; background: linear-gradient(180deg, #ffd1dc 0%, #ffb7c5 100%); opacity: 0.65; }
+.p6  { left: 55%; animation-duration: 8.5s; animation-delay: 1.5s; width: 24rpx; height: 36rpx; }
+.p7  { left: 65%; animation-duration: 7.5s; animation-delay: 4s;   width: 20rpx; height: 30rpx; opacity: 0.55; }
+.p8  { left: 75%; animation-duration: 9.5s; animation-delay: 2s;   width: 26rpx; height: 40rpx; background: linear-gradient(180deg, #ffd1dc 0%, #ffb7c5 100%); }
+.p9  { left: 85%; animation-duration: 6s;  animation-delay: 5s;   width: 22rpx; height: 34rpx; opacity: 0.7; }
+.p10 { left: 10%; animation-duration: 8s;  animation-delay: 3.5s;  width: 18rpx; height: 28rpx; opacity: 0.5; }
+.p11 { left: 50%; animation-duration: 7s;  animation-delay: 0.8s;  width: 24rpx; height: 36rpx; background: linear-gradient(180deg, #ffd1dc 0%, #ffb7c5 100%); }
+.p12 { left: 90%; animation-duration: 9s;  animation-delay: 4.5s;  width: 20rpx; height: 32rpx; opacity: 0.6; }
 
 @keyframes fall {
-  0%   { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+  0%   { transform: translateY(0) rotate(0deg) rotateX(0deg); opacity: 0.7; }
   20%  { opacity: 0.9; }
-  80%  { opacity: 0.5; }
-  100% { transform: translateY(120vh) rotate(360deg); opacity: 0; }
+  80%  { opacity: 0.4; }
+  100% { transform: translateY(120vh) rotate(360deg) rotateX(180deg); opacity: 0; }
 }
 
