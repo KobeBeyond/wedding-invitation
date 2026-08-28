@@ -810,7 +810,7 @@ font-weight: 400;
 /* 协议勾选 */
 .agreement-check {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   margin: 24rpx 0 8rpx;
 }
 
@@ -823,7 +823,6 @@ font-weight: 400;
   align-items: center;
   justify-content: center;
   margin-right: 12rpx;
-  margin-top: 4rpx;
   flex-shrink: 0;
   background: #fff;
   transition: background 0.2s, border-color 0.2s;
@@ -843,7 +842,10 @@ font-weight: 400;
 .agreement-text {
   font-size: 24rpx;
   color: #999;
-  line-height: 1.6;
+  line-height: 32rpx;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .agreement-link {
