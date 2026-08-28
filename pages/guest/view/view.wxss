@@ -91,25 +91,29 @@ page {
   height: 180rpx;
   position: relative;
   animation: ringSpin 4s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .ring {
   position: absolute;
-  width: 110rpx;
-  height: 110rpx;
+  width: 108rpx;
+  height: 108rpx;
   border: 6rpx solid #e8c05a;
   border-radius: 50%;
   box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.35), 0 0 10rpx rgba(232, 192, 90, 0.3);
+  backface-visibility: hidden;
 }
 
+/* 对称分布：重心正好在 loader 中心 (90,90)，消除旋转 wobble */
 .ring-1 {
-  top: 12rpx;
-  left: 12rpx;
+  top: 14rpx;
+  left: 14rpx;
 }
 
 .ring-2 {
-  top: 48rpx;
-  left: 48rpx;
+  top: 58rpx;
+  left: 58rpx;
 }
 
 @keyframes ringSpin {
