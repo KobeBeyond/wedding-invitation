@@ -5,119 +5,28 @@ Page({
   data: {
     invitations: [],
     loading: true,
-    isEmpty: false,
-    isLoggedIn: true,
-    loginAvatarUrl: '',
-    loginNickName: ''
+    isEmpty: false
   },
 
   onShow() {
-    // 先检查登录态
-    this.checkLoginState()
     // 已有数据时静默刷新，不重置 loading 状态
     const silent = this.data.invitations.length > 0
     this.loadInvitations(silent)
-  },
-
-  // 检查登录态
-  checkLoginState() {
-    const app = getApp()
-    const userInfo = app.globalData.userInfo || {}
-    const loggedIn = !!(userInfo.avatarUrl && userInfo.nickName)
-    this.setData({ isLoggedIn: loggedIn })
-    return loggedIn
-  },
-
-  // 登录遮罩 — 选择头像（微信自动填充后触发自动登录）
-  onLoginChooseAvatar(e) {
-    const tempPath = e.detail.avatarUrl
-    if (!tempPath) return
-    this.setData({ loginAvatarUrl: tempPath }, () => {
-      // 如果昵称也已获取，自动完成登录
-      if (this.data.loginNickName && this.data.loginNickName.trim()) {
-        this.autoLogin()
-      }
-    })
-  },
-
-  // 登录遮罩 — 输入昵称（微信自动填充后触发自动登录）
-  onLoginNickNameInput(e) {
-    const nickName = e.detail.value
-    this.setData({ loginNickName: nickName })
-    // 如果头像和昵称都已获取，自动完成登录
-    if (nickName && nickName.trim() && this.data.loginAvatarUrl) {
-      this.autoLogin()
-    }
-  },
-
-  // 自动登录（头像和昵称都已获取时触发）
-  autoLogin() {
-    if (this._autoLogging) return
-    this._autoLogging = true
-    this.confirmLogin().finally(() => {
-      this._autoLogging = false
-    })
-  },
-
-  // 登录遮罩 — 确认进入
-  async confirmLogin() {
-    const { loginAvatarUrl, loginNickName } = this.data
-    if (!loginNickName.trim()) {
-      wx.showToast({ title: '请输入昵称', icon: 'none' })
-      return
-    }
-    if (!loginAvatarUrl) {
-      wx.showToast({ title: '请选择头像', icon: 'none' })
-      return
-    }
-    wx.showLoading({ title: '保存中...' })
-    try {
-      let avatarUrl = loginAvatarUrl
-      if (loginAvatarUrl.startsWith('http://tmp') || loginAvatarUrl.startsWith('wxfile://')) {
-        const uploadRes = await wx.cloud.uploadFile({
-          cloudPath: `avatars/user_${Date.now()}.jpg`,
-          filePath: loginAvatarUrl
-        })
-        avatarUrl = uploadRes.fileID
-      }
-      wx.setStorageSync('wedding_avatar', avatarUrl)
-      wx.setStorageSync('wedding_nickname', loginNickName)
-      getApp().updateUserInfo(loginNickName, avatarUrl)
-      this.setData({
-        isLoggedIn: true,
-        loginAvatarUrl: '',
-        loginNickName: ''
-      })
-      wx.showToast({ title: '欢迎回来', icon: 'success' })
-    } catch (err) {
-      console.error('登录保存失败:', err)
-      wx.showToast({ title: '保存失败', icon: 'none' })
-    } finally {
-      wx.hideLoading()
-    }
   },
 
   // 退出登录
   logout() {
     wx.showModal({
       title: '退出登录',
-      content: '退出后将清除您的头像和昵称，需要重新设置才能使用',
+      content: '退出后将清除本地缓存，需要重新进入小程序',
       confirmColor: '#ff6b6b',
       success: res => {
         if (res.confirm) {
-          // 清除本地缓存
           wx.removeStorageSync('wedding_avatar')
           wx.removeStorageSync('wedding_nickname')
-          // 清除全局数据
           const app = getApp()
           app.globalData.userInfo = null
           app.globalData.userOpenId = ''
-          // 刷新状态
-          this.setData({
-            isLoggedIn: false,
-            loginAvatarUrl: '',
-            loginNickName: ''
-          })
           wx.showToast({ title: '已退出登录', icon: 'none' })
         }
       }

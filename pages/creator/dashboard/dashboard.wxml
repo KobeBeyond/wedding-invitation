@@ -46,31 +46,3 @@
 
   <view class="bottom-space"></view>
 </view>
-
-<!-- 未登录遮罩 — 微信授权获取头像昵称 -->
-<view class="login-mask" wx:if="{{!isLoggedIn}}">
-  <view class="login-panel">
-    <view class="login-title">Nupcias</view>
-    <view class="login-sub">婚礼请柬制作工具</view>
-
-    <!-- 头像选择 — 正圆 -->
-    <button class="login-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onLoginChooseAvatar">
-      <image wx:if="{{loginAvatarUrl}}" src="{{loginAvatarUrl}}" class="login-avatar-img" mode="aspectFill" />
-      <view wx:else class="login-avatar-placeholder">
-        <text class="login-avatar-icon">📷</text>
-      </view>
-    </button>
-
-    <!-- 昵称输入 — 微信自动填充 -->
-    <input
-      class="login-nickname-input"
-      type="nickname"
-      placeholder="点击获取微信昵称"
-      value="{{loginNickName}}"
-      bindinput="onLoginNickNameInput"
-      bindblur="onLoginNickNameInput"
-    />
-
-    <view class="login-hint">点击头像和昵称区域，自动获取微信信息</view>
-  </view>
-</view>

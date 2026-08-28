@@ -418,33 +418,23 @@
     </view>
   </view>
 
-  <!-- 用户信息补全弹窗 -->
+  <!-- 头像选择弹窗 -->
   <view class="user-modal-mask" wx:if="{{showUserModal}}" bindtap="closeUserModal">
     <view class="user-modal" catchtap="noop">
-      <view class="modal-title">完善个人信息</view>
-      <view class="modal-sub">发送祝福前，请设置您的头像和昵称</view>
+      <view class="modal-title">选择您的头像</view>
+      <view class="modal-sub">发送祝福前，请设置一个头像</view>
 
-      <view class="modal-avatar-row">
-        <button class="modal-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onModalChooseAvatar">
-          <image wx:if="{{modalAvatarUrl}}" src="{{modalAvatarUrl}}" class="modal-avatar-img" mode="aspectFill" />
-          <view wx:else class="modal-avatar-placeholder">
-            <text class="modal-avatar-icon">📷</text>
-            <text class="modal-avatar-text">点击选头像</text>
-          </view>
-        </button>
-      </view>
-
-      <input
-        class="modal-nickname-input"
-        type="nickname"
-        placeholder="请输入昵称"
-        value="{{modalNickName}}"
-        bindinput="onModalNickNameInput"
-      />
+      <button class="modal-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onModalChooseAvatar">
+        <image wx:if="{{modalAvatarUrl}}" src="{{modalAvatarUrl}}" class="modal-avatar-img" mode="aspectFill" />
+        <view wx:else class="modal-avatar-placeholder">
+          <text class="modal-avatar-icon">📷</text>
+          <text class="modal-avatar-text">点击选头像</text>
+        </view>
+      </button>
 
       <view class="modal-actions">
         <view class="modal-btn secondary" bindtap="closeUserModal">稍后再说</view>
-        <view class="modal-btn primary" bindtap="confirmUserInfo">确认</view>
+        <view class="modal-btn primary" bindtap="confirmAvatar">确认</view>
       </view>
     </view>
   </view>

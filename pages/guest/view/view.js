@@ -53,9 +53,8 @@ Page({
     // 封面图加载状态
     coverLoaded: false,
 
-    // 用户信息弹窗
+    // 头像选择弹窗
     showUserModal: false,
-    modalNickName: '',
     modalAvatarUrl: '',
 
   },
@@ -477,28 +476,24 @@ Page({
     }, 8000)
   },
 
-  // 检查用户信息：优先用 app.globalData，没有再弹窗引导
+  // 检查用户头像：优先用 app.globalData，没有再弹窗引导
   checkUserInfo() {
     const app = getApp()
     const userInfo = app.globalData.userInfo || {}
-    if (userInfo.avatarUrl && userInfo.nickName) {
+    if (userInfo.avatarUrl) {
       this.setData({
         userAvatar: userInfo.avatarUrl,
-        modalNickName: userInfo.nickName,
         modalAvatarUrl: userInfo.avatarUrl
       })
       return true
     }
     // 尝试读本地缓存
     const cachedAvatar = wx.getStorageSync('wedding_avatar')
-    const cachedName = wx.getStorageSync('wedding_nickname')
-    if (cachedAvatar && cachedName) {
+    if (cachedAvatar) {
       this.setData({
         userAvatar: cachedAvatar,
-        modalNickName: cachedName,
         modalAvatarUrl: cachedAvatar
       })
-      app.updateUserInfo(cachedName, cachedAvatar)
       return true
     }
     return false
@@ -507,7 +502,7 @@ Page({
   // 阻止冒泡（弹窗内部点击不关闭）
   noop() {},
 
-  // 显示用户信息补全弹窗
+  // 显示头像选择弹窗
   openUserModal() {
     this.setData({ showUserModal: true })
   },
@@ -521,28 +516,21 @@ Page({
   onModalChooseAvatar(e) {
     const tempPath = e.detail.avatarUrl
     if (!tempPath) return
-    this.setData({ modalAvatarUrl: tempPath })
+    this.setData({ modalAvatarUrl: tempPath }, () => {
+      // 选完头像自动保存
+      this.confirmAvatar()
+    })
   },
 
-  // 弹窗内输入昵称
-  onModalNickNameInput(e) {
-    this.setData({ modalNickName: e.detail.value })
-  },
-
-  // 确认提交用户信息
-  async confirmUserInfo() {
-    const { modalNickName, modalAvatarUrl } = this.data
-    if (!modalNickName.trim()) {
-      wx.showToast({ title: '请输入昵称', icon: 'none' })
-      return
-    }
+  // 确认保存头像
+  async confirmAvatar() {
+    const { modalAvatarUrl } = this.data
     if (!modalAvatarUrl) {
       wx.showToast({ title: '请选择头像', icon: 'none' })
       return
     }
     wx.showLoading({ title: '保存中...' })
     try {
-      // 如果选的是临时路径，先上传云存储
       let avatarUrl = modalAvatarUrl
       if (modalAvatarUrl.startsWith('http://tmp') || modalAvatarUrl.startsWith('wxfile://')) {
         const uploadRes = await wx.cloud.uploadFile({
@@ -552,33 +540,25 @@ Page({
         avatarUrl = uploadRes.fileID
       }
       wx.setStorageSync('wedding_avatar', avatarUrl)
-      wx.setStorageSync('wedding_nickname', modalNickName)
-      getApp().updateUserInfo(modalNickName, avatarUrl)
       this.setData({
         userAvatar: avatarUrl,
         showUserModal: false
       })
-      wx.showToast({ title: '保存成功', icon: 'success' })
+      wx.showToast({ title: '已设置头像', icon: 'success' })
     } catch (err) {
-      console.error('保存用户信息失败:', err)
+      console.error('保存头像失败:', err)
       wx.showToast({ title: '保存失败', icon: 'none' })
     } finally {
       wx.hideLoading()
     }
   },
 
-  // 旧版 chooseAvatar 回调（兼容，实际走弹窗逻辑）
+  // 旧版 chooseAvatar 回调（输入栏左侧头像按钮）
   onChooseAvatar(e) {
-    // 如果已有完整信息，直接更新头像
     const tempPath = e.detail.avatarUrl
     if (!tempPath) return
-    const hasInfo = this.checkUserInfo()
-    if (hasInfo) {
-      this.setData({ modalAvatarUrl: tempPath })
-      this.confirmUserInfo()
-    } else {
-      this.setData({ modalAvatarUrl: tempPath, showUserModal: true })
-    }
+    this.setData({ modalAvatarUrl: tempPath })
+    this.confirmAvatar()
   },
 
   onBlessingInput(e) {
@@ -604,12 +584,11 @@ Page({
     }
 
     const avatarUrl = this.data.userAvatar || ''
-    const nickName = this.data.modalNickName || ''
 
     // 先本地飘一条弹幕
     const danmaku = this.selectComponent('#danmaku')
     if (danmaku) {
-      danmaku.addDanmu(text, avatarUrl, nickName)
+      danmaku.addDanmu(text, avatarUrl, '')
     }
     this.setData({ blessingText: '' })
 
@@ -618,7 +597,7 @@ Page({
         name: 'submitBlessing',
         data: {
           text,
-          nickName,
+          nickName: '',
           avatarUrl,
           invitationId: this.data.inv
         }
