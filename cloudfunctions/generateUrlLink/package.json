@@ -1,0 +1,9 @@
+{
+  "name": "generateUrlLink",
+  "version": "1.0.0",
+  "description": "生成小程序 URL Link 短链",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

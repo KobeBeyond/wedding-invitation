@@ -83,7 +83,35 @@ Page({
     }
   },
 
-  // 复制邀请文案
+  // 复制小程序短链（点击直接打开请柬）
+  async copyLink() {
+    wx.showLoading({ title: '生成链接中...' })
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'generateUrlLink',
+        data: { invitationId: this.data.invitationId }
+      })
+
+      if (res.result && res.result.success && res.result.urlLink) {
+        wx.setClipboardData({
+          data: res.result.urlLink,
+          success: () => {
+            wx.showToast({ title: '链接已复制', icon: 'success' })
+          }
+        })
+      } else {
+        // 短链生成失败，fallback 到复制文案
+        this.copyInviteText()
+      }
+    } catch (err) {
+      console.error('copyLink error:', err)
+      this.copyInviteText()
+    } finally {
+      wx.hideLoading()
+    }
+  },
+
+  // 复制邀请文案（fallback）
   copyInviteText() {
     const inv = this.data.invitation || {}
     const text = `${inv.shareTitle || inv.groomName + '与' + inv.brideName + '的婚礼'}\n时间：${inv.weddingDate}\n地点：${inv.venueName || ''} ${inv.venueAddress || ''}\n\n打开微信搜索小程序「Nupcias」查看完整请柬`
