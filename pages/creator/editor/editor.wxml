@@ -203,7 +203,7 @@
   <view class="step-content" hidden="{{currentStep != 4}}">
     <view class="section-title">音乐与封面</view>
 
-    <!-- 封面图（竖向长图，请柬首屏铺满展示） -->
+    <!-- 封面图 + 背景音乐 -->
     <view class="form-group">
       <text class="form-label">封面图 <text class="form-hint">（竖向长图，请柬首屏铺满展示）</text></text>
       <view class="cover-picker portrait" bindtap="chooseCoverImage">
@@ -221,7 +221,22 @@
       </view>
     </view>
 
-    <!-- 分享卡片图（4:3 横向图，转发/分享时展示） -->
+    <view class="form-group">
+      <text class="form-label">背景音乐（选填）</text>
+      <view class="music-picker" bindtap="chooseMusic">
+        <view class="music-display" wx:if="{{musicUrl}}">
+          <text class="music-icon">🎵</text>
+          <text class="music-name">已上传音乐</text>
+          <text class="music-replace">更换</text>
+        </view>
+        <view class="music-empty" wx:else>
+          <text class="music-icon">🎵</text>
+          <text>选择音乐文件（mp3/m4a，10MB以内）</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 分享卡片图 + 分享标题 -->
     <view class="form-group">
       <text class="form-label">分享卡片图 <text class="form-hint">（4:3 横向图，转发好友时展示）</text></text>
       <view class="cover-picker landscape" bindtap="chooseShareImage">
@@ -235,21 +250,6 @@
           <text class="cover-icon">🖼</text>
           <text class="cover-text">选择分享卡片图</text>
           <text class="cover-hint">横向图，建议 4:3</text>
-        </view>
-      </view>
-    </view>
-
-    <view class="form-group">
-      <text class="form-label">背景音乐（选填）</text>
-      <view class="music-picker" bindtap="chooseMusic">
-        <view class="music-display" wx:if="{{musicUrl}}">
-          <text class="music-icon">🎵</text>
-          <text class="music-name">已上传音乐</text>
-          <text class="music-replace">更换</text>
-        </view>
-        <view class="music-empty" wx:else>
-          <text class="music-icon">🎵</text>
-          <text>选择音乐文件（mp3/m4a，10MB以内）</text>
         </view>
       </view>
     </view>
