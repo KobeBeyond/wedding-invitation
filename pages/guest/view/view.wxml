@@ -23,8 +23,8 @@
     <view wx:else class="cover-gradient"></view>
 
     <!-- 封面加载动画 -->
-    <view class="cover-loading {{coverLoaded ? 'hidden' : ''}}" wx:if="{{invitation.coverImage && !coverLoaded}}">
-      <image class="loading-gif" src="/static/images/loading.gif" mode="aspectFit" />
+    <view class="cover-loading {{coverLoaded ? 'hidden' : ''}}" wx:if="{{invitation.coverImage && !coverLoaded}}" catchtouchmove="preventScroll">
+      <image class="loading-logo" src="/static/images/logo.jpg" mode="aspectFit" />
     </view>
 
     <view class="cover-overlay"></view>
@@ -436,7 +436,7 @@ lazy-load
 
 </view>
 
-<!-- 加载中 — 统一用 GIF loading -->
-<view class="cover-loading full-page" wx:else>
-  <image class="loading-gif" src="/static/images/loading.gif" mode="aspectFit" />
+<!-- 加载中 — 旋转 logo -->
+<view class="cover-loading full-page" wx:else catchtouchmove="preventScroll">
+  <image class="loading-logo" src="/static/images/logo.jpg" mode="aspectFit" />
 </view>

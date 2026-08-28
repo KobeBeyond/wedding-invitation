@@ -659,6 +659,9 @@ Page({
     this.setData({ timelineExpanded: !this.data.timelineExpanded })
   },
 
+  // 阻止 loading 遮罩下的页面滑动
+  preventScroll() {}
+
   // 封面图加载完成
   onCoverLoad() {
     this.setData({ coverLoaded: true })

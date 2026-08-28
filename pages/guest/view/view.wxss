@@ -54,7 +54,7 @@ page {
   background: linear-gradient(180deg, #e8a0a0 0%, #d4af37 100%);
 }
 
-/* 封面加载动画 */
+/* 封面加载动画 — 纯色背景 + 旋转 logo */
 .cover-loading {
   position: absolute;
   top: 0; left: 0;
@@ -62,8 +62,8 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, #8a1c2c 0%, #6b1220 100%);
-  z-index: 3;
+  background: #a60b3a;
+  z-index: 9999;
   transition: opacity 0.6s ease-out;
 }
 
@@ -72,16 +72,21 @@ page {
   pointer-events: none;
 }
 
-.loading-gif {
-  width: 300rpx;
-  height: 300rpx;
-  border-radius: 24rpx;
+.loading-logo {
+  width: 240rpx;
+  height: 240rpx;
+  border-radius: 48rpx;
+  animation: logoRotate 3s linear infinite;
+}
+
+@keyframes logoRotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 /* 全页 loading */
 .cover-loading.full-page {
   position: fixed;
-  z-index: 999;
 }
 
 .cover-bg.loaded {
