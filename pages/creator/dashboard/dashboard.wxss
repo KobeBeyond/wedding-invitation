@@ -147,13 +147,15 @@
 }
 
 .avatar-btn {
-  width: 200rpx;
-  height: 200rpx;
+  width: 200rpx !important;
+  height: 200rpx !important;
   min-width: 200rpx;
   min-height: 200rpx;
+  max-width: 200rpx;
+  max-height: 200rpx;
   border-radius: 50%;
   overflow: hidden;
-  padding: 0;
+  padding: 0 !important;
   margin: 0 0 40rpx 0;
   background: #fdf5f6;
   border: 4rpx solid #f0dcdc;
@@ -163,6 +165,7 @@
   line-height: 1;
   box-sizing: border-box;
   flex-shrink: 0;
+  font-size: 0;
 }
 
 .avatar-btn::after {
@@ -170,12 +173,15 @@
 }
 
 .avatar-img {
-  width: 100%;
-  height: 100%;
+  width: 200rpx;
+  height: 200rpx;
   border-radius: 50%;
+  display: block;
 }
 
 .avatar-placeholder {
+  width: 200rpx;
+  height: 200rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -183,10 +189,41 @@
 
 .avatar-icon {
   font-size: 64rpx;
+  line-height: 1;
 }
 
 .avatar-hint {
   font-size: 24rpx;
   color: #ccc;
+}
+
+/* ===== 飘落花瓣 ===== */
+.petal {
+  position: absolute;
+  top: -60rpx;
+  font-size: 32rpx;
+  opacity: 0.7;
+  pointer-events: none;
+  animation: fall linear infinite;
+}
+
+.p1 { left: 5%;  animation-duration: 6s; animation-delay: 0s;   font-size: 28rpx; }
+.p2 { left: 15%; animation-duration: 8s; animation-delay: 1s;   font-size: 36rpx; }
+.p3 { left: 25%; animation-duration: 7s; animation-delay: 2.5s; font-size: 24rpx; }
+.p4 { left: 35%; animation-duration: 9s; animation-delay: 0.5s; font-size: 40rpx; }
+.p5 { left: 45%; animation-duration: 6.5s; animation-delay: 3s;  font-size: 30rpx; }
+.p6 { left: 55%; animation-duration: 8.5s; animation-delay: 1.5s; font-size: 34rpx; }
+.p7 { left: 65%; animation-duration: 7.5s; animation-delay: 4s;   font-size: 26rpx; }
+.p8 { left: 75%; animation-duration: 9.5s; animation-delay: 2s;   font-size: 38rpx; }
+.p9 { left: 85%; animation-duration: 6s; animation-delay: 5s;    font-size: 32rpx; }
+.p10 { left: 10%; animation-duration: 8s; animation-delay: 3.5s;  font-size: 28rpx; }
+.p11 { left: 50%; animation-duration: 7s; animation-delay: 0.8s;  font-size: 36rpx; }
+.p12 { left: 90%; animation-duration: 9s; animation-delay: 4.5s;  font-size: 30rpx; }
+
+@keyframes fall {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+  20%  { opacity: 0.9; }
+  80%  { opacity: 0.5; }
+  100% { transform: translateY(120vh) rotate(360deg); opacity: 0; }
 }
 

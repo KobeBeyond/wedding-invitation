@@ -49,6 +49,20 @@
 
 <!-- 头像设置遮罩 — 无头像时拦截 -->
 <view class="avatar-mask" wx:if="{{showAvatarModal}}">
+  <!-- 飘落花瓣 -->
+  <view class="petal p1">🌸</view>
+  <view class="petal p2">🌺</view>
+  <view class="petal p3">🌸</view>
+  <view class="petal p4">🌺</view>
+  <view class="petal p5">🌸</view>
+  <view class="petal p6">🌺</view>
+  <view class="petal p7">🌸</view>
+  <view class="petal p8">🌺</view>
+  <view class="petal p9">🌸</view>
+  <view class="petal p10">🌺</view>
+  <view class="petal p11">🌸</view>
+  <view class="petal p12">🌺</view>
+
   <view class="avatar-panel">
     <view class="avatar-title">欢迎使用 Nupcias</view>
     <view class="avatar-sub">请选择您的头像，开始使用</view>
