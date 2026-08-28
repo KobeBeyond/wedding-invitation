@@ -129,19 +129,17 @@
         current="{{photoIdx}}"
         bindchange="onSwiperChange"
       >
-        <swiper-item wx:for="{{invitation.photos}}" wx:key="index">
-          <view class="card-item {{photoIdx === index ? 'active' : ''}}">
-            <image
-              wx:if="{{item.url}}"
-              src="{{item.url}}"
-              mode="aspectFit"
-              class="card-img"
-              lazy-load
-              bindtap="previewPhoto"
-              data-idx="{{index}}"
-            />
-          </view>
-        </swiper-item>
+<swiper-item wx:for="{{invitation.photos}}" wx:key="index">
+<view class="card-item {{photoIdx === index ? 'active' : ''}}">
+<image
+wx:if="{{item.url}}"
+src="{{item.url}}"
+mode="aspectFit"
+class="card-img"
+lazy-load
+/>
+</view>
+</swiper-item>
       </swiper>
 
       <!-- 无照片时兜底 -->

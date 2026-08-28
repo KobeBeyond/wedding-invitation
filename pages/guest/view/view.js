@@ -231,17 +231,6 @@ Page({
     this.setData({ photoIdx: e.currentTarget.dataset.idx })
   },
 
-  previewPhoto(e) {
-    const idx = e.currentTarget.dataset.idx
-    const photos = this.data.invitation.photos || []
-    const urls = photos.filter(p => p.url).map(p => p.url)
-    if (urls.length === 0) return
-    wx.previewImage({
-      current: urls[idx] || urls[0],
-      urls
-    })
-  },
-
   // ===== 地图导航 =====
   openNavigation() {
     const d = this.data.invitation
