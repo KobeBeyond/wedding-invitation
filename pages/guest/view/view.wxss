@@ -137,9 +137,9 @@ page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   padding: 0 64rpx;
-  padding-top: 120rpx;
+  padding-bottom: 160rpx;
 }
 
 .cover-names {
