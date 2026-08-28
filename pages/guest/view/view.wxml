@@ -25,10 +25,9 @@
     <!-- 封面加载动画 -->
     <view class="cover-loading {{coverLoaded ? 'hidden' : ''}}" wx:if="{{invitation.coverImage && !coverLoaded}}">
       <view class="logo-loader">
-        <image class="logo-img" src="/static/images/logo.jpg" mode="aspectFit" />
+        <image class="logo-img" src="/static/images/logo.jpg" mode="aspectFill" />
         <view class="ring-shine"></view>
       </view>
-      <text class="loading-text">加载中...</text>
     </view>
 
     <view class="cover-overlay"></view>
@@ -421,8 +420,10 @@
 
 </view>
 
-<!-- 加载中 -->
-<view class="loading-state" wx:else>
-  <view class="loading-spinner"></view>
-  <text>加载请柬中...</text>
+<!-- 加载中 — 统一用戒指 loading -->
+<view class="cover-loading full-page" wx:else>
+  <view class="logo-loader">
+    <image class="logo-img" src="/static/images/logo.jpg" mode="aspectFill" />
+    <view class="ring-shine"></view>
+  </view>
 </view>
