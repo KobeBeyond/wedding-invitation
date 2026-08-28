@@ -53,6 +53,11 @@ Page({
     // 封面图加载状态
     coverLoaded: false,
 
+    // 用户信息弹窗
+    showUserModal: false,
+    modalNickName: '',
+    modalAvatarUrl: '',
+
   },
 
   onLoad(options) {
@@ -63,7 +68,7 @@ Page({
     }
     this.setData({ inv: options.inv })
     this.loadInvitation(options.inv)
-    this.checkUserAvatar()
+    this.checkUserInfo()
   },
 
   // 页面回到前台时恢复音乐播放
@@ -472,36 +477,107 @@ Page({
     }, 8000)
   },
 
-  checkUserAvatar() {
-    let cachedAvatar = wx.getStorageSync('wedding_avatar')
-    // 过滤掉旧版临时路径（http://tmp/ 开头），这些路径会报 CORS
-    if (cachedAvatar && cachedAvatar.startsWith('http')) {
-      wx.removeStorageSync('wedding_avatar')
-      cachedAvatar = ''
+  // 检查用户信息：优先用 app.globalData，没有再弹窗引导
+  checkUserInfo() {
+    const app = getApp()
+    const userInfo = app.globalData.userInfo || {}
+    if (userInfo.avatarUrl && userInfo.nickName) {
+      this.setData({
+        userAvatar: userInfo.avatarUrl,
+        modalNickName: userInfo.nickName,
+        modalAvatarUrl: userInfo.avatarUrl
+      })
+      return true
     }
-    if (cachedAvatar) {
-      this.setData({ userAvatar: cachedAvatar })
+    // 尝试读本地缓存
+    const cachedAvatar = wx.getStorageSync('wedding_avatar')
+    const cachedName = wx.getStorageSync('wedding_nickname')
+    if (cachedAvatar && cachedName) {
+      this.setData({
+        userAvatar: cachedAvatar,
+        modalNickName: cachedName,
+        modalAvatarUrl: cachedAvatar
+      })
+      app.updateUserInfo(cachedName, cachedAvatar)
+      return true
+    }
+    return false
+  },
+
+  // 阻止冒泡（弹窗内部点击不关闭）
+  noop() {},
+
+  // 显示用户信息补全弹窗
+  openUserModal() {
+    this.setData({ showUserModal: true })
+  },
+
+  // 关闭弹窗
+  closeUserModal() {
+    this.setData({ showUserModal: false })
+  },
+
+  // 弹窗内选择头像
+  onModalChooseAvatar(e) {
+    const tempPath = e.detail.avatarUrl
+    if (!tempPath) return
+    this.setData({ modalAvatarUrl: tempPath })
+  },
+
+  // 弹窗内输入昵称
+  onModalNickNameInput(e) {
+    this.setData({ modalNickName: e.detail.value })
+  },
+
+  // 确认提交用户信息
+  async confirmUserInfo() {
+    const { modalNickName, modalAvatarUrl } = this.data
+    if (!modalNickName.trim()) {
+      wx.showToast({ title: '请输入昵称', icon: 'none' })
+      return
+    }
+    if (!modalAvatarUrl) {
+      wx.showToast({ title: '请选择头像', icon: 'none' })
+      return
+    }
+    wx.showLoading({ title: '保存中...' })
+    try {
+      // 如果选的是临时路径，先上传云存储
+      let avatarUrl = modalAvatarUrl
+      if (modalAvatarUrl.startsWith('http://tmp') || modalAvatarUrl.startsWith('wxfile://')) {
+        const uploadRes = await wx.cloud.uploadFile({
+          cloudPath: `avatars/visitor_${Date.now()}.jpg`,
+          filePath: modalAvatarUrl
+        })
+        avatarUrl = uploadRes.fileID
+      }
+      wx.setStorageSync('wedding_avatar', avatarUrl)
+      wx.setStorageSync('wedding_nickname', modalNickName)
+      getApp().updateUserInfo(modalNickName, avatarUrl)
+      this.setData({
+        userAvatar: avatarUrl,
+        showUserModal: false
+      })
+      wx.showToast({ title: '保存成功', icon: 'success' })
+    } catch (err) {
+      console.error('保存用户信息失败:', err)
+      wx.showToast({ title: '保存失败', icon: 'none' })
+    } finally {
+      wx.hideLoading()
     }
   },
 
-  // chooseAvatar 回调：用户选择微信头像后立即上传云存储
-  async onChooseAvatar(e) {
+  // 旧版 chooseAvatar 回调（兼容，实际走弹窗逻辑）
+  onChooseAvatar(e) {
+    // 如果已有完整信息，直接更新头像
     const tempPath = e.detail.avatarUrl
     if (!tempPath) return
-    wx.showLoading({ title: '上传中...' })
-    try {
-      const uploadRes = await wx.cloud.uploadFile({
-        cloudPath: `avatars/visitor_${Date.now()}.jpg`,
-        filePath: tempPath
-      })
-      const fileID = uploadRes.fileID
-      wx.setStorageSync('wedding_avatar', fileID)
-      this.setData({ userAvatar: fileID })
-    } catch (err) {
-      console.error('Avatar upload failed:', err)
-      wx.showToast({ title: '头像上传失败', icon: 'none' })
-    } finally {
-      wx.hideLoading()
+    const hasInfo = this.checkUserInfo()
+    if (hasInfo) {
+      this.setData({ modalAvatarUrl: tempPath })
+      this.confirmUserInfo()
+    } else {
+      this.setData({ modalAvatarUrl: tempPath, showUserModal: true })
     }
   },
 
@@ -511,11 +587,6 @@ Page({
       blessingText: value,
       canSend: value.trim().length > 0
     })
-    // 首次输入且未选头像时，温和提示引导点击左侧头像按钮
-    if (value.trim().length > 0 && !this.data.userAvatar && !this._avatarPrompted) {
-      this._avatarPrompted = true
-      wx.showToast({ title: '点击左侧头像可选微信头像', icon: 'none', duration: 2000 })
-    }
   },
 
   async sendBlessing() {
@@ -525,38 +596,29 @@ Page({
       return
     }
 
-    let avatarUrl = this.data.userAvatar || ''
+    // 未设置头像/昵称时，弹出补全弹窗
+    const hasUserInfo = this.checkUserInfo()
+    if (!hasUserInfo) {
+      this.openUserModal()
+      return
+    }
+
+    const avatarUrl = this.data.userAvatar || ''
+    const nickName = this.data.modalNickName || ''
 
     // 先本地飘一条弹幕
     const danmaku = this.selectComponent('#danmaku')
     if (danmaku) {
-      danmaku.addDanmu(text, avatarUrl, '')
+      danmaku.addDanmu(text, avatarUrl, nickName)
     }
     this.setData({ blessingText: '' })
-
-    // 头像持久化：临时路径 → 上传云存储 → 拿到 fileID
-    if (avatarUrl && !avatarUrl.startsWith('cloud://')) {
-      try {
-        const uploadRes = await wx.cloud.uploadFile({
-          cloudPath: `avatars/${Date.now()}-${Math.random().toString(36).substr(2, 8)}.jpg`,
-          filePath: avatarUrl
-        })
-        if (uploadRes.fileID) {
-          avatarUrl = uploadRes.fileID
-          wx.setStorageSync('wedding_avatar', avatarUrl)
-          this.setData({ userAvatar: avatarUrl })
-        }
-      } catch (err) {
-        console.error('Avatar upload failed, falling back to temp path:', err)
-      }
-    }
 
     try {
       const submitRes = await wx.cloud.callFunction({
         name: 'submitBlessing',
         data: {
           text,
-          nickName: '',
+          nickName,
           avatarUrl,
           invitationId: this.data.inv
         }

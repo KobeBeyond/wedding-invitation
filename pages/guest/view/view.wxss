@@ -1134,3 +1134,122 @@ font-weight: 400;
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* ===== 用户信息补全弹窗 ===== */
+.user-modal-mask {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-modal {
+  width: 80%;
+  max-width: 560rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 48rpx 40rpx;
+  text-align: center;
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #4a4a4a;
+  margin-bottom: 12rpx;
+}
+
+.modal-sub {
+  font-size: 26rpx;
+  color: #888;
+  margin-bottom: 40rpx;
+}
+
+.modal-avatar-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32rpx;
+}
+
+.modal-avatar-btn {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  background: #fdf5f6;
+  border: 2rpx solid #f0dcdc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-avatar-btn::after {
+  border: none;
+}
+
+.modal-avatar-img {
+  width: 100%;
+  height: 100%;
+}
+
+.modal-avatar-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-avatar-icon {
+  font-size: 48rpx;
+  margin-bottom: 8rpx;
+}
+
+.modal-avatar-text {
+  font-size: 22rpx;
+  color: #c07070;
+}
+
+.modal-nickname-input {
+  width: 100%;
+  height: 88rpx;
+  background: #fafafa;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  font-size: 30rpx;
+  color: #333;
+  border: 2rpx solid #f0f0f0;
+  box-sizing: border-box;
+  margin-bottom: 40rpx;
+  text-align: center;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 24rpx;
+}
+
+.modal-btn {
+  flex: 1;
+  height: 80rpx;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+.modal-btn.secondary {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.modal-btn.primary {
+  background: linear-gradient(135deg, #e8a0a0, #d45d5d);
+  color: #fff;
+}

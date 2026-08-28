@@ -1,0 +1,9 @@
+{
+  "name": "clearDebugData",
+  "version": "1.0.0",
+  "description": "清理 guests / blessings 调试数据",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

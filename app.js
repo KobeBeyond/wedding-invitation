@@ -44,11 +44,29 @@ App({
             this.globalData.userInfo = res.result.user
           }
           console.log('✅ 登录成功', this.globalData.userOpenId)
+          // 触发登录完成回调（页面可监听）
+          if (this.loginReadyCallback) {
+            this.loginReadyCallback(res.result)
+          }
         }
       },
       fail: err => {
         console.error('❌ 静默登录失败', err)
       }
+    })
+  },
+
+  // 更新全局用户信息（头像+昵称）
+  updateUserInfo(nickName, avatarUrl) {
+    if (!nickName && !avatarUrl) return
+    const info = this.globalData.userInfo || {}
+    if (nickName) info.nickName = nickName
+    if (avatarUrl) info.avatarUrl = avatarUrl
+    this.globalData.userInfo = info
+    // 同步到云端 users 表
+    wx.cloud.callFunction({
+      name: 'login',
+      data: { nickName: info.nickName, avatarUrl: info.avatarUrl }
     })
   }
 })
