@@ -182,18 +182,6 @@ mode="aspectFit"
 class="photo-img"
 lazy-load
 />
-<view class="corner-flower corner-tl">
-<view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view>
-</view>
-<view class="corner-flower corner-tr">
-<view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view>
-</view>
-<view class="corner-flower corner-bl">
-<view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view>
-</view>
-<view class="corner-flower corner-br">
-<view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view>
-</view>
 </view>
 </view>
 </swiper-item>
