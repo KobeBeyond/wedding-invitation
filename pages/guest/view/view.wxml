@@ -223,11 +223,9 @@ lazy-load
         <view class="blessing-preview">
           <text class="blessing-preview-text">{{currentBlessing}}</text>
         </view>
-        <!-- 换一条：CSS 绘制的粉色渐变刷新按钮 -->
-        <view class="blessing-refresh-btn" bindtap="refreshBlessing">
-          <view class="refresh-circle">
-            <view class="refresh-arrow"></view>
-          </view>
+        <!-- 换一条 -->
+        <view class="blessing-send-btn active" bindtap="refreshBlessing">
+          <text>换一条</text>
         </view>
         <!-- 发送：无头像时文案变为「选头像」，点击跳转头像设置页 -->
         <view class="blessing-send-btn active" bindtap="sendBlessing">
