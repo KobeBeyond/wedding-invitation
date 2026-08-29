@@ -625,18 +625,18 @@ burstY: 0,
   async loadBlessingQuotes(retry = true) {
     try {
       const res = await wx.cloud.callFunction({ name: 'getBlessingQuotes' })
-      if (res.result && res.result.success && res.result.data && res.result.data.length > 0) {
-        this.setData({ blessingQuotes: res.result.data })
-      } else {
-        throw new Error('empty')
-      }
-    } catch (err) {
-      console.error('Load blessingQuotes error:', err)
-      if (retry) {
-        // 延迟 1.5s 后重试一次
-        setTimeout(() => this.loadBlessingQuotes(false), 1500)
+      const data = res.result && res.result.data
+      if (data && data.length > 0) {
+        this.setData({ blessingQuotes: data })
         return
       }
+    } catch (err) {
+      // 云函数未部署或数据库异常：静默处理，走下方重试/隐藏逻辑
+    }
+    if (retry) {
+      // 延迟 1.5s 后重试一次
+      setTimeout(() => this.loadBlessingQuotes(false), 1500)
+    } else {
       // 最终失败：隐藏发送入口，只保留已有的弹幕展示
       this.setData({ showBlessingBtn: false })
     }
