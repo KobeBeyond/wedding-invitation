@@ -1141,12 +1141,13 @@ font-weight: 400;
   line-height: 1;
 }
 
-/* 当前随机语录预览 */
+/* 当前随机语录预览：模拟 input 输入框样式 */
 .blessing-preview {
   flex: 1;
   min-width: 0;
   height: 64rpx;
-  background: #f9f5f5;
+  background: #fff;
+  border: 2rpx solid #e8d0d0;
   border-radius: 32rpx;
   padding: 0 20rpx;
   display: flex;
@@ -1159,7 +1160,7 @@ font-weight: 400;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 26rpx;
-  color: #555;
+  color: #333;
   line-height: 1.4;
 }
 
