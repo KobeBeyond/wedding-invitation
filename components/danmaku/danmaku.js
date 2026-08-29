@@ -6,10 +6,11 @@ const util = require('../../utils/util.js')
 const LANES = [10, 27, 44, 61, 78]
 // 单条弹幕穿屏时长（秒）：从右侧屏幕外移动到左侧屏幕外
 const DURATION = 10
-// 同一轨道两条弹幕的最小出发间隔（秒）：> DURATION/2 保证屏幕内不重叠
-const LANE_GAP = 6
-// 全局相邻两条弹幕（任意轨道）最小出发间隔（秒），控制密度
-const GLOBAL_GAP = 1.2
+// 同一轨道两条弹幕的最小出发间隔（秒）：> DURATION 保证同轨道屏幕内最多 1 条，不重叠
+const LANE_GAP = 12
+// 全局相邻两条弹幕（任意轨道）最小出发间隔（秒），控制密度：
+// DURATION / GLOBAL_GAP ≈ 同屏并发数，3s 时约 3~4 条同屏，不会满屏
+const GLOBAL_GAP = 3
 
 Component({
   data: {
@@ -59,11 +60,16 @@ Component({
 
     /**
      * 批量循环播放：保存列表，播完一轮后从头再来
+     * 有头像的弹幕排前面，优先展示（新发的弹幕均已强制带头像，
+     * 旧的无头像数据靠后展示）
      * @param {Array} items - [{ text, avatar, name }, ...]
      */
     addBatch(items, options = {}) {
       if (!items || !items.length) return
-      this._loopItems = items.slice()
+      const sorted = items.slice().sort((a, b) => {
+        return (b.avatar && b.avatar.length ? 1 : 0) - (a.avatar && a.avatar.length ? 1 : 0)
+      })
+      this._loopItems = sorted
       this._playRound()
     },
 

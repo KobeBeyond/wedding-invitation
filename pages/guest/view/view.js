@@ -52,10 +52,14 @@ Page({
     // mapSnapshot / hideMapPoi 截图方案已回退
 
     // 花瓣彩蛋
-    petalList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    petalBubble: '',
-    burstX: 0,
-    burstY: 0,
+petalList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+// 被点碎的花瓣（idx → true 表示已消失）
+petalHidden: {},
+petalBubble: '',
+// 自增 id：每次点击变化，强制重建动画节点，保证绽放动效每次都重新播放
+burstId: 0,
+burstX: 0,
+burstY: 0,
 
     // 婚礼流程默认折叠（只显示前5个）
     timelineExpanded: false,
@@ -786,30 +790,53 @@ Page({
   },
 
   // ===== 花瓣彩蛋 =====
-  // 点击飘落的花瓣：花瓣位置炸开碎片烟花，随机弹出一句祝福
+  // 点击飘落的花瓣：花瓣碎裂消失，位置炸开碎片烟花，随机弹出一句祝福
   onPetalTap(e) {
-    const blessings = [
-      '愿你们百年好合，永结同心 🌹',
-      '新婚快乐，白头偕老 💕',
-      '愿往后余生，皆是甜蜜 ✨',
-      '执子之手，与子偕老 💖',
-      '祝福你们，爱情甜蜜如初 🍷',
-      '愿岁月温柔，爱情长久 🌸',
-      '天作之合，鸾凤和鸣 🎊',
-      '愿你们的爱情，历久弥新 💫',
-      '琴瑟和鸣，幸福美满 🎵',
-      '愿每一个明天，都比今天更爱彼此 🌈'
+    // 祝福文本与 emoji 各自独立随机，组合更丰富
+    const texts = [
+      '愿你们百年好合，永结同心',
+      '新婚快乐，白头偕老',
+      '愿往后余生，皆是甜蜜',
+      '执子之手，与子偕老',
+      '祝福你们，爱情甜蜜如初',
+      '愿岁月温柔，爱情长久',
+      '天作之合，鸾凤和鸣',
+      '愿你们的爱情，历久弥新',
+      '琴瑟和鸣，幸福美满',
+      '愿每一个明天，都比今天更爱彼此'
     ]
-    let text = blessings[Math.floor(Math.random() * blessings.length)]
+    const emojis = ['💒', '☺️', '😄', '🌹', '💕', '✨', '🎊', '🌸', '💫', '🌈', '💖', '🥂']
+    let text = texts[Math.floor(Math.random() * texts.length)]
     // 避免连续两次抽到同一句
-    if (text === this.data.petalBubble) {
-      text = blessings[(blessings.indexOf(text) + 1) % blessings.length]
+    if (text === this._lastBlessingText && texts.length > 1) {
+      text = texts[(texts.indexOf(text) + 1) % texts.length]
     }
-    // 记录点击位置（花瓣所在屏幕坐标），气泡与炸裂动画在此位置触发
-    const touch = e.touches && e.touches[0]
-    const x = touch ? touch.clientX : e.detail.x || 187
-    const y = touch ? touch.clientY : e.detail.y || 333
-    this.setData({ petalBubble: text, burstX: x, burstY: y })
+    this._lastBlessingText = text
+    const emoji = emojis[Math.floor(Math.random() * emojis.length)]
+
+    // 点击位置（changedTouches 优先，取 clientX/clientY 配合 position:fixed）
+    const t = (e.changedTouches && e.changedTouches[0]) || (e.touches && e.touches[0])
+    const x = t ? t.clientX : (e.detail.x || 187)
+    const y = t ? t.clientY : (e.detail.y || 333)
+
+    // burstId 自增：配合 wxml 中 wx:key="*this"，每次点击都重建动画节点，
+    // 否则气泡存活期内（2.5s）节点不销毁，CSS 动画不会重新播放
+    this.setData({
+      petalBubble: text + ' ' + emoji,
+      burstX: x,
+      burstY: y,
+      burstId: this.data.burstId + 1
+    })
+
+    // 点击的花瓣碎裂消失，4s 后从顶部重新飘落
+    const idx = e.currentTarget.dataset.idx
+    if (idx !== undefined && idx !== null) {
+      this.setData({ ['petalHidden.' + idx]: true })
+      setTimeout(() => {
+        this.setData({ ['petalHidden.' + idx]: false })
+      }, 4000)
+    }
+
     // 2.5s 后自动消失
     if (this._petalBubbleTimer) clearTimeout(this._petalBubbleTimer)
     this._petalBubbleTimer = setTimeout(() => {

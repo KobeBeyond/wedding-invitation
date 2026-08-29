@@ -204,7 +204,12 @@ page {
 
 /* 点击反馈：放大提示可点 */
 .g-petal:active {
-  transform: scale(1.6);
+transform: scale(1.6);
+}
+
+/* 被点碎的花瓣：立即消失（碎裂效果由 burst 粒子承接） */
+.petal-gone {
+display: none;
 }
 
 /* 10 片花瓣：位置 / 大小 / 时长 / 延迟各不相同，色彩略有差异 */

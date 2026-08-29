@@ -11,27 +11,30 @@
 <view class="guest-view" wx:if="{{!loading && invitation}}" bindtap="onPageTap">
 
   <!-- 飘落花瓣彩蛋层（固定于视口，不随页面滚动） -->
-  <view class="petal-layer">
-    <view class="g-petal gp{{index + 1}}" wx:for="{{petalList}}" wx:key="index"
-          data-idx="{{index}}" catchtap="onPetalTap"></view>
-  </view>
+<view class="petal-layer">
+<view class="g-petal gp{{index + 1}} {{petalHidden[index] ? 'petal-gone' : ''}}" wx:for="{{petalList}}" wx:key="index"
+data-idx="{{index}}" catchtap="onPetalTap"></view>
+</view>
 
-  <!-- 花瓣点击彩蛋：花瓣位置炸开碎片 + 祝福气泡 -->
-  <block wx:if="{{petalBubble}}">
-    <view class="petal-burst" style="left:{{burstX}}px; top:{{burstY}}px;">
-      <view class="burst-particle bp1"></view>
-      <view class="burst-particle bp2"></view>
-      <view class="burst-particle bp3"></view>
-      <view class="burst-particle bp4"></view>
-      <view class="burst-particle bp5"></view>
-      <view class="burst-particle bp6"></view>
-      <view class="burst-particle bp7"></view>
-      <view class="burst-particle bp8"></view>
-    </view>
-    <view class="petal-bubble show" style="left:{{burstX}}px; top:{{burstY}}px;">
-      <text class="petal-bubble-text">{{petalBubble}}</text>
-    </view>
-  </block>
+<!-- 花瓣点击彩蛋：花瓣碎裂消失，位置炸开碎片 + 祝福气泡 -->
+<!-- wx:for=[burstId] + wx:key="*this"：burstId 每次点击自增，强制销毁重建节点，让 CSS 动画每次都重新播放 -->
+<block wx:if="{{petalBubble}}">
+<view wx:for="{{[burstId]}}" wx:key="*this">
+<view class="petal-burst" style="left:{{burstX}}px; top:{{burstY}}px;">
+<view class="burst-particle bp1"></view>
+<view class="burst-particle bp2"></view>
+<view class="burst-particle bp3"></view>
+<view class="burst-particle bp4"></view>
+<view class="burst-particle bp5"></view>
+<view class="burst-particle bp6"></view>
+<view class="burst-particle bp7"></view>
+<view class="burst-particle bp8"></view>
+</view>
+<view class="petal-bubble show" style="left:{{burstX}}px; top:{{burstY}}px;">
+<text class="petal-bubble-text">{{petalBubble}}</text>
+</view>
+</view>
+</block>
 
   <!-- ========== 第一屏：封面 ========== -->
   <view class="cover-section" style="height:100vh;">
