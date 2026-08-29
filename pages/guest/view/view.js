@@ -665,7 +665,8 @@ Page({
       this._audioCtx = null
     })
     ctx.onPlay(() => {
-      this.setData({ playing: true })
+      // autoplay 启动成功也标记 musicStarted，防止后续 tap 重复调 play() 触发真机报错
+      this.setData({ playing: true, musicStarted: true })
     })
     ctx.onPause(() => {
       this.setData({ playing: false })
@@ -676,6 +677,12 @@ Page({
   // 首次点击页面时自动播放音乐（微信限制需用户交互后才能播放音频）
   onPageTap() {
     if (this.data.musicStarted || !this._audioCtx) return
+    // 已经在播放（autoplay 已启动）时仅补标记，绝不对播放中的 context 重复调 play()
+    // 真机上对正在播放的 audio 再次 play() 会触发中断报错，导致音乐停止且 icon 被隐藏
+    if (this.data.playing) {
+      this.setData({ musicStarted: true })
+      return
+    }
     this._audioCtx.play()
     this.setData({ musicStarted: true, playing: true })
   },
