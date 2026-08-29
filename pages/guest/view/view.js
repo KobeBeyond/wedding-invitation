@@ -617,6 +617,14 @@ Page({
         showUserModal: false
       })
       wx.showToast({ title: '已设置头像', icon: 'success' })
+      // 原生相册面板可能抢占音频焦点导致音乐暂停，选完头像主动恢复
+      if (this._audioCtx && this.data.musicStarted) {
+        setTimeout(() => {
+          if (this._audioCtx && this.data.musicStarted && !this.data.playing) {
+            this._audioCtx.play()
+          }
+        }, 300)
+      }
     } catch (err) {
       console.error('保存头像失败:', err)
       wx.showToast({ title: '保存失败', icon: 'none' })
@@ -716,10 +724,17 @@ Page({
     try { ctx.prepare && ctx.prepare() } catch (e) {}
     ctx.onError((err) => {
       console.error('Music error:', err)
-      // 音频解码失败时隐藏音乐按钮，销毁无效的音频上下文
-      this.setData({ showMusicBtn: false, playing: false })
-      try { ctx.destroy() } catch (e) {}
-      this._audioCtx = null
+      // 仅格式/解码类永久性错误才隐藏按钮并销毁（音乐确实无法播放）；
+      // 其余错误（如原生相册/相机面板抢占音频焦点导致的瞬时中断）保留上下文，
+      // 后续 onShow / 头像选择完成时可通过 play() 恢复播放
+      const errCode = err && err.errCode
+      if (errCode === 10002 || errCode === 10003) {
+        this.setData({ showMusicBtn: false, playing: false })
+        try { ctx.destroy() } catch (e) {}
+        this._audioCtx = null
+      } else {
+        this.setData({ playing: false })
+      }
     })
     ctx.onPlay(() => {
       // autoplay 启动成功也标记 musicStarted，防止后续 tap 重复调 play() 触发真机报错
