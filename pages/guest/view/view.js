@@ -103,7 +103,7 @@ burstY: 0,
         }
       }, 300)
     }
-    // 从头像设置页返回后，刷新头像状态，按钮文案自动切换
+    // 头像选择后自动保存，刷新按钮文案
     this.checkUserInfo()
   },
 
@@ -338,10 +338,10 @@ burstY: 0,
       return
     }
 
-    // 提交前检查头像，没有则跳转头像设置页
+    // 防御性检查头像（正常情况下无头像时按钮已切换为选头像）
     const hasAvatar = this.checkUserInfo()
     if (!hasAvatar) {
-      wx.navigateTo({ url: '/pages/common/avatar-setup/avatar-setup' })
+      wx.showToast({ title: '请先选择头像', icon: 'none' })
       return
     }
 
@@ -532,7 +532,7 @@ burstY: 0,
     }, 8000)
   },
 
-  // 检查用户头像：优先用 app.globalData，没有再弹窗引导
+  // 检查用户头像：优先用 app.globalData，没有再读本地缓存
   checkUserInfo() {
     const app = getApp()
     const userInfo = app.globalData.userInfo || {}
@@ -670,10 +670,10 @@ burstY: 0,
       return
     }
 
-    // 未设置头像时，跳转头像设置页
+    // 未设置头像时提示引导（发送区左侧头像按钮可直接选头像）
     const hasUserInfo = this.checkUserInfo()
     if (!hasUserInfo) {
-      wx.navigateTo({ url: '/pages/common/avatar-setup/avatar-setup' })
+      wx.showToast({ title: '请先点击左侧头像选择图片', icon: 'none' })
       return
     }
 

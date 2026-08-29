@@ -398,7 +398,11 @@ lazy-load
         </view>
       </view>
 
-      <button class="rsvp-submit-btn" bindtap="submitRSVP" disabled="{{rsvpSubmitting}}">
+      <!-- 无头像时：点按钮直接选头像；选完自动保存，文案切回「提交回执」 -->
+      <button wx:if="{{!userAvatar}}" class="rsvp-submit-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <text>选头像</text>
+      </button>
+      <button wx:else class="rsvp-submit-btn" bindtap="submitRSVP" disabled="{{rsvpSubmitting}}">
         <text wx:if="{{!rsvpSubmitting}}">提交回执</text>
         <text wx:else>提交中...</text>
       </button>
