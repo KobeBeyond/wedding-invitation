@@ -138,9 +138,16 @@ exports.main = async (event, context) => {
       const res = await db.collection('blessingQuotes').count()
       total = res.total || 0
     } catch (countErr) {
-      // 集合不存在时自动创建
-      const msg = countErr.message || ''
-      if (msg.includes('not found') || msg.includes('不存在') || msg.includes('Invalid collection')) {
+      // 集合不存在时自动创建（匹配多种错误表述）
+      const msg = (countErr.message || countErr.errMsg || '').toLowerCase()
+      if (
+        msg.includes('not found') ||
+        msg.includes('not exists') ||
+        msg.includes('not exist') ||
+        msg.includes('不存在') ||
+        msg.includes('invalid collection') ||
+        msg.includes('collection not')
+      ) {
         console.log('集合不存在，尝试创建...')
         await db.createCollection('blessingQuotes')
         console.log('集合创建成功')
