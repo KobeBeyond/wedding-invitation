@@ -225,11 +225,14 @@ lazy-load
         </view>
         <!-- 换一条 -->
         <view class="blessing-refresh-btn" bindtap="refreshBlessing">
-          <image src="/images/refresh-icon.png" class="blessing-refresh-img" mode="aspectFit" />
+          <view class="refresh-icon">
+            <view class="refresh-line"></view>
+            <view class="refresh-line"></view>
+          </view>
         </view>
-        <!-- 发送 -->
+        <!-- 发送：无头像时文案变为「选头像」，点击跳转头像设置页 -->
         <view class="blessing-send-btn active" bindtap="sendBlessing">
-          <text>发送</text>
+          <text>{{userAvatar ? '发送' : '选头像'}}</text>
         </view>
       </block>
       <block wx:else>
