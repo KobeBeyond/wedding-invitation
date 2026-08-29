@@ -33,6 +33,7 @@ Page({
     // 祝福墙
     blessingQuotes: [],   // 平台预设语录库（从云端加载，失败用本地兜底）
     currentBlessing: '',  // 当前随机选中的语录预览
+    blessingSent: false,  // 是否已发送过祝福（发送后显示感谢文案，防止重复发送）
     userAvatar: '',  // 微信头像临时路径
     blessingCount: 0,
     blessingsLoading: true,
@@ -700,11 +701,10 @@ burstY: 0,
         list.unshift(newItem)
         this.setData({
           blessingCount: this.data.blessingCount + 1,
-          blessingList: list
+          blessingList: list,
+          blessingSent: true
         }, () => {
           this.updatePagedBlessings()
-          // 发送成功后自动换一条新的语录预览，方便继续发送
-          this._pickRandomBlessing()
         })
       }
     } catch (err) {

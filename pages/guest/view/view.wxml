@@ -209,6 +209,34 @@ lazy-load
       ></view>
     </view>
 
+    <!-- 弹幕发送区：放在幸福瞬间下方，发送后直接看到弹幕飘过 -->
+    <view class="blessing-input-bar {{blessingSent ? 'sent' : ''}}">
+      <block wx:if="{{!blessingSent}}">
+        <!-- 头像选择按钮 -->
+        <button class="blessing-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+          <image wx:if="{{userAvatar}}" src="{{userAvatar}}" class="blessing-avatar-img" mode="aspectFill" />
+          <view wx:else class="blessing-avatar-placeholder">
+            <text class="blessing-avatar-icon">♥</text>
+          </view>
+        </button>
+        <!-- 当前随机语录预览 -->
+        <view class="blessing-preview">
+          <text class="blessing-preview-text">{{currentBlessing}}</text>
+        </view>
+        <!-- 换一条 -->
+        <view class="blessing-refresh-btn" bindtap="refreshBlessing">
+          <image src="/images/refresh-icon.png" class="blessing-refresh-img" mode="aspectFit" />
+        </view>
+        <!-- 发送 -->
+        <view class="blessing-send-btn active" bindtap="sendBlessing">
+          <text>发送</text>
+        </view>
+      </block>
+      <block wx:else>
+        <view class="blessing-sent-text">感谢您的祝福，愿新人百年好合 💕</view>
+      </block>
+    </view>
+
   </view>
 
   <!-- ========== 第四屏：婚礼信息 ========== -->
@@ -431,29 +459,6 @@ lazy-load
       </view>
       <view class="page-btn {{blessingPage >= blessingTotalPages - 1 ? 'disabled' : ''}}" bindtap="nextBlessingPage">下一页</view>
     </view>
-
-<!-- 发送入口：头像 + 语录预览 + 换一条 + 发送 -->
-<view class="blessing-input-bar">
-  <!-- 头像选择按钮 -->
-  <button class="blessing-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
-    <image wx:if="{{userAvatar}}" src="{{userAvatar}}" class="blessing-avatar-img" mode="aspectFill" />
-    <view wx:else class="blessing-avatar-placeholder">
-      <text class="blessing-avatar-icon">♥</text>
-    </view>
-  </button>
-  <!-- 当前随机语录预览 -->
-  <view class="blessing-preview">
-    <text class="blessing-preview-text">{{currentBlessing}}</text>
-  </view>
-  <!-- 换一条 -->
-  <view class="blessing-refresh-btn" bindtap="refreshBlessing">
-    <text class="blessing-refresh-icon">🔄</text>
-  </view>
-  <!-- 发送 -->
-  <view class="blessing-send-btn active" bindtap="sendBlessing">
-    <text>发送</text>
-  </view>
-</view>
 </view>
 
   <!-- ========== 底部 ========== -->

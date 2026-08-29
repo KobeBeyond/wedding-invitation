@@ -1176,9 +1176,9 @@ font-weight: 400;
   border: 2rpx solid #e8c0c0;
 }
 
-.blessing-refresh-icon {
-  font-size: 28rpx;
-  line-height: 1;
+.blessing-refresh-img {
+  width: 40rpx;
+  height: 40rpx;
 }
 
 .blessing-send-btn {
@@ -1198,6 +1198,21 @@ font-weight: 400;
 
 .blessing-send-btn.active {
   background: #c98d8d;
+}
+
+/* 发送成功后的感谢文案 */
+.blessing-input-bar.sent {
+  justify-content: center;
+  background: #fff8f8;
+  border-radius: 32rpx;
+  padding: 16rpx 0;
+  border: 1rpx solid #f0e0e0;
+}
+
+.blessing-sent-text {
+  font-size: 28rpx;
+  color: #c98d8d;
+  text-align: center;
 }
 
 .blessing-list {
