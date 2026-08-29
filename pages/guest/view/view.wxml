@@ -490,7 +490,13 @@ data-index="{{index}}"
     <!-- 分享按钮（整体居中） -->
     <view class="footer-actions">
       <button class="share-btn" open-type="share">
-        <text class="share-icon">↗</text>
+        <view class="share-icon-wrap">
+          <view class="share-node share-node-left"></view>
+          <view class="share-node share-node-tr"></view>
+          <view class="share-node share-node-br"></view>
+          <view class="share-line share-line-top"></view>
+          <view class="share-line share-line-bottom"></view>
+        </view>
         <text class="share-text">分享给好友</text>
       </button>
     </view>
