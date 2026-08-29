@@ -477,7 +477,7 @@ lazy-load
     <!-- 版权与版本信息 -->
     <view class="footer-copyright">
       <text class="copyright-text">Nupcias · 婚礼电子请柬</text>
-      <text class="copyright-text">© 2026 kbvillero@163.com · v1.0.0</text>
+      <text class="copyright-text">© 2026 kbvillero@163.com · v1.0.6</text>
     </view>
   </view>
 
