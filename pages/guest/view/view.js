@@ -1,6 +1,6 @@
 // pages/guest/view/view.js — 来宾视角：完整请柬页面
 const app = getApp()
-const { preloadImages, centerCropImage } = require('../../../utils/util.js')
+const { preloadImages, centerCropImage, getAppVersion } = require('../../../utils/util.js')
 
 Page({
   data: {
@@ -50,6 +50,9 @@ Page({
 
     // 地图（原生组件，保留 POI 文字；安卓滚动重绘属平台行为，可接受）
     // mapSnapshot / hideMapPoi 截图方案已回退
+
+    // 版本号：动态读取线上版本，开发/体验版回退默认值
+    appVersion: getAppVersion(),
 
     // 花瓣彩蛋
 petalList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],

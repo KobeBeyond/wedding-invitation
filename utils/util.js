@@ -202,6 +202,22 @@ function centerCropImage(src, ratio) {
   })
 }
 
+/**
+ * 获取小程序版本号（动态，带静态回退）
+ * wx.getAccountInfoSync().miniProgram.version 仅正式包有值；
+ * 开发版/体验版为空，回退到 defaultVersion
+ */
+function getAppVersion(defaultVersion) {
+  defaultVersion = defaultVersion || '1.0.6'
+  try {
+    const info = wx.getAccountInfoSync()
+    const v = info && info.miniProgram && info.miniProgram.version
+    return v || defaultVersion
+  } catch (e) {
+    return defaultVersion
+  }
+}
+
 module.exports = {
   formatTime,
   formatDate,
@@ -211,5 +227,6 @@ module.exports = {
   pad,
   compressImage,
   preloadImages,
-  centerCropImage
+  centerCropImage,
+  getAppVersion
 }
