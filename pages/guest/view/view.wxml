@@ -10,6 +10,17 @@
 <!-- pages/guest/view/view.wxml — 来宾视角：完整长滚动请柬页面 -->
 <view class="guest-view" wx:if="{{!loading && invitation}}" bindtap="onPageTap">
 
+  <!-- 飘落花瓣彩蛋层（固定于视口，不随页面滚动） -->
+  <view class="petal-layer">
+    <view class="g-petal gp{{index + 1}}" wx:for="{{petalList}}" wx:key="index"
+          data-idx="{{index}}" catchtap="onPetalTap"></view>
+  </view>
+
+  <!-- 花瓣点击彩蛋：随机祝福气泡 -->
+  <view class="petal-bubble {{petalBubble ? 'show' : ''}}" wx:if="{{petalBubble}}">
+    <text class="petal-bubble-text">{{petalBubble}}</text>
+  </view>
+
   <!-- ========== 第一屏：封面 ========== -->
   <view class="cover-section" style="height:100vh;">
     <image

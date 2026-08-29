@@ -52,6 +52,10 @@ Page({
     mapSnapshot: '',
     hideMapPoi: false,
 
+    // 花瓣彩蛋
+    petalList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    petalBubble: '',
+
     // 婚礼流程默认折叠（只显示前5个）
     timelineExpanded: false,
 
@@ -705,7 +709,11 @@ Page({
     ctx.src = musicUrl
     ctx.loop = true
     ctx.volume = 0.4
-    ctx.autoplay = true
+    // 不再 autoplay：等 loading 遮罩淡出时（onCoverLoad / 超时兑底）再统一触发播放，
+    // 保证「音乐响起」和「loading 消失」同时发生，而不是背景先响、页面还在转圈
+    ctx.autoplay = false
+    // 提前预热：加载音频资源但不播放，等 play() 时能立即出声
+    try { ctx.prepare && ctx.prepare() } catch (e) {}
     ctx.onError((err) => {
       console.error('Music error:', err)
       // 音频解码失败时隐藏音乐按钮，销毁无效的音频上下文
@@ -744,13 +752,21 @@ Page({
   // 阻止 loading 遮罩下的页面滑动
   preventScroll() {},
 
-  // 封面图加载完成（或加载失败）：都去掉 loading 遮罩，避免卡死
+  // 封面 loading 结束（图片加载完成/失败/6s超时）的统一收口：
+  // loading 淡出与背景音乐开始播放在同一时刻触发
   onCoverLoad() {
     if (this._coverTimeout) {
       clearTimeout(this._coverTimeout)
       this._coverTimeout = null
     }
-    this.setData({ coverLoaded: true })
+    if (!this.data.coverLoaded) {
+      this.setData({ coverLoaded: true })
+      // loading 消失的同时启动背景音乐（仅首次）
+      if (this._audioCtx && !this.data.musicStarted) {
+        this._audioCtx.play()
+        this.setData({ musicStarted: true, playing: true })
+      }
+    }
   },
 
   // 封面 loading 兑底超时：无论图片是否加载完成，最多 6s 后强制去掉 loading 遮罩
@@ -762,6 +778,11 @@ Page({
       if (!this.data.coverLoaded) {
         console.warn('cover loading timeout, force hide')
         this.setData({ coverLoaded: true })
+        // 超时兑底同样触发音乐：不能 loading 卡死了音乐也永远不响
+        if (this._audioCtx && !this.data.musicStarted) {
+          this._audioCtx.play()
+          this.setData({ musicStarted: true, playing: true })
+        }
       }
     }, 6000)
   },
@@ -776,6 +797,34 @@ Page({
       // 同步标记 musicStarted，避免后续 onPageTap 重复触发 play
       this.setData({ playing: true, musicStarted: true })
     }
+  },
+
+  // ===== 花瓣彩蛋 =====
+  // 点击飘落的花瓣，随机弹出一句祝福
+  onPetalTap() {
+    const blessings = [
+      '愿你们百年好合，永结同心 🌹',
+      '新婚快乐，白头偕老 💕',
+      '愿往后余生，皆是甜蜜 ✨',
+      '执子之手，与子偕老 💖',
+      '祝福你们，爱情甜蜜如初 🍷',
+      '愿岁月温柔，爱情长久 🌸',
+      '天作之合，鸾凤和鸣 🎊',
+      '愿你们的爱情，历久弥新 💫',
+      '琴瑟和鸣，幸福美满 🎵',
+      '愿每一个明天，都比今天更爱彼此 🌈'
+    ]
+    let text = blessings[Math.floor(Math.random() * blessings.length)]
+    // 避免连续两次抽到同一句
+    if (text === this.data.petalBubble) {
+      text = blessings[(blessings.indexOf(text) + 1) % blessings.length]
+    }
+    this.setData({ petalBubble: text })
+    // 2.5s 后自动消失
+    if (this._petalBubbleTimer) clearTimeout(this._petalBubbleTimer)
+    this._petalBubbleTimer = setTimeout(() => {
+      this.setData({ petalBubble: '' })
+    }, 2500)
   },
 
   // ===== 分享 =====
