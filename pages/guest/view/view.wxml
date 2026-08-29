@@ -174,13 +174,19 @@ data-idx="{{index}}" catchtap="onPetalTap"></view>
       >
 <swiper-item wx:for="{{invitation.photos}}" wx:key="index">
 <view class="card-item {{photoIdx === index ? 'active' : ''}}">
+<view class="photo-frame">
 <image
 wx:if="{{item.url}}"
 src="{{item.url}}"
 mode="aspectFit"
-class="card-img"
+class="photo-img"
 lazy-load
 />
+<view class="corner-flower corner-tl">🌸</view>
+<view class="corner-flower corner-tr">🌸</view>
+<view class="corner-flower corner-bl">🌸</view>
+<view class="corner-flower corner-br">🌸</view>
+</view>
 </view>
 </swiper-item>
       </swiper>
@@ -210,26 +216,29 @@ lazy-load
     </view>
 
     <!-- 弹幕发送区：放在幸福瞬间下方，发送后直接看到弹幕飘过 -->
-    <view class="blessing-input-bar {{blessingSent ? 'sent' : ''}}">
+    <view class="blessing-area {{blessingSent ? 'sent' : ''}}">
       <block wx:if="{{!blessingSent}}">
-        <!-- 头像选择按钮 -->
-        <button class="blessing-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
-          <image wx:if="{{userAvatar}}" src="{{userAvatar}}" class="blessing-avatar-img" mode="aspectFill" />
-          <view wx:else class="blessing-avatar-placeholder">
-            <text class="blessing-avatar-icon">♥</text>
+        <!-- 第一行：头像 + 提示文案 + 操作按钮 -->
+        <view class="blessing-top-row">
+          <button class="blessing-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+            <image wx:if="{{userAvatar}}" src="{{userAvatar}}" class="blessing-avatar-img" mode="aspectFill" />
+            <view wx:else class="blessing-avatar-placeholder">
+              <text class="blessing-avatar-icon">♥</text>
+            </view>
+          </button>
+          <text class="blessing-hint">{{userAvatar ? '已设置头像' : '点击头像选择照片'}}</text>
+          <view class="blessing-actions">
+            <view class="blessing-send-btn active" bindtap="refreshBlessing">
+              <text>换一条</text>
+            </view>
+            <view class="blessing-send-btn active" bindtap="sendBlessing">
+              <text>{{userAvatar ? '发送' : '选头像'}}</text>
+            </view>
           </view>
-        </button>
-        <!-- 当前随机语录预览 -->
-        <view class="blessing-preview">
-          <text class="blessing-preview-text">{{currentBlessing}}</text>
         </view>
-        <!-- 换一条 -->
-        <view class="blessing-send-btn active" bindtap="refreshBlessing">
-          <text>换一条</text>
-        </view>
-        <!-- 发送：无头像时文案变为「选头像」，点击跳转头像设置页 -->
-        <view class="blessing-send-btn active" bindtap="sendBlessing">
-          <text>{{userAvatar ? '发送' : '选头像'}}</text>
+        <!-- 第二行：祝福语单独展示 -->
+        <view class="blessing-quote-row">
+          <text class="blessing-quote-text">{{currentBlessing}}</text>
         </view>
       </block>
       <block wx:else>
