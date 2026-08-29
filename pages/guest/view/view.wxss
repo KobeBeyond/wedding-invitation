@@ -751,19 +751,15 @@ display: none;
   justify-content: center;
 }
 
-/* 裁剪层：普通 view 的 overflow:hidden 能可靠裁剪 image */
+/* 照片层：用 background-image 替代 image 组件，border-radius 真正生效 */
 .photo-clip {
   width: 100%;
   height: 100%;
   border-radius: 10rpx;
   overflow: hidden;
-}
-
-/* 照片本身 */
-.photo-img {
-  width: 100%;
-  height: 100%;
-  display: block;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* 无照片时兜底 */
