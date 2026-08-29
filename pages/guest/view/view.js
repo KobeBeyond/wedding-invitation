@@ -694,10 +694,10 @@ burstY: 0,
       return
     }
 
-    // 未设置头像时提示引导（发送区左侧头像按钮可直接选头像）
+    // 未设置头像时拦截
     const hasUserInfo = this.checkUserInfo()
     if (!hasUserInfo) {
-      wx.showToast({ title: '请先点击左侧头像选择图片', icon: 'none' })
+      wx.showToast({ title: '请先选择头像', icon: 'none' })
       return
     }
 
