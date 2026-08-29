@@ -1,6 +1,7 @@
 // pages/guest/view/view.js — 来宾视角：完整请柬页面
 const app = getApp()
 const { preloadImages, centerCropImage, getAppVersion } = require('../../../utils/util.js')
+const { QUOTES: LOCAL_BLESSING_QUOTES } = require('../../../utils/blessingQuotes.js')
 
 Page({
   data: {
@@ -621,8 +622,8 @@ burstY: 0,
     this.confirmAvatar()
   },
 
-  // 加载平台预设祝福语录库，失败时自动重试 1 次，最终失败隐藏发送入口
-  async loadBlessingQuotes(retry = true) {
+  // 加载平台预设祝福语录库：先尝试云端，失败/为空时自动降级到本地内置语录
+  async loadBlessingQuotes() {
     try {
       const res = await wx.cloud.callFunction({ name: 'getBlessingQuotes' })
       const data = res.result && res.result.data
@@ -631,15 +632,10 @@ burstY: 0,
         return
       }
     } catch (err) {
-      // 云函数未部署或数据库异常：静默处理，走下方重试/隐藏逻辑
+      // 云函数未部署或数据库异常：静默降级到本地兜底
     }
-    if (retry) {
-      // 延迟 1.5s 后重试一次
-      setTimeout(() => this.loadBlessingQuotes(false), 1500)
-    } else {
-      // 最终失败：隐藏发送入口，只保留已有的弹幕展示
-      this.setData({ showBlessingBtn: false })
-    }
+    // 云端不可用：使用本地内置 100 条语录兜底，保证按钮始终可展示
+    this.setData({ blessingQuotes: LOCAL_BLESSING_QUOTES })
   },
 
   async sendBlessing() {
