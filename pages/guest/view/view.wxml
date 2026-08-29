@@ -245,7 +245,11 @@ data-index="{{index}}"
         </view>
       </block>
       <block wx:else>
-        <view class="blessing-sent-text">感谢您的祝福，愿新人百年好合 💕</view>
+        <view class="blessing-sent-wrap">
+          <view class="blessing-sent-icon">✓</view>
+          <text class="blessing-sent-title">祝福已送达</text>
+          <text class="blessing-sent-sub">愿新人百年好合，永结同心 💕</text>
+        </view>
       </block>
     </view>
 
