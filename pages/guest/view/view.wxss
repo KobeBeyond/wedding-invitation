@@ -1234,19 +1234,21 @@ font-weight: 400;
   flex-shrink: 0;
   height: 64rpx;
   padding: 0 32rpx;
-  background: #e0e0e0;
+  background: linear-gradient(135deg, #e8d0d0, #dcc0c0);
   border-radius: 32rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 28rpx;
   color: #fff;
-  transition: background 0.3s;
+  transition: opacity 0.3s;
   white-space: nowrap;
+  box-shadow: 0 2rpx 8rpx rgba(200, 120, 120, 0.15);
 }
 
 .blessing-send-btn.active {
-  background: #c98d8d;
+  background: linear-gradient(135deg, #e8a0a0, #d88a8a);
+  box-shadow: 0 4rpx 12rpx rgba(200, 100, 100, 0.25);
 }
 
 /* 发送成功后的感谢文案 */
