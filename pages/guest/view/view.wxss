@@ -1420,11 +1420,11 @@ font-weight: 400;
   border: none;
 }
 
-/* 分享图标：经典三点连线 */
+/* 分享图标：经典三点连线（圆心对齐版） */
 .share-icon-wrap {
   position: relative;
-  width: 36rpx;
-  height: 36rpx;
+  width: 40rpx;
+  height: 40rpx;
   flex-shrink: 0;
 }
 
@@ -1434,53 +1434,51 @@ font-weight: 400;
   background: #fff;
 }
 
-/* 左侧大节点 */
+/* 三圆点中心坐标：左(10,20) 右上(30,8) 右下(30,32) */
 .share-node-left {
   width: 12rpx;
   height: 12rpx;
-  left: 2rpx;
-  top: 50%;
-  transform: translateY(-50%);
+  left: 4rpx;
+  top: 14rpx;
 }
 
-/* 右上节点 */
 .share-node-tr {
   width: 8rpx;
   height: 8rpx;
-  right: 2rpx;
+  left: 26rpx;
   top: 4rpx;
 }
 
-/* 右下节点 */
 .share-node-br {
   width: 8rpx;
   height: 8rpx;
-  right: 2rpx;
-  bottom: 4rpx;
+  left: 26rpx;
+  top: 28rpx;
 }
 
-/* 连线 */
+/* 连线：从圆心到圆心 */
 .share-line {
   position: absolute;
   height: 3rpx;
   background: #fff;
   border-radius: 2rpx;
+  transform-origin: 0 50%;
 }
 
+/* 左上连线：左圆心(10,20) → 右上圆心(30,8) */
 .share-line-top {
-  width: 20rpx;
-  left: 8rpx;
-  top: 10rpx;
-  transform-origin: left center;
-  transform: rotate(-28deg);
+  width: 24rpx;
+  left: 10rpx;
+  top: 20rpx;
+  transform: rotate(-31deg);
 }
 
+/* 左下连线：左圆心(10,20) → 右下圆心(30,32) */
 .share-line-bottom {
-  width: 20rpx;
-  left: 8rpx;
-  bottom: 10rpx;
-  transform-origin: left center;
-  transform: rotate(28deg);
+  width: 24rpx;
+  left: 10rpx;
+  top: 20rpx;
+  transform: rotate(31deg);
 }
 
 .create-cta {
