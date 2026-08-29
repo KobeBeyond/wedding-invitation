@@ -223,12 +223,23 @@ lazy-load
 
     <!-- 地图 -->
     <view class="map-wrap" wx:if="{{invitation.venueLat && invitation.venueLng}}">
+      <!-- 优先展示截图静态图：原生地图在安卓上滚动页面时 POI 文字会反复重渲染 -->
+      <image
+        wx:if="{{mapSnapshot}}"
+        class="venue-map"
+        src="{{mapSnapshot}}"
+        mode="aspectFill"
+        bindtap="openNavigation"
+      />
       <map
+        wx:else
+        id="venueMap"
         class="venue-map"
         longitude="{{invitation.venueLng}}"
         latitude="{{invitation.venueLat}}"
         markers="{{markers}}"
         scale="16"
+        enable-poi="{{!hideMapPoi}}"
         show-location
       ></map>
       <view class="map-nav-btn" bindtap="openNavigation">🧭 导航到这里</view>

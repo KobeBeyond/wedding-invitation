@@ -48,6 +48,10 @@ Page({
     musicStarted: false,
     showMusicBtn: true,
 
+    // 地图截图（安卓滚动重渲染问题）
+    mapSnapshot: '',
+    hideMapPoi: false,
+
     // 婚礼流程默认折叠（只显示前5个）
     timelineExpanded: false,
 
@@ -156,6 +160,9 @@ Page({
             coverLoaded: !d.coverImage
           })
 
+          // 地图渲染稳定后截图，用静态图替换原生地图（规避安卓滚动重渲染）
+          this.captureMapSnapshot()
+
           // 预加载关键图片，减少滑动时的白屏
           const urls = []
           if (d.coverImage) urls.push(d.coverImage)
@@ -227,6 +234,40 @@ Page({
 
   tapThumbnail(e) {
     this.setData({ photoIdx: e.currentTarget.dataset.idx })
+  },
+
+  // ===== 地图截图 =====
+  // 原生地图组件在安卓上会随页面滚动触发原生视图重绘，POI 文字反复重新渲染。
+  // 方案：地图渲染完成后截图，用静态 image 替换活的 map 组件；
+  // 点击图片或导航按钮 → wx.openLocation 打开原生地图导航。
+  // 兑底：截图失败时隐藏 POI 文字（enable-poi=false）减轻重渲染观感。
+  captureMapSnapshot() {
+    if (this.data.mapSnapshot || !this.data.invitation) return
+    setTimeout(() => {
+      if (this.data.mapSnapshot) return
+      try {
+        const mapCtx = wx.createMapContext('venueMap', this)
+        if (mapCtx && mapCtx.snapshot) {
+          mapCtx.snapshot({
+            success: (res) => {
+              if (res && res.tempImagePath) {
+                this.setData({ mapSnapshot: res.tempImagePath })
+              } else {
+                this.setData({ hideMapPoi: true })
+              }
+            },
+            fail: () => {
+              this.setData({ hideMapPoi: true })
+            }
+          })
+        } else {
+          // 低版本基础库无 snapshot API，直接隐藏 POI 文字
+          this.setData({ hideMapPoi: true })
+        }
+      } catch (e) {
+        this.setData({ hideMapPoi: true })
+      }
+    }, 1200)
   },
 
   // ===== 地图导航 =====
