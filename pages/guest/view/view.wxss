@@ -1149,8 +1149,8 @@ font-weight: 400;
 
 .blessing-send-btn {
   flex-shrink: 0;
-  width: 96rpx;
   height: 64rpx;
+  padding: 0 32rpx;
   background: #e0e0e0;
   border-radius: 32rpx;
   display: flex;
@@ -1159,6 +1159,7 @@ font-weight: 400;
   font-size: 28rpx;
   color: #fff;
   transition: background 0.3s;
+  white-space: nowrap;
 }
 
 .blessing-send-btn.active {
@@ -1251,25 +1252,6 @@ font-weight: 400;
   color: #fff;
   background: #c98d8d;
   border-color: #c98d8d;
-}
-
-.blessing-send-btn {
-  flex-shrink: 0;
-  height: 80rpx;
-  padding: 0 32rpx;
-  background: #e0e0e0;
-  color: #999;
-  font-size: 28rpx;
-  border-radius: 40rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s;
-}
-
-.blessing-send-btn.active {
-  background: linear-gradient(135deg, #e8a0a0, #d97a7a);
-  color: #fff;
 }
 
 /* ========== 底部 ========== */

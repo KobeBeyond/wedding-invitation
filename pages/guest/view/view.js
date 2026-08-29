@@ -30,8 +30,8 @@ Page({
     rsvpAgreed: false,  // 是否同意协议
 
     // 祝福墙
-    blessingText: '',
-    canSend: false,
+    blessingQuotes: [],   // 平台预设语录库（从云端加载）
+    showBlessingBtn: true, // 语录库加载失败则隐藏发送入口
     userAvatar: '',  // 微信头像临时路径
     blessingCount: 0,
     blessingsLoading: true,
@@ -84,6 +84,8 @@ burstY: 0,
     }
     this.setData({ inv: options.inv })
     this.loadInvitation(options.inv)
+    // 加载平台预设祝福语录库（失败重试，最终失败隐藏发送入口）
+    this.loadBlessingQuotes()
     // 静默检查头像（不弹窗），有则显示在输入栏
     this.checkUserInfo()
   },
@@ -619,18 +621,31 @@ burstY: 0,
     this.confirmAvatar()
   },
 
-  onBlessingInput(e) {
-    const value = e.detail.value
-    this.setData({
-      blessingText: value,
-      canSend: value.trim().length > 0
-    })
+  // 加载平台预设祝福语录库，失败时自动重试 1 次，最终失败隐藏发送入口
+  async loadBlessingQuotes(retry = true) {
+    try {
+      const res = await wx.cloud.callFunction({ name: 'getBlessingQuotes' })
+      if (res.result && res.result.success && res.result.data && res.result.data.length > 0) {
+        this.setData({ blessingQuotes: res.result.data })
+      } else {
+        throw new Error('empty')
+      }
+    } catch (err) {
+      console.error('Load blessingQuotes error:', err)
+      if (retry) {
+        // 延迟 1.5s 后重试一次
+        setTimeout(() => this.loadBlessingQuotes(false), 1500)
+        return
+      }
+      // 最终失败：隐藏发送入口，只保留已有的弹幕展示
+      this.setData({ showBlessingBtn: false })
+    }
   },
 
   async sendBlessing() {
-    const text = this.data.blessingText.trim()
-    if (!text) {
-      wx.showToast({ title: '请输入祝福内容', icon: 'none' })
+    const quotes = this.data.blessingQuotes
+    if (!quotes || !quotes.length) {
+      wx.showToast({ title: '祝福语录加载中，请稍候', icon: 'none' })
       return
     }
 
@@ -641,6 +656,13 @@ burstY: 0,
       return
     }
 
+    // 从语录库随机选取一条（避免连续重复）
+    let idx = Math.floor(Math.random() * quotes.length)
+    if (quotes.length > 1 && this._lastQuoteIdx === idx) {
+      idx = (idx + 1) % quotes.length
+    }
+    this._lastQuoteIdx = idx
+    const text = quotes[idx].text || quotes[idx]
     const avatarUrl = this.data.userAvatar || ''
 
     // 先本地飘一条弹幕
@@ -648,7 +670,6 @@ burstY: 0,
     if (danmaku) {
       danmaku.addDanmu(text, avatarUrl, '')
     }
-    this.setData({ blessingText: '' })
 
     try {
       const submitRes = await wx.cloud.callFunction({

@@ -6,7 +6,7 @@ const db = cloud.database()
 exports.main = async (event, context) => {
   const results = {}
   // 需要创建的所有集合
-  const collections = ['guests', 'blessings', 'users', 'invitations']
+  const collections = ['guests', 'blessings', 'users', 'invitations', 'blessingQuotes']
 
   for (const name of collections) {
     try {

@@ -1,0 +1,9 @@
+{
+  "name": "getBlessingQuotes",
+  "version": "1.0.0",
+  "description": "查询祝福语录库，空库时自动 seed 100 条预设语录",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}
