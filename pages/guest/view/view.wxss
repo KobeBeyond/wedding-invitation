@@ -1272,8 +1272,9 @@ font-weight: 400;
   margin-top: 16rpx;
   background: #fff;
   border: 2rpx solid #e8d0d0;
-  border-radius: 16rpx;
-  padding: 20rpx 24rpx;
+  border-radius: 32rpx;
+  height: 64rpx;
+  padding: 0 24rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1282,9 +1283,11 @@ font-weight: 400;
 .blessing-quote-text {
   font-size: 30rpx;
   color: #5a3a3a;
-  line-height: 1.5;
+  line-height: 1;
   text-align: center;
-  word-break: break-all;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .blessing-send-btn {
