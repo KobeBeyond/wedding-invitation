@@ -490,9 +490,7 @@ data-index="{{index}}"
     <!-- 分享按钮（整体居中） -->
     <view class="footer-actions">
       <button class="share-btn" open-type="share">
-        <view class="share-icon-svg">
-          <view class="share-arrow"></view>
-        </view>
+        <text class="share-icon">↗</text>
         <text class="share-text">分享给好友</text>
       </button>
     </view>
