@@ -133,19 +133,33 @@ async function seedQuotes() {
 
 exports.main = async (event, context) => {
   try {
-    let res = await db.collection('blessingQuotes').count()
-    const total = res.total || 0
+    let total = 0
+    try {
+      const res = await db.collection('blessingQuotes').count()
+      total = res.total || 0
+    } catch (countErr) {
+      // 集合不存在时自动创建
+      const msg = countErr.message || ''
+      if (msg.includes('not found') || msg.includes('不存在') || msg.includes('Invalid collection')) {
+        console.log('集合不存在，尝试创建...')
+        await db.createCollection('blessingQuotes')
+        console.log('集合创建成功')
+      } else {
+        throw countErr
+      }
+    }
 
     // 库为空时自动 seed
     if (total === 0) {
       await seedQuotes()
-      res = await db.collection('blessingQuotes').count()
+      const res = await db.collection('blessingQuotes').count()
+      total = res.total || 0
     }
 
     const listRes = await db.collection('blessingQuotes').get()
     return { success: true, data: listRes.data || [], total: listRes.data.length }
   } catch (err) {
     console.error('getBlessingQuotes error:', err)
-    return { success: false, data: [], message: '查询失败' }
+    return { success: false, data: [], message: err.message || '查询失败' }
   }
 }
