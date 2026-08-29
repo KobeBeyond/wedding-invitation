@@ -165,8 +165,8 @@ data-idx="{{index}}" catchtap="onPetalTap"></view>
         class="card-swiper"
         previous-margin="115rpx"
         next-margin="115rpx"
-        autoplay="{{false}}"
-        interval="4000"
+        autoplay="{{true}}"
+        interval="3000"
         circular="{{true}}"
         duration="300"
         current="{{photoIdx}}"
@@ -174,12 +174,21 @@ data-idx="{{index}}" catchtap="onPetalTap"></view>
       >
 <swiper-item wx:for="{{invitation.photos}}" wx:key="index">
 <view class="card-item {{photoIdx === index ? 'active' : ''}}">
-<view class="photo-frame">
+<view class="photo-frame" id="photo-frame-{{index}}">
 <view
 class="photo-clip"
 wx:if="{{item.url}}"
-style="background-image: url({{item.url}});"
+style="width: {{item.renderW || '100%'}}; height: {{item.renderH || '100%'}}; opacity: {{item.imgLoaded ? 1 : 0}};"
+>
+<image
+src="{{item.url}}"
+mode="aspectFit"
+class="photo-img"
+lazy-load
+bindload="onPhotoLoad"
+data-index="{{index}}"
 />
+</view>
 </view>
 </view>
 </swiper-item>

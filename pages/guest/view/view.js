@@ -170,28 +170,6 @@ burstY: 0,
               ...p,
               url: p.url || p.fileID || ''
             })).filter(p => p.url)
-
-            // CSS background-image 不支持 cloud:// 协议，转成 https 临时链接
-            const cloudUrls = d.photos
-              .filter(p => p.url && p.url.startsWith('cloud://'))
-              .map(p => p.url)
-            if (cloudUrls.length > 0) {
-              try {
-                const tempRes = await wx.cloud.getTempFileURL({ fileList: cloudUrls })
-                const tempMap = {}
-                tempRes.fileList.forEach(item => {
-                  tempMap[item.fileID] = item.tempFileURL
-                })
-                d.photos = d.photos.map(p => ({
-                  ...p,
-                  url: p.url && p.url.startsWith('cloud://')
-                    ? (tempMap[p.url] || p.url)
-                    : p.url
-                }))
-              } catch (e) {
-                console.error('getTempFileURL failed:', e)
-              }
-            }
           }
 
           this.setData({
@@ -683,6 +661,30 @@ burstY: 0,
   // 用户点击「换一条」：重新随机选一条语录预览
   refreshBlessing() {
     this._pickRandomBlessing()
+  },
+
+  // 照片加载完成：计算实际渲染尺寸，让包裹层和图片大小一致，圆角才能完美裁剪
+  onPhotoLoad(e) {
+    const idx = e.currentTarget.dataset.index
+    const { width: imgW, height: imgH } = e.detail
+
+    const query = wx.createSelectorQuery().in(this)
+    query.select(`#photo-frame-${idx}`).boundingClientRect()
+    query.exec(res => {
+      if (!res[0]) return
+      const { width: cW, height: cH } = res[0]
+
+      // aspectFit 实际渲染尺寸 = 原始尺寸 * min(容器宽/原始宽, 容器高/原始高)
+      const ratio = Math.min(cW / imgW, cH / imgH)
+      const renderW = Math.round(imgW * ratio)
+      const renderH = Math.round(imgH * ratio)
+
+      this.setData({
+        [`invitation.photos[${idx}].renderW`]: renderW + 'px',
+        [`invitation.photos[${idx}].renderH`]: renderH + 'px',
+        [`invitation.photos[${idx}].imgLoaded`]: true
+      })
+    })
   },
 
   async sendBlessing() {
