@@ -165,7 +165,7 @@ data-idx="{{index}}" catchtap="onPetalTap"></view>
         class="card-swiper"
         previous-margin="115rpx"
         next-margin="115rpx"
-        autoplay="{{true}}"
+        autoplay="{{false}}"
         interval="4000"
         circular="{{true}}"
         duration="300"
