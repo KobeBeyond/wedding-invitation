@@ -6,7 +6,9 @@
     <!-- 圆形头像 -->
     <image wx:if="{{item.avatar}}" src="{{item.avatar}}" class="danmaku-avatar" mode="aspectFill" />
     <view wx:else class="danmaku-avatar danmaku-avatar-default">♥</view>
-    <!-- 祝福语 -->
-    <text class="danmaku-text">{{item.text}}</text>
+    <!-- 祝福语（超长显示省略号） -->
+    <view class="danmaku-text-wrap">
+      <text class="danmaku-text">{{item.text}}</text>
+    </view>
   </view>
 </view>

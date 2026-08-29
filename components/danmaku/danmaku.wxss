@@ -22,6 +22,9 @@
   animation-fill-mode: forwards;
   pointer-events: none;
   opacity: 0;
+  /* 弹幕整体最大宽度：头像 + 文本区域 */
+  max-width: 70vw;
+  box-sizing: border-box;
 }
 
 .danmaku-avatar {
@@ -41,11 +44,21 @@
   font-size: 22rpx;
 }
 
+/* 文本容器：可收缩，让省略号生效 */
+.danmaku-text-wrap {
+  min-width: 0;
+  max-width: 480rpx;
+  overflow: hidden;
+  display: block;
+}
+
+/* 超长文本省略号：text 需要 display:block + overflow hidden 才能触发 ellipsis */
 .danmaku-text {
+  display: block;
   font-size: 28rpx;
   font-weight: 500;
   color: #8a4a4a;
-  max-width: 400rpx;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }

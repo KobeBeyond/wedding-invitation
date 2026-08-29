@@ -413,7 +413,7 @@ Page({
           preloadImages(avatarUrls)
         }
 
-        // 逐条播放历史弹幕（头像 + 祝福语），按照片轮播时间均匀分布
+        // 逐条循环播放历史弹幕（头像 + 祝福语），组件内部按轨道防重叠调度，播完一轮从头再来
         const danmaku = this.selectComponent('#danmaku')
         if (danmaku) {
           const items = list.map(b => ({
@@ -421,8 +421,7 @@ Page({
             avatar: b.avatarUrl || '',
             name: b.nickName || ''
           }))
-          const photoCount = (this.data.invitation.photos && this.data.invitation.photos.length) || 1
-          danmaku.addBatch(items, { photoCount, interval: 3500 })
+          danmaku.addBatch(items)
         }
       } else {
         this.setData({ blessingsLoading: false })

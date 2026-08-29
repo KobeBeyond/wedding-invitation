@@ -1,63 +1,146 @@
 // components/danmaku/danmaku.js
+// 弹幕组件：轨道制防重叠 + 超长省略号 + 循环播放（无时效性，播完一轮从头再来）
 const util = require('../../utils/util.js')
+
+// 轨道配置：垂直方向固定 5 条轨道（百分比 top），同轨道弹幕间隔足够远保证不重叠
+const LANES = [10, 27, 44, 61, 78]
+// 单条弹幕穿屏时长（秒）：从右侧屏幕外移动到左侧屏幕外
+const DURATION = 10
+// 同一轨道两条弹幕的最小出发间隔（秒）：> DURATION/2 保证屏幕内不重叠
+const LANE_GAP = 6
+// 全局相邻两条弹幕（任意轨道）最小出发间隔（秒），控制密度
+const GLOBAL_GAP = 1.2
 
 Component({
   data: {
     danmuList: []
   },
 
+  lifetimes: {
+    detached() {
+      this._clearTimers()
+    }
+  },
+
   methods: {
-    /**
-     * 生成一个不与其他弹幕太近的垂直位置
-     * @param {Array<number>} usedTops - 已占用的位置
-     * @param {number} minGap - 最小间距（百分比）
-     */
-    _generateTop(usedTops, minGap = 12) {
-      let attempts = 0
-      let top
-      do {
-        top = Math.random() * 85 + 5   // 5% ~ 90%
-        attempts++
-      } while (attempts < 20 && usedTops.some(t => Math.abs(t - top) < minGap))
-      return top
+    _clearTimers() {
+      if (this._timers && this._timers.length) {
+        this._timers.forEach(t => clearTimeout(t))
+      }
+      this._timers = []
+      if (this._loopTimer) {
+        clearTimeout(this._loopTimer)
+        this._loopTimer = null
+      }
+    },
+
+    // 轨道状态：每条轨道下一次可安排弹幕的时刻（相对调度原点的秒数）
+    // 供即时弹幕（用户刚发送）做绝对时刻分配
+    _initLanes() {
+      if (!this._laneFreeAt) {
+        this._laneFreeAt = LANES.map(() => 0)
+        this._laneLastStart = LANES.map(() => 0)
+      }
     },
 
     /**
-     * 添加一条弹幕
-     * @param {string} text     - 祝福语
-     * @param {string} [avatar] - 头像 url
-     * @param {string} [name]   - 昵称
-     * @param {Object} [options] - 可选参数 { top, duration, delay }
+     * 添加一条即时弹幕（用户刚发送的）
+     * 走轨道分配，保证与正在飘的弹幕不重叠
      */
     addDanmu(text, avatar, name, options = {}) {
       if (!text || !text.trim()) return
+      this._initLanes()
+      const now = Date.now() / 1000
+      this._emit(text, avatar, name, {
+        lane: this._pickLane(now),
+        at: now + 0.1
+      })
+    },
 
+    /**
+     * 批量循环播放：保存列表，播完一轮后从头再来
+     * @param {Array} items - [{ text, avatar, name }, ...]
+     */
+    addBatch(items, options = {}) {
+      if (!items || !items.length) return
+      this._loopItems = items.slice()
+      this._playRound()
+    },
+
+    // 播放一轮：为每条弹幕分配轨道和出发时刻
+    _playRound() {
+      this._clearTimers()
+      const items = this._loopItems || []
+      if (!items.length) return
+
+      this._initLanes()
+      // 重置轨道状态（新一轮从现在开始）
+      const origin = Date.now() / 1000
+      const laneFreeAt = LANES.map(() => 0)      // 相对 origin 的秒数
+      const laneLastStart = LANES.map(() => 0)
+      let lastStart = -GLOBAL_GAP               // 全局上一条出发时刻
+      let lastEnd = 0                            // 本轮结束时刻
+
+      items.forEach((item, i) => {
+        // 选一条「最早可用」的轨道
+        let lane = 0
+        for (let l = 1; l < LANES.length; l++) {
+          if (laneFreeAt[l] < laneFreeAt[lane]) lane = l
+        }
+        let t = Math.max(laneFreeAt[lane], lastStart + GLOBAL_GAP)
+        lastStart = t
+        laneFreeAt[lane] = t + LANE_GAP
+        laneLastStart[lane] = t
+        lastEnd = Math.max(lastEnd, t + DURATION)
+
+        const delayMs = (t) * 1000 + 200  // 稍加缓冲
+        this._timers.push(setTimeout(() => {
+          this._emit(item.text, item.avatar, item.name, { lane, at: Date.now() / 1000 + 0.05 })
+        }, delayMs))
+      })
+
+      // 一轮结束后循环从头播放
+      const roundMs = (lastEnd + 2) * 1000
+      this._loopTimer = setTimeout(() => {
+        this._playRound()
+      }, roundMs)
+    },
+
+    // 即时弹幕的轨道分配：找最早空闲的轨道
+    _pickLane(now) {
+      this._initLanes()
+      let lane = 0
+      let earliest = Infinity
+      for (let l = 0; l < LANES.length; l++) {
+        const freeAt = this._laneFreeAt[l] || 0
+        // 以绝对秒数比较
+        const abs = freeAt + (this._laneOrigin || now)
+        if (abs < earliest) {
+          earliest = abs
+          lane = l
+        }
+      }
+      this._laneOrigin = now
+      this._laneFreeAt[lane] = Math.max(this._laneFreeAt[lane] || 0, 6)
+      return lane
+    },
+
+    // 实际渲染一条弹幕
+    _emit(text, avatar, name, { lane, at }) {
+      if (!text || !text.trim()) return
       const id = util.generateId()
+      const now = Date.now() / 1000
+      const delay = Math.max(0, at - now)
+      // 轨道内位置微调（±3%），避免完全对齐显得呆板
+      const top = LANES[lane % LANES.length] + (Math.random() * 6 - 3)
 
-      // 垂直位置：优先用传入的，否则做碰撞避让
-      const usedTops = this.data.danmuList.map(d => d.top)
-      const top = options.top !== undefined
-        ? options.top
-        : this._generateTop(usedTops)
-
-      const duration = options.duration !== undefined
-        ? options.duration
-        : (Math.random() * 4 + 6)   // 6~10s，比之前短，减少重叠感
-
-      const delay = options.delay !== undefined
-        ? options.delay
-        : (Math.random() * 0.5)
-
-      const initial = (name && name.trim()) ? name.trim().charAt(0).toUpperCase() : '♥'
-
-      const danmu = { id, text, avatar: avatar || '', initial, top, duration, delay }
+      const danmu = { id, text, avatar: avatar || '', top, duration: DURATION, delay }
 
       this.setData({
         danmuList: this.data.danmuList.concat([danmu])
       })
 
-      // 动画结束后移除
-      const totalMs = (duration + delay) * 1000 + 500
+      const totalMs = (delay + DURATION) * 1000 + 500
       setTimeout(() => {
         const list = this.data.danmuList.filter(d => d.id !== id)
         this.setData({ danmuList: list })
@@ -65,49 +148,11 @@ Component({
     },
 
     /**
-     * 批量添加弹幕，按照片轮播时间均匀分布
-     * @param {Array} items    - [{ text, avatar, name }, ...]
-     * @param {Object} options - { photoCount, interval }
-     *   photoCount: 照片数量（决定时间窗口数）
-     *   interval:  轮播间隔 ms，默认 3500
-     */
-    addBatch(items, options = {}) {
-      if (!items || !items.length) return
-
-      const photoCount = options.photoCount || 1
-      const interval = (options.interval || 3500) / 1000   // 转成秒
-
-    // 把弹幕随机打乱，再分配到各个照片的时间窗口
-    const shuffled = items.slice().sort(() => Math.random() - 0.5)
-
-      // 预先生成一组不重叠的垂直位置，循环复用
-      const preAllocatedTops = []
-      for (let i = 0; i < shuffled.length; i++) {
-        preAllocatedTops.push(this._generateTop(preAllocatedTops))
-      }
-
-      shuffled.forEach((item, i) => {
-        // 决定这条弹幕落在第几张照片的时间窗口
-        const photoIndex = i % photoCount
-        const windowStart = photoIndex * interval
-        // 在窗口内随机偏移，留 1.5s 缓冲避免切到下一页时还在开头
-        const randomOffset = Math.random() * (interval - 1.5)
-        const startTime = (windowStart + randomOffset) * 1000
-
-        setTimeout(() => {
-          this.addDanmu(item.text, item.avatar, item.name, {
-            top: preAllocatedTops[i],
-            duration: Math.random() * 4 + 6,   // 6~10s
-            delay: 0
-          })
-        }, startTime)
-      })
-    },
-
-    /**
-     * 清空弹幕
+     * 清空弹幕并停止循环
      */
     clear() {
+      this._clearTimers()
+      this._loopItems = []
       this.setData({ danmuList: [] })
     }
   }
