@@ -120,11 +120,11 @@ burstY: 0,
   },
 
   // ===== 加载请柬数据 =====
-  loadInvitation(id) {
+  async loadInvitation(id) {
     wx.cloud.callFunction({
       name: 'getInvitation',
       data: { invitationId: id },
-      success: res => {
+      success: async res => {
         if (res.result && res.result.success) {
           const d = res.result.data
           app.globalData.currentInvitation = d
@@ -170,6 +170,28 @@ burstY: 0,
               ...p,
               url: p.url || p.fileID || ''
             })).filter(p => p.url)
+
+            // CSS background-image 不支持 cloud:// 协议，转成 https 临时链接
+            const cloudUrls = d.photos
+              .filter(p => p.url && p.url.startsWith('cloud://'))
+              .map(p => p.url)
+            if (cloudUrls.length > 0) {
+              try {
+                const tempRes = await wx.cloud.getTempFileURL({ fileList: cloudUrls })
+                const tempMap = {}
+                tempRes.fileList.forEach(item => {
+                  tempMap[item.fileID] = item.tempFileURL
+                })
+                d.photos = d.photos.map(p => ({
+                  ...p,
+                  url: p.url && p.url.startsWith('cloud://')
+                    ? (tempMap[p.url] || p.url)
+                    : p.url
+                }))
+              } catch (e) {
+                console.error('getTempFileURL failed:', e)
+              }
+            }
           }
 
           this.setData({
