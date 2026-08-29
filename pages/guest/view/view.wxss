@@ -226,32 +226,80 @@ page {
   100% { transform: translateY(110vh) rotate(320deg) rotateX(200deg); opacity: 0; }
 }
 
-/* 花瓣点击彩蛋气泡 */
+/* 花瓣点击彩蛋气泡：锚定在花瓣点击位置（JS 传入 left/top px） */
 .petal-bubble {
   position: fixed;
-  top: 32%;
-  left: 50%;
-  transform: translateX(-50%) scale(0.6);
+  transform: translate(-50%, -130%) scale(0.4);
   background: rgba(255, 255, 255, 0.95);
   border: 2rpx solid #ffb7c5;
   border-radius: 32rpx;
-  padding: 24rpx 40rpx;
+  padding: 20rpx 36rpx;
   box-shadow: 0 8rpx 32rpx rgba(255, 107, 138, 0.25);
   z-index: 9998;
   opacity: 0;
-  transition: opacity 0.3s ease-out, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.35s ease-out, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
   pointer-events: none;
+  max-width: 80vw;
+  box-sizing: border-box;
 }
 
 .petal-bubble.show {
   opacity: 1;
-  transform: translateX(-50%) scale(1);
+  transform: translate(-50%, -130%) scale(1);
 }
 
 .petal-bubble-text {
   font-size: 28rpx;
   color: #c94f6d;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+/* ===== 花瓣炸碎烟花 ===== */
+.petal-burst {
+  position: fixed;
+  width: 0;
+  height: 0;
+  z-index: 9997;
+  pointer-events: none;
+}
+
+.burst-particle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 14rpx;
+  height: 14rpx;
+  background: linear-gradient(135deg, #ffb7c5, #ff6b8a);
+  border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%; /* 花瓣碎片形状 */
+  animation: burstFly 0.8s cubic-bezier(0.16, 0.84, 0.44, 1) forwards;
+  box-shadow: 0 2rpx 8rpx rgba(255, 107, 138, 0.5);
+}
+
+/* 8 个碎片向不同方向飞散 */
+.bp1 { animation-delay: 0s;    --dx: -120rpx; --dy: -100rpx; }
+.bp2 { animation-delay: 0.02s; --dx: 0rpx;    --dy: -140rpx; }
+.bp3 { animation-delay: 0.04s; --dx: 120rpx;  --dy: -100rpx; }
+.bp4 { animation-delay: 0s;    --dx: -150rpx; --dy: 0rpx; }
+.bp5 { animation-delay: 0.02s; --dx: 150rpx;  --dy: 0rpx; }
+.bp6 { animation-delay: 0.04s; --dx: -100rpx; --dy: 110rpx; }
+.bp7 { animation-delay: 0s;    --dx: 0rpx;    --dy: 150rpx; }
+.bp8 { animation-delay: 0.02s; --dx: 100rpx;  --dy: 110rpx; }
+
+@keyframes burstFly {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(0.3) rotate(360deg);
+    opacity: 0;
+  }
 }
 
 .cover-bg.loaded {

@@ -16,10 +16,22 @@
           data-idx="{{index}}" catchtap="onPetalTap"></view>
   </view>
 
-  <!-- 花瓣点击彩蛋：随机祝福气泡 -->
-  <view class="petal-bubble {{petalBubble ? 'show' : ''}}" wx:if="{{petalBubble}}">
-    <text class="petal-bubble-text">{{petalBubble}}</text>
-  </view>
+  <!-- 花瓣点击彩蛋：花瓣位置炸开碎片 + 祝福气泡 -->
+  <block wx:if="{{petalBubble}}">
+    <view class="petal-burst" style="left:{{burstX}}px; top:{{burstY}}px;">
+      <view class="burst-particle bp1"></view>
+      <view class="burst-particle bp2"></view>
+      <view class="burst-particle bp3"></view>
+      <view class="burst-particle bp4"></view>
+      <view class="burst-particle bp5"></view>
+      <view class="burst-particle bp6"></view>
+      <view class="burst-particle bp7"></view>
+      <view class="burst-particle bp8"></view>
+    </view>
+    <view class="petal-bubble show" style="left:{{burstX}}px; top:{{burstY}}px;">
+      <text class="petal-bubble-text">{{petalBubble}}</text>
+    </view>
+  </block>
 
   <!-- ========== 第一屏：封面 ========== -->
   <view class="cover-section" style="height:100vh;">
@@ -235,23 +247,13 @@ lazy-load
 
     <!-- 地图 -->
     <view class="map-wrap" wx:if="{{invitation.venueLat && invitation.venueLng}}">
-      <!-- 优先展示截图静态图：原生地图在安卓上滚动页面时 POI 文字会反复重渲染 -->
-      <image
-        wx:if="{{mapSnapshot}}"
-        class="venue-map"
-        src="{{mapSnapshot}}"
-        mode="aspectFill"
-        bindtap="openNavigation"
-      />
       <map
-        wx:else
         id="venueMap"
         class="venue-map"
         longitude="{{invitation.venueLng}}"
         latitude="{{invitation.venueLat}}"
         markers="{{markers}}"
         scale="16"
-        enable-poi="{{!hideMapPoi}}"
         show-location
       ></map>
       <view class="map-nav-btn" bindtap="openNavigation">🧭 导航到这里</view>

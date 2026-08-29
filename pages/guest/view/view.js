@@ -48,13 +48,14 @@ Page({
     musicStarted: false,
     showMusicBtn: true,
 
-    // 地图截图（安卓滚动重渲染问题）
-    mapSnapshot: '',
-    hideMapPoi: false,
+    // 地图（原生组件，保留 POI 文字；安卓滚动重绘属平台行为，可接受）
+    // mapSnapshot / hideMapPoi 截图方案已回退
 
     // 花瓣彩蛋
     petalList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     petalBubble: '',
+    burstX: 0,
+    burstY: 0,
 
     // 婚礼流程默认折叠（只显示前5个）
     timelineExpanded: false,
@@ -165,9 +166,6 @@ Page({
             coverLoaded: !d.coverImage
           })
 
-          // 地图渲染稳定后截图，用静态图替换原生地图（规避安卓滚动重渲染）
-          this.captureMapSnapshot()
-
           // 封面 loading 兑底超时，防止 bindload 未触发卡在 loading
           if (d.coverImage) this.startCoverTimeout()
 
@@ -246,40 +244,6 @@ Page({
 
   tapThumbnail(e) {
     this.setData({ photoIdx: e.currentTarget.dataset.idx })
-  },
-
-  // ===== 地图截图 =====
-  // 原生地图组件在安卓上会随页面滚动触发原生视图重绘，POI 文字反复重新渲染。
-  // 方案：地图渲染完成后截图，用静态 image 替换活的 map 组件；
-  // 点击图片或导航按钮 → wx.openLocation 打开原生地图导航。
-  // 兑底：截图失败时隐藏 POI 文字（enable-poi=false）减轻重渲染观感。
-  captureMapSnapshot() {
-    if (this.data.mapSnapshot || !this.data.invitation) return
-    setTimeout(() => {
-      if (this.data.mapSnapshot) return
-      try {
-        const mapCtx = wx.createMapContext('venueMap', this)
-        if (mapCtx && mapCtx.snapshot) {
-          mapCtx.snapshot({
-            success: (res) => {
-              if (res && res.tempImagePath) {
-                this.setData({ mapSnapshot: res.tempImagePath })
-              } else {
-                this.setData({ hideMapPoi: true })
-              }
-            },
-            fail: () => {
-              this.setData({ hideMapPoi: true })
-            }
-          })
-        } else {
-          // 低版本基础库无 snapshot API，直接隐藏 POI 文字
-          this.setData({ hideMapPoi: true })
-        }
-      } catch (e) {
-        this.setData({ hideMapPoi: true })
-      }
-    }, 1200)
   },
 
   // ===== 地图导航 =====
@@ -814,8 +778,8 @@ Page({
   },
 
   // ===== 花瓣彩蛋 =====
-  // 点击飘落的花瓣，随机弹出一句祝福
-  onPetalTap() {
+  // 点击飘落的花瓣：花瓣位置炸开碎片烟花，随机弹出一句祝福
+  onPetalTap(e) {
     const blessings = [
       '愿你们百年好合，永结同心 🌹',
       '新婚快乐，白头偕老 💕',
@@ -833,7 +797,11 @@ Page({
     if (text === this.data.petalBubble) {
       text = blessings[(blessings.indexOf(text) + 1) % blessings.length]
     }
-    this.setData({ petalBubble: text })
+    // 记录点击位置（花瓣所在屏幕坐标），气泡与炸裂动画在此位置触发
+    const touch = e.touches && e.touches[0]
+    const x = touch ? touch.clientX : e.detail.x || 187
+    const y = touch ? touch.clientY : e.detail.y || 333
+    this.setData({ petalBubble: text, burstX: x, burstY: y })
     // 2.5s 后自动消失
     if (this._petalBubbleTimer) clearTimeout(this._petalBubbleTimer)
     this._petalBubbleTimer = setTimeout(() => {
