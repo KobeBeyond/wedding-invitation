@@ -1206,7 +1206,7 @@ font-weight: 400;
   line-height: 1.4;
 }
 
-/* 换一条按钮 */
+/* 换一条按钮：粉色渐变圆形 + 白色刷新箭头 */
 .blessing-refresh-btn {
   flex-shrink: 0;
   width: 64rpx;
@@ -1216,9 +1216,41 @@ font-weight: 400;
   justify-content: center;
 }
 
-.blessing-refresh-img {
-  width: 64rpx;
-  height: 64rpx;
+.refresh-circle {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f8bbd0, #f48fb1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(244, 143, 177, 0.3);
+}
+
+/* 白色刷新箭头：圆环 + 箭头 */
+.refresh-arrow {
+  width: 28rpx;
+  height: 28rpx;
+  border: 4rpx solid #fff;
+  border-radius: 50%;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  transform: rotate(-45deg);
+  position: relative;
+}
+
+/* 箭头尖 */
+.refresh-arrow::after {
+  content: '';
+  position: absolute;
+  right: -2rpx;
+  bottom: -2rpx;
+  width: 0;
+  height: 0;
+  border-left: 8rpx solid #fff;
+  border-top: 5rpx solid transparent;
+  border-bottom: 5rpx solid transparent;
+  transform: rotate(45deg);
 }
 
 .blessing-send-btn {
