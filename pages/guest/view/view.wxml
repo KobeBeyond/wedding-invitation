@@ -182,10 +182,18 @@ mode="aspectFit"
 class="photo-img"
 lazy-load
 />
-<view class="corner-flower corner-tl">🌸</view>
-<view class="corner-flower corner-tr">🌸</view>
-<view class="corner-flower corner-bl">🌸</view>
-<view class="corner-flower corner-br">🌸</view>
+<view class="corner-flower corner-tl">
+<view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view>
+</view>
+<view class="corner-flower corner-tr">
+<view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view>
+</view>
+<view class="corner-flower corner-bl">
+<view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view>
+</view>
+<view class="corner-flower corner-br">
+<view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view><view class="petal"></view>
+</view>
 </view>
 </view>
 </swiper-item>
@@ -226,7 +234,7 @@ lazy-load
               <text class="blessing-avatar-icon">♥</text>
             </view>
           </button>
-          <text class="blessing-hint">{{userAvatar ? '已设置头像' : '点击头像选择照片'}}</text>
+          <text class="blessing-hint">{{userAvatar ? '选一句祝福送给新人' : '点击头像选择照片'}}</text>
           <view class="blessing-actions">
             <view class="blessing-send-btn active" bindtap="refreshBlessing">
               <text>换一条</text>

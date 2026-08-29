@@ -767,32 +767,63 @@ display: none;
 }
 
 /* 四角花朵装饰 */
+/* 四角花朵：用多个重叠圆形模拟花瓣 */
 .corner-flower {
   position: absolute;
-  font-size: 28rpx;
-  line-height: 1;
+  width: 48rpx;
+  height: 48rpx;
   z-index: 2;
-  text-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* 花心 */
+.corner-flower::before {
+  content: '';
+  position: absolute;
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: #fff5e6;
+  z-index: 2;
+  box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 花瓣层：5 个小圆围绕中心 */
+.corner-flower .petal {
+  position: absolute;
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #e8a0a0;
+  opacity: 0.85;
+}
+
+.corner-flower .petal:nth-child(1) { transform: translateY(-14rpx); background: #f48fb1; }
+.corner-flower .petal:nth-child(2) { transform: translate(12rpx, -6rpx) rotate(72deg); background: #e8a0a0; }
+.corner-flower .petal:nth-child(3) { transform: translate(8rpx, 10rpx) rotate(144deg); background: #f48fb1; }
+.corner-flower .petal:nth-child(4) { transform: translate(-8rpx, 10rpx) rotate(216deg); background: #e8a0a0; }
+.corner-flower .petal:nth-child(5) { transform: translate(-12rpx, -6rpx) rotate(288deg); background: #f48fb1; }
+
 .corner-tl {
-  top: 8rpx;
-  left: 8rpx;
+  top: 6rpx;
+  left: 6rpx;
 }
 
 .corner-tr {
-  top: 8rpx;
-  right: 8rpx;
+  top: 6rpx;
+  right: 6rpx;
 }
 
 .corner-bl {
-  bottom: 8rpx;
-  left: 8rpx;
+  bottom: 6rpx;
+  left: 6rpx;
 }
 
 .corner-br {
-  bottom: 8rpx;
-  right: 8rpx;
+  bottom: 6rpx;
+  right: 6rpx;
 }
 
 /* 无照片时兜底 */
