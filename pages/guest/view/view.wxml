@@ -175,6 +175,7 @@ data-idx="{{index}}" catchtap="onPetalTap"></view>
 <swiper-item wx:for="{{invitation.photos}}" wx:key="index">
 <view class="card-item {{photoIdx === index ? 'active' : ''}}">
 <view class="photo-frame">
+<view class="photo-clip">
 <image
 wx:if="{{item.url}}"
 src="{{item.url}}"
@@ -182,6 +183,7 @@ mode="aspectFit"
 class="photo-img"
 lazy-load
 />
+</view>
 </view>
 </view>
 </swiper-item>
