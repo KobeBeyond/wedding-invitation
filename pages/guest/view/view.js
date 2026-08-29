@@ -635,7 +635,8 @@ burstY: 0,
         quotes = data
       }
     } catch (err) {
-      // 云函数未部署或数据库异常：静默降级到本地兜底
+      // 云函数未部署或数据库异常：降级到本地兜底
+      console.error('getBlessingQuotes 失败:', err)
     }
     if (!quotes.length) {
       quotes = LOCAL_BLESSING_QUOTES
