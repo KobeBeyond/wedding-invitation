@@ -92,7 +92,7 @@ burstY: 0,
     this.checkUserInfo()
   },
 
-  // 页面回到前台时恢复音乐播放
+  // 页面回到前台时恢复音乐播放 + 刷新头像状态
   onShow() {
     // 只要用户之前启动过音乐（musicStarted），就恢复播放
     // 不依赖 playing 状态，因为 wx.previewImage 等操作会触发 onPause 把 playing 设为 false
@@ -103,6 +103,8 @@ burstY: 0,
         }
       }, 300)
     }
+    // 从头像设置页返回后，刷新头像状态，按钮文案自动切换
+    this.checkUserInfo()
   },
 
   onUnload() {

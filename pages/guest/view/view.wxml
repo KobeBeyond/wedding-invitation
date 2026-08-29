@@ -223,11 +223,11 @@ lazy-load
         <view class="blessing-preview">
           <text class="blessing-preview-text">{{currentBlessing}}</text>
         </view>
-        <!-- 换一条 -->
+        <!-- 换一条：⇄ 交换箭头，表示随机换一条 -->
         <view class="blessing-refresh-btn" bindtap="refreshBlessing">
-          <view class="refresh-icon">
-            <view class="refresh-line"></view>
-            <view class="refresh-line"></view>
+          <view class="random-icon">
+            <view class="random-arrow random-arrow-left"></view>
+            <view class="random-arrow random-arrow-right"></view>
           </view>
         </view>
         <!-- 发送：无头像时文案变为「选头像」，点击跳转头像设置页 -->
