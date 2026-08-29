@@ -92,6 +92,7 @@ Page({
   onUnload() {
     if (this._timer) clearInterval(this._timer)
     if (this._pollTimer) clearInterval(this._pollTimer)
+    if (this._coverTimeout) clearTimeout(this._coverTimeout)
     if (this._blessingWatcher) {
       try { this._blessingWatcher.close() } catch (e) {}
     }
@@ -163,6 +164,9 @@ Page({
           // 地图渲染稳定后截图，用静态图替换原生地图（规避安卓滚动重渲染）
           this.captureMapSnapshot()
 
+          // 封面 loading 兑底超时，防止 bindload 未触发卡在 loading
+          if (d.coverImage) this.startCoverTimeout()
+
           // 预加载关键图片，减少滑动时的白屏
           const urls = []
           if (d.coverImage) urls.push(d.coverImage)
@@ -198,6 +202,10 @@ Page({
   _lastCD: null,
 
   updateCountdown(target) {
+    // loading 遮罩展示期间跳过倒计时刷新：避免每秒 setData 打断主线程导致戒指动画掉帧跳动
+    // loading 结束后下一秒会自动刷成正确值
+    if (!this.data.coverLoaded) return
+
     const diff = target - Date.now()
     if (diff <= 0) {
       if (!this._lastCD || !this._lastCD.finished) {
@@ -736,9 +744,26 @@ Page({
   // 阻止 loading 遮罩下的页面滑动
   preventScroll() {},
 
-  // 封面图加载完成
+  // 封面图加载完成（或加载失败）：都去掉 loading 遮罩，避免卡死
   onCoverLoad() {
+    if (this._coverTimeout) {
+      clearTimeout(this._coverTimeout)
+      this._coverTimeout = null
+    }
     this.setData({ coverLoaded: true })
+  },
+
+  // 封面 loading 兑底超时：无论图片是否加载完成，最多 6s 后强制去掉 loading 遮罩
+  // 防止 bindload 在部分机型/缓存场景下未触发，导致永久卡在 loading
+  startCoverTimeout() {
+    if (this._coverTimeout) clearTimeout(this._coverTimeout)
+    this._coverTimeout = setTimeout(() => {
+      this._coverTimeout = null
+      if (!this.data.coverLoaded) {
+        console.warn('cover loading timeout, force hide')
+        this.setData({ coverLoaded: true })
+      }
+    }, 6000)
   },
 
   toggleMusic() {

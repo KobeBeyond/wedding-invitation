@@ -19,6 +19,7 @@
       class="cover-bg {{coverLoaded ? 'loaded' : ''}}"
       lazy-load
       bindload="onCoverLoad"
+      binderror="onCoverLoad"
     />
     <view wx:else class="cover-gradient"></view>
 
