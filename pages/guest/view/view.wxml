@@ -432,8 +432,8 @@ lazy-load
       <view class="page-btn {{blessingPage >= blessingTotalPages - 1 ? 'disabled' : ''}}" bindtap="nextBlessingPage">下一页</view>
     </view>
 
-<!-- 发送入口：语录库加载失败时自动隐藏；点击从云端随机选取一条预设祝福发送 -->
-<view class="blessing-input-bar" wx:if="{{showBlessingBtn}}">
+<!-- 发送入口：头像 + 语录预览 + 换一条 + 发送 -->
+<view class="blessing-input-bar">
   <!-- 头像选择按钮 -->
   <button class="blessing-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
     <image wx:if="{{userAvatar}}" src="{{userAvatar}}" class="blessing-avatar-img" mode="aspectFill" />
@@ -441,8 +441,17 @@ lazy-load
       <text class="blessing-avatar-icon">♥</text>
     </view>
   </button>
+  <!-- 当前随机语录预览 -->
+  <view class="blessing-preview">
+    <text class="blessing-preview-text">{{currentBlessing}}</text>
+  </view>
+  <!-- 换一条 -->
+  <view class="blessing-refresh-btn" bindtap="refreshBlessing">
+    <text class="blessing-refresh-icon">🔄</text>
+  </view>
+  <!-- 发送 -->
   <view class="blessing-send-btn active" bindtap="sendBlessing">
-    <text class="blessing-send-text">发送随机祝福</text>
+    <text>发送</text>
   </view>
 </view>
 </view>

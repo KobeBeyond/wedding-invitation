@@ -1089,29 +1089,32 @@ font-weight: 400;
 
 .blessing-input-bar {
   display: flex;
-  gap: 10rpx;
+  gap: 12rpx;
   margin-top: 24rpx;
   align-items: center;
 }
 
-/* 头像选择按钮 */
+/* 头像选择按钮：彻底覆盖微信 button 默认样式 */
 .blessing-avatar-btn {
   flex-shrink: 0;
-  width: 64rpx!important;
-  height: 64rpx;
-  padding: 0;
-  margin: 0;
-  border: none;
-  background: transparent;
-  line-height: normal;
+  width: 64rpx !important;
+  height: 64rpx !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  line-height: 1 !important;
   min-width: 0;
   min-height: 0;
   overflow: hidden;
   border-radius: 50%;
+  position: relative;
+  box-sizing: border-box;
 }
 
 .blessing-avatar-btn::after {
-  border: none;
+  content: none !important;
+  border: none !important;
 }
 
 .blessing-avatar-img {
@@ -1119,6 +1122,7 @@ font-weight: 400;
   height: 64rpx;
   border-radius: 50%;
   border: 2rpx solid #e8a0a0;
+  display: block;
 }
 
 .blessing-avatar-placeholder {
@@ -1133,18 +1137,48 @@ font-weight: 400;
 }
 
 .blessing-avatar-icon {
-  font-size: 36rpx;
+  font-size: 32rpx;
+  line-height: 1;
 }
 
-.blessing-input {
+/* 当前随机语录预览 */
+.blessing-preview {
   flex: 1;
   min-width: 0;
   height: 64rpx;
   background: #f9f5f5;
   border-radius: 32rpx;
   padding: 0 20rpx;
+  display: flex;
+  align-items: center;
+}
+
+.blessing-preview-text {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 26rpx;
+  color: #555;
+  line-height: 1.4;
+}
+
+/* 换一条按钮 */
+.blessing-refresh-btn {
+  flex-shrink: 0;
+  width: 64rpx;
+  height: 64rpx;
+  background: #fff0f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid #e8c0c0;
+}
+
+.blessing-refresh-icon {
   font-size: 28rpx;
-  color: #333;
+  line-height: 1;
 }
 
 .blessing-send-btn {

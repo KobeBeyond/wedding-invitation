@@ -31,8 +31,8 @@ Page({
     rsvpAgreed: false,  // 是否同意协议
 
     // 祝福墙
-    blessingQuotes: [],   // 平台预设语录库（从云端加载）
-    showBlessingBtn: true, // 语录库加载失败则隐藏发送入口
+    blessingQuotes: [],   // 平台预设语录库（从云端加载，失败用本地兜底）
+    currentBlessing: '',  // 当前随机选中的语录预览
     userAvatar: '',  // 微信头像临时路径
     blessingCount: 0,
     blessingsLoading: true,
@@ -624,23 +624,45 @@ burstY: 0,
 
   // 加载平台预设祝福语录库：先尝试云端，失败/为空时自动降级到本地内置语录
   async loadBlessingQuotes() {
+    let quotes = []
     try {
       const res = await wx.cloud.callFunction({ name: 'getBlessingQuotes' })
       const data = res.result && res.result.data
       if (data && data.length > 0) {
-        this.setData({ blessingQuotes: data })
-        return
+        quotes = data
       }
     } catch (err) {
       // 云函数未部署或数据库异常：静默降级到本地兜底
     }
-    // 云端不可用：使用本地内置 100 条语录兜底，保证按钮始终可展示
-    this.setData({ blessingQuotes: LOCAL_BLESSING_QUOTES })
+    if (!quotes.length) {
+      quotes = LOCAL_BLESSING_QUOTES
+    }
+    this.setData({ blessingQuotes: quotes })
+    // 语录库就绪后，自动随机选一条作为预览
+    this._pickRandomBlessing(quotes)
+  },
+
+  // 从语录库随机选一条作为当前预览（避免连续重复）
+  _pickRandomBlessing(quotes) {
+    quotes = quotes || this.data.blessingQuotes
+    if (!quotes || !quotes.length) return
+    let idx = Math.floor(Math.random() * quotes.length)
+    if (quotes.length > 1 && this._lastQuoteIdx === idx) {
+      idx = (idx + 1) % quotes.length
+    }
+    this._lastQuoteIdx = idx
+    const text = quotes[idx].text || quotes[idx]
+    this.setData({ currentBlessing: text })
+  },
+
+  // 用户点击「换一条」：重新随机选一条语录预览
+  refreshBlessing() {
+    this._pickRandomBlessing()
   },
 
   async sendBlessing() {
-    const quotes = this.data.blessingQuotes
-    if (!quotes || !quotes.length) {
+    const text = this.data.currentBlessing
+    if (!text) {
       wx.showToast({ title: '祝福语录加载中，请稍候', icon: 'none' })
       return
     }
@@ -652,13 +674,6 @@ burstY: 0,
       return
     }
 
-    // 从语录库随机选取一条（避免连续重复）
-    let idx = Math.floor(Math.random() * quotes.length)
-    if (quotes.length > 1 && this._lastQuoteIdx === idx) {
-      idx = (idx + 1) % quotes.length
-    }
-    this._lastQuoteIdx = idx
-    const text = quotes[idx].text || quotes[idx]
     const avatarUrl = this.data.userAvatar || ''
 
     // 先本地飘一条弹幕
@@ -688,6 +703,8 @@ burstY: 0,
           blessingList: list
         }, () => {
           this.updatePagedBlessings()
+          // 发送成功后自动换一条新的语录预览，方便继续发送
+          this._pickRandomBlessing()
         })
       }
     } catch (err) {
