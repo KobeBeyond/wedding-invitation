@@ -1,4 +1,6 @@
 // pages/creator/share/share.js
+const { centerCropImage } = require('../../../utils/util.js')
+
 Page({
   data: {
     invitationId: '',
@@ -30,6 +32,14 @@ Page({
             loading: false
           })
           this.loadStats(id)
+
+          // 预生成居中裁剪的分享图（5:4）：微信分享默认从左边裁剪，宽图会丢右半边
+          const shareSrc = res.result.data.shareImage || res.result.data.coverImage
+          if (shareSrc) {
+            centerCropImage(shareSrc).then(cropped => {
+              if (cropped) this._shareImage = cropped
+            })
+          }
         } else {
           this.setData({ loading: false })
           wx.showToast({ title: '加载失败', icon: 'none' })
@@ -68,7 +78,7 @@ Page({
     return {
       title,
       path: `/pages/router/router?inv=${this.data.invitationId}`,
-      imageUrl: inv.shareImage || inv.coverImage || ''
+      imageUrl: this._shareImage || inv.shareImage || inv.coverImage || ''
     }
   },
 
@@ -79,7 +89,7 @@ Page({
     return {
       title,
       query: `inv=${this.data.invitationId}`,
-      imageUrl: inv.shareImage || inv.coverImage || ''
+      imageUrl: this._shareImage || inv.shareImage || inv.coverImage || ''
     }
   },
 

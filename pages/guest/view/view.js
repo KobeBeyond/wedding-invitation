@@ -1,6 +1,6 @@
 // pages/guest/view/view.js — 来宾视角：完整请柬页面
 const app = getApp()
-const { preloadImages } = require('../../../utils/util.js')
+const { preloadImages, centerCropImage } = require('../../../utils/util.js')
 
 Page({
   data: {
@@ -176,6 +176,14 @@ Page({
           if (d.brideAvatar) urls.push(d.brideAvatar)
           if (d.photos) d.photos.forEach(p => { if (p.url) urls.push(p.url) })
           preloadImages(urls)
+
+          // 预生成居中裁剪的分享图（5:4）：微信分享默认从左边裁剪，宽图会丢右半边
+          const shareSrc = d.shareImage || d.coverImage
+          if (shareSrc) {
+            centerCropImage(shareSrc).then(cropped => {
+              if (cropped) this._shareImage = cropped
+            })
+          }
 
           this.startCountdown(d.weddingDate)
           this.loadBlessings(id)
@@ -815,7 +823,8 @@ Page({
     return {
       title: d.shareTitle || `${d.groomName} & ${d.brideName}的婚礼请柬`,
       path: `/pages/router/router?inv=${this.data.inv}`,
-      imageUrl: d.shareImage || d.coverImage || ''
+      // 优先用居中裁剪后的分享图，未生成或失败时回退原图
+      imageUrl: this._shareImage || d.shareImage || d.coverImage || ''
     }
   },
 
@@ -824,7 +833,7 @@ Page({
     return {
       title: d.shareTitle || `${d.groomName} & ${d.brideName}的婚礼请柬`,
       query: `inv=${this.data.inv}`,
-      imageUrl: d.shareImage || d.coverImage || ''
+      imageUrl: this._shareImage || d.shareImage || d.coverImage || ''
     }
   },
 

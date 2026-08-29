@@ -454,19 +454,27 @@ lazy-load
       <text class="footer-heart">❤</text>
       <view class="footer-line"></view>
     </view>
-    <text class="footer-couple">{{invitation.groomName}} & {{invitation.brideName}}</text>
-    <text class="footer-date">{{invitation.weddingDate}}</text>
+    <view class="footer-couple">{{invitation.groomName}} & {{invitation.brideName}}</view>
+    <view class="footer-date">{{invitation.weddingDate}}</view>
 
-    <!-- 分享按钮 -->
+    <!-- 分享按钮（整体居中） -->
     <view class="footer-actions">
       <button class="share-btn" open-type="share">
-        <text class="share-icon">💌</text>
+        <view class="share-icon-svg">
+          <view class="share-arrow"></view>
+        </view>
         <text class="share-text">分享给好友</text>
       </button>
     </view>
 
     <view class="create-cta" bindtap="goCreate">
       我也要制作请柬 →
+    </view>
+
+    <!-- 版权与版本信息 -->
+    <view class="footer-copyright">
+      <text class="copyright-text">Nupcias · 婚礼电子请柬</text>
+      <text class="copyright-text">© 2026 kbvillero@163.com · v1.0.0</text>
     </view>
   </view>
 

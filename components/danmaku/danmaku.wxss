@@ -23,7 +23,7 @@
   pointer-events: none;
   opacity: 0;
   /* 弹幕整体最大宽度：头像 + 文本区域 */
-  max-width: 70vw;
+  max-width: 92vw;
   box-sizing: border-box;
 }
 
@@ -47,7 +47,7 @@
 /* 文本容器：可收缩，让省略号生效 */
 .danmaku-text-wrap {
   min-width: 0;
-  max-width: 480rpx;
+  max-width: 960rpx;
   overflow: hidden;
   display: block;
 }

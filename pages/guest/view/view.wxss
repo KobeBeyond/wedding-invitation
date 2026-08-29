@@ -1294,6 +1294,7 @@ font-weight: 400;
 }
 
 .footer-couple {
+  display: block;
   font-size: 32rpx;
   font-weight: 600;
   color: #8a6d4f;
@@ -1301,6 +1302,7 @@ font-weight: 400;
 }
 
 .footer-date {
+  display: block;
   font-size: 26rpx;
   color: #b09080;
   margin-bottom: 48rpx;
@@ -1308,11 +1310,14 @@ font-weight: 400;
 
 .footer-actions {
   margin-bottom: 40rpx;
+  display: flex;
+  justify-content: center;
 }
 
 .share-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 12rpx;
   background: linear-gradient(135deg, #e8a0a0, #d97a7a);
   color: #fff !important;
@@ -1327,8 +1332,46 @@ font-weight: 400;
   border: none;
 }
 
-.share-icon {
-  font-size: 32rpx;
+/* CSS 转发图标：圆弧 + 箭头 */
+.share-icon-svg {
+  position: relative;
+  width: 32rpx;
+  height: 32rpx;
+  flex-shrink: 0;
+}
+
+.share-icon-svg::before {
+  content: '';
+  position: absolute;
+  top: 10rpx;
+  left: 2rpx;
+  width: 24rpx;
+  height: 20rpx;
+  border: 4rpx solid #fff;
+  border-radius: 50% 50% 0 0;
+  border-bottom: none;
+}
+
+.share-arrow {
+  position: absolute;
+  top: 2rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4rpx;
+  height: 22rpx;
+  background: #fff;
+}
+
+.share-arrow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12rpx;
+  height: 12rpx;
+  border-top: 4rpx solid #fff;
+  border-right: 4rpx solid #fff;
 }
 
 .create-cta {
@@ -1336,6 +1379,22 @@ font-weight: 400;
   color: #b09080;
   text-decoration: underline;
   padding: 16rpx;
+}
+
+/* 版权与版本信息 */
+.footer-copyright {
+  margin-top: 48rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid rgba(176, 144, 128, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.copyright-text {
+  font-size: 22rpx;
+  color: #c4a99a;
+  line-height: 1.5;
 }
 
 /* ========== 加载状态 ========== */
