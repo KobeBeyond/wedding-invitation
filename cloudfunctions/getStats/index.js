@@ -35,9 +35,13 @@ exports.main = async (event, context) => {
       (sum, g) => sum + (parseInt(g.guestCount, 10) || 1), 0
     )
 
-    // 祝福总数
-    const blessingsRes = await blessingQuery.count()
-    const blessingCount = blessingsRes.total
+    // 祝福总数（按 openid+text 去重，与展示端口径一致）
+    const blessingList = await blessingQuery.field({ openid: true, text: true }).get()
+    const seen = new Set()
+    for (const b of blessingList.data) {
+      seen.add((b.openid || '') + '|' + (b.text || ''))
+    }
+    const blessingCount = seen.size
 
     return {
       success: true,

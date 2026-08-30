@@ -24,17 +24,19 @@ exports.main = async (event, context) => {
       }
     }
 
-    // ★ 同一用户同一请柬只能发送一条祝福（幂等：返回已存在的）
+    // ★ 去重（与客户端展示口径一致）：同一用户 + 相同祝福语 = 重复，幂等返回已有记录
+    const trimmedText = text.trim()
     const existing = await db.collection('blessings')
       .where({
         openid: OPENID,
-        invitationId: invitationId || ''
+        invitationId: invitationId || '',
+        text: trimmedText
       })
       .limit(1)
       .get()
 
     if (existing.data && existing.data.length > 0) {
-      return { success: true, _id: existing.data[0]._id, message: '您已发送过祝福' }
+      return { success: true, duplicated: true, _id: existing.data[0]._id }
     }
 
     const res = await db.collection('blessings').add({
@@ -43,11 +45,11 @@ exports.main = async (event, context) => {
         openid: OPENID,
         nickName: nickName || '',
         avatarUrl: avatarUrl || '',
-        text: text.trim(),
+        text: trimmedText,
         createdAt: db.serverDate()
       }
     })
-    return { success: true, _id: res._id }
+    return { success: true, duplicated: false, _id: res._id }
   } catch (err) {
     console.error('submitBlessing error:', err)
     return { success: false, message: '发送失败，请稍后重试' }

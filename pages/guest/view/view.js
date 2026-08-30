@@ -376,11 +376,11 @@ burstY: 0,
     }
   },
 
-  // 按 openid 去重，只保留每个人最新的一条祝福
+  // 按 openid+text 组合键去重（与服务端规则一致）：同一用户相同祝福语只保留最新一条
   _dedupBlessings(list) {
     const seen = new Map()
     for (const item of list) {
-      const key = item.openid || item._id
+      const key = (item.openid || item._id) + '|' + (item.text || '')
       if (!seen.has(key)) {
         seen.set(key, item)
       }
@@ -748,8 +748,8 @@ burstY: 0,
       })
       // 乐观更新：立即把新祝福插入列表头部并刷新分页
       if (submitRes.result && submitRes.result._id) {
-        // 已发送过祝福（服务端幂等返回）
-        if (submitRes.result.message === '您已发送过祝福') {
+        // 服务端幂等返回：已存在相同 openid+text 的祝福
+        if (submitRes.result.duplicated) {
           this.setData({
             blessingSent: true,
             submittingBlessing: false
@@ -758,10 +758,12 @@ burstY: 0,
         }
         this._lastBlessingId = submitRes.result._id // 防止 watcher 重复插入
         const newItem = { _id: submitRes.result._id, text, nickName: '', avatarUrl, openid: '' }
-        const list = this.data.blessingList.slice()
+        let list = this.data.blessingList.slice()
         list.unshift(newItem)
+        // 按 openid+text 去重（保持与服务端一致的口径）
+        list = this._dedupBlessings(list)
         this.setData({
-          blessingCount: this.data.blessingCount + 1,
+          blessingCount: list.length,
           blessingList: list,
           blessingSent: true,
           submittingBlessing: false
