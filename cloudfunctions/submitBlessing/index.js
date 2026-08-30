@@ -24,9 +24,22 @@ exports.main = async (event, context) => {
       }
     }
 
+    // ★ 同一用户同一请柬只能发送一条祝福（幂等：返回已存在的）
+    const existing = await db.collection('blessings')
+      .where({
+        openid: OPENID,
+        invitationId: invitationId || ''
+      })
+      .limit(1)
+      .get()
+
+    if (existing.data && existing.data.length > 0) {
+      return { success: true, _id: existing.data[0]._id, message: '您已发送过祝福' }
+    }
+
     const res = await db.collection('blessings').add({
       data: {
-        invitationId: invitationId || '',  // ★ 新增
+        invitationId: invitationId || '',
         openid: OPENID,
         nickName: nickName || '',
         avatarUrl: avatarUrl || '',

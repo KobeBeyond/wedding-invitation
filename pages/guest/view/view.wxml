@@ -414,7 +414,11 @@ data-index="{{index}}"
         </view>
       </view>
 
-      <button class="rsvp-submit-btn" bindtap="submitRSVP" disabled="{{rsvpSubmitting}}">
+      <!-- 无头像时按钮即为 chooseAvatar，点击直接选头像；有头像后正常提交 -->
+      <button wx:if="{{!userAvatar}}" class="rsvp-submit-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <text>提交回执</text>
+      </button>
+      <button wx:else class="rsvp-submit-btn" bindtap="submitRSVP" disabled="{{rsvpSubmitting}}">
         <text wx:if="{{!rsvpSubmitting}}">提交回执</text>
         <text wx:else>提交中...</text>
       </button>

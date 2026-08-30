@@ -34,6 +34,7 @@ Page({
     blessingQuotes: [],   // 平台预设语录库（从云端加载，失败用本地兜底）
     currentBlessing: '',  // 当前随机选中的语录预览
     blessingSent: false,  // 是否已发送过祝福（发送后显示感谢文案，防止重复发送）
+    submittingBlessing: false,  // 祝福发送中，防止快速双击重复提交
     userAvatar: '',  // 微信头像临时路径
     blessingCount: 0,
     blessingsLoading: true,
@@ -375,6 +376,18 @@ burstY: 0,
     }
   },
 
+  // 按 openid 去重，只保留每个人最新的一条祝福
+  _dedupBlessings(list) {
+    const seen = new Map()
+    for (const item of list) {
+      const key = item.openid || item._id
+      if (!seen.has(key)) {
+        seen.set(key, item)
+      }
+    }
+    return Array.from(seen.values())
+  },
+
   // ===== 祝福墙 =====
   async loadBlessings(invitationId) {
     try {
@@ -383,10 +396,9 @@ burstY: 0,
         data: { invitationId }
       })
       if (res.result && res.result.data) {
-        const count = res.result.data.length
-        const list = res.result.data
+        const list = this._dedupBlessings(res.result.data)
         this.setData({
-          blessingCount: count,
+          blessingCount: list.length,
           blessingList: list,
           blessingsLoading: false
         })
@@ -476,14 +488,16 @@ burstY: 0,
           this._lastBlessingId = newBlessing._id
 
           // 新祝福加入列表头部（列表按 createdAt 倒序，最新在前），并刷新分页
-          const list = this.data.blessingList.slice()
+          let list = this.data.blessingList.slice()
           // 防重复：发送时已乐观插入过
           const exists = list.some(b => b._id === newBlessing._id)
           if (!exists) {
             list.unshift(newBlessing)
           }
+          // 按 openid 去重展示
+          list = this._dedupBlessings(list)
           this.setData({
-            blessingCount: exists ? this.data.blessingCount : this.data.blessingCount + 1,
+            blessingCount: list.length,
             blessingList: list
           }, () => {
             this.updatePagedBlessings()
@@ -516,16 +530,22 @@ burstY: 0,
           data: { invitationId }
         })
         if (!res.result || !res.result.data || res.result.data.length === 0) return
-        const latest = res.result.data[0]
+        const list = this._dedupBlessings(res.result.data)
+        const latest = list[0]
         if (this._lastBlessingId === latest._id) return
         this._lastBlessingId = latest._id
-        this.setData({ blessingCount: res.result.data.length })
-      const danmaku = this.selectComponent('#danmaku')
-      if (danmaku && latest) {
-        danmaku.addDanmu(latest.text, latest.avatarUrl || '', latest.nickName || '', {
-          duration: 6 + Math.random() * 4
+        this.setData({
+          blessingCount: list.length,
+          blessingList: list
+        }, () => {
+          this.updatePagedBlessings()
         })
-      }
+        const danmaku = this.selectComponent('#danmaku')
+        if (danmaku && latest) {
+          danmaku.addDanmu(latest.text, latest.avatarUrl || '', latest.nickName || '', {
+            duration: 6 + Math.random() * 4
+          })
+        }
       } catch (e) {
         console.error('Polling blessings error:', e)
       }
@@ -702,6 +722,12 @@ burstY: 0,
       return
     }
 
+    // 防止快速双击重复提交
+    if (this.data.submittingBlessing || this.data.blessingSent) {
+      return
+    }
+    this.setData({ submittingBlessing: true })
+
     const avatarUrl = this.data.userAvatar || ''
 
     // 先本地飘一条弹幕
@@ -722,20 +748,33 @@ burstY: 0,
       })
       // 乐观更新：立即把新祝福插入列表头部并刷新分页
       if (submitRes.result && submitRes.result._id) {
+        // 已发送过祝福（服务端幂等返回）
+        if (submitRes.result.message === '您已发送过祝福') {
+          this.setData({
+            blessingSent: true,
+            submittingBlessing: false
+          })
+          return
+        }
         this._lastBlessingId = submitRes.result._id // 防止 watcher 重复插入
-        const newItem = { _id: submitRes.result._id, text, nickName: '', avatarUrl }
+        const newItem = { _id: submitRes.result._id, text, nickName: '', avatarUrl, openid: '' }
         const list = this.data.blessingList.slice()
         list.unshift(newItem)
         this.setData({
           blessingCount: this.data.blessingCount + 1,
           blessingList: list,
-          blessingSent: true
+          blessingSent: true,
+          submittingBlessing: false
         }, () => {
           this.updatePagedBlessings()
         })
+      } else if (submitRes.result && submitRes.result.message) {
+        wx.showToast({ title: submitRes.result.message, icon: 'none' })
+        this.setData({ submittingBlessing: false })
       }
     } catch (err) {
       console.error('Submit blessing error:', err)
+      this.setData({ submittingBlessing: false })
     }
   },
 
